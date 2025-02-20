@@ -4,7 +4,7 @@ import { Routes, Navigate, Route } from 'react-router-dom';
 // project import
 import Loader from './components/Loader/Loader';
 import AdminLayout from './layouts/AdminLayout';
-
+import AuthGuard from './config/AuthGuard';
 import { BASE_URL } from './config/constant';
 
 // ==============================|| ROUTES ||============================== //
@@ -58,57 +58,68 @@ export const routes = [
       {
         exact: 'true',
         path: '/app/dashboard/analytics',
-        element: lazy(() => import('./views/dashboard'))
+        element: lazy(() => import('./views/dashboard')),
+        guard: (props) => <AuthGuard allowedRoles={['admin','superadmin','chefdepartement','membrerh','adminrh','employee','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/departements',
-        element: lazy(() => import('./views/departements'))
+        element: lazy(() => import('./views/departements')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/offers',
-        element: lazy(() => import('./views/offer'))
+        element: lazy(() => import('./views/offer')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','chefdepartement','membrerh','adminrh','employee','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/leaves',
-        element: lazy(() => import('./views/leaves'))
+        element: lazy(() => import('./views/leaves')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','chefdepartement','employee','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/workshops',
-        element: lazy(() => import('./views/workshops'))
+        element: lazy(() => import('./views/workshops')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','chefdepartement','adminrh','employee','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/employees',
-        element: lazy(() => import('./views/employees'))
+        element: lazy(() => import('./views/employees')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/events',
-        element: lazy(() => import('./views/events'))
+        element: lazy(() => import('./views/events')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','chefdepartement','adminrh','employee','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/attendance',
-        element: lazy(() => import('./views/attendance'))
+        element: lazy(() => import('./views/attendance')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','chefdepartement','employee','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/complaints',
-        element: lazy(() => import('./views/complaint'))
+        element: lazy(() => import('./views/complaint')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','adminrh','employee','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/chat-rooms',
-        element: lazy(() => import('./views/chat-rooms'))
+        element: lazy(() => import('./views/chat-rooms')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','adminrh','employee','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/hr-member',
-        element: lazy(() => import('./views/hr-member'))
+        element: lazy(() => import('./views/hr-member')),
+        guard: (props) => <AuthGuard allowedRoles={['superadmin','dev']}>{props.children}</AuthGuard>
       }/* ,
       {
         exact: 'true',

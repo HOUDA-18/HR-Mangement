@@ -1,3 +1,4 @@
+//roles : ['superadmin','chefdepartement','membrerh','adminrh','employee'] 'dev'
 const menuItems = {
   items: [
     {
@@ -11,14 +12,16 @@ const menuItems = {
           title: 'Dashboard',
           type: 'item',
           icon: 'feather icon-home',
-          url: '/app/dashboard/analytics'
+          url: '/app/dashboard/analytics',
+          roles: ['admin','superadmin','chefdepartement','membrerh','adminrh','employee','dev']
         },
         {
           id: 'departements',
           title: 'Departements',
           type: 'item',
           icon: 'feather icon-server',
-          url: '/app/dashboard/departements'
+          url: '/app/dashboard/departements',
+          roles: ['superadmin','dev']
         }
       ]
     },
@@ -33,7 +36,8 @@ const menuItems = {
           title: 'HR members',
           type: 'item',
           icon: 'feather icon-user',
-          url: '/app/dashboard/hr-member'
+          url: '/app/dashboard/hr-member',
+          roles: ['superadmin','dev']
         },
         ,
         {
@@ -41,7 +45,8 @@ const menuItems = {
           title: 'Employees',
           type: 'item',
           icon: 'feather icon-users',
-          url: '/app/dashboard/employees'
+          url: '/app/dashboard/employees',
+          roles: ['superadmin','dev']
         }
       ]
     },
@@ -56,14 +61,16 @@ const menuItems = {
           title: 'Leaves',
           type: 'item',
           icon: 'feather icon-bookmark',
-          url: '/app/dashboard/leaves'
+          url: '/app/dashboard/leaves',
+          roles: ['superadmin','chefdepartement','employee','dev']
         },
         {
           id: 'Attendance',
           title: 'Attendance',
           type: 'item',
           icon: 'feather icon-check-circle',
-          url: '/app/dashboard/attendance'
+          url: '/app/dashboard/attendance',
+          roles: ['superadmin','chefdepartement','employee','dev']
         }
       ]
     },
@@ -78,14 +85,16 @@ const menuItems = {
           title: 'Workshops',
           type: 'item',
           icon: 'feather icon-briefcase',
-          url: '/app/dashboard/workshops'
+          url: '/app/dashboard/workshops',
+          roles: ['superadmin','chefdepartement','adminrh','employee','dev']
         },
         {
           id: 'Events',
           title: 'Events',
           type: 'item',
           icon: 'feather icon-calendar',
-          url: '/app/dashboard/events'
+          url: '/app/dashboard/events',
+          roles: ['superadmin','chefdepartement','adminrh','employee','dev']
         }
         ,
         {
@@ -93,7 +102,8 @@ const menuItems = {
           title: 'Offers',
           type: 'item',
           icon: 'feather icon-file-plus',
-          url: '/app/dashboard/offers'
+          url: '/app/dashboard/offers',
+          roles: ['superadmin','chefdepartement','membrerh','adminrh','employee','dev']
         }
       ]
     },
@@ -108,14 +118,16 @@ const menuItems = {
           title: 'Chat-rooms',
           type: 'item',
           icon: 'feather icon-message-circle',
-          url: '/app/dashboard/chat-rooms'
+          url: '/app/dashboard/chat-rooms',
+          roles: ['superadmin','adminrh','employee','dev']
         },
         {
           id: 'Complaints',
           title: 'Complaints',
           type: 'item',
           icon: 'feather icon-message-square',
-          url: '/app/dashboard/complaints'
+          url: '/app/dashboard/complaints',
+          roles: ['superadmin','adminrh','employee','dev']
         }
       ]
     },
