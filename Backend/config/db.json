@@ -1,5 +1,5 @@
 {
     "mongo":{
-        "uri":"mongodb://localhost:27017/hrms"
+        "uri":"mongodb://localhost:27017/hr-management"
     }
 }
