@@ -6,7 +6,7 @@ const Employees = () => {
 
   useEffect(() => {
   
-    fetch("http://localhost:5000/api/users")
+    fetch("http://localhost:5000/api/employees")
       .then((res) => {
         console.log("Réponse du serveur :", res);
         return res.json();
@@ -54,7 +54,7 @@ const Employees = () => {
             <tr>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Nom</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Email</th>
-              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Speciality</th>
+              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Role</th>
             </tr>
           </thead>
           <tbody>
@@ -62,7 +62,7 @@ const Employees = () => {
               <tr key={emp._id} style={{ borderBottom: '1px solid #dddddd' }}>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.name}</td>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.email}</td>
-                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.speciality || 'N/A'}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.role}</td>
               </tr>
             ))}
           </tbody>

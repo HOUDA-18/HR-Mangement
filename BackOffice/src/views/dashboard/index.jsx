@@ -1,4 +1,7 @@
-import React from 'react';
+import React ,{ useState } from 'react';
+
+import axios from 'axios';
+
 
 // react-bootstrap
 import { Row, Col, Card, Table, ListGroup } from 'react-bootstrap';
@@ -24,29 +27,77 @@ import imgGrid3 from '../../assets/images/gallery-grid/img-grd-gal-3.jpg';
 // ==============================|| DASHBOARD ANALYTICS ||============================== //
 
 const DashAnalytics = () => {
+  const [showUsers, setShowUsers] = useState(false);
+  const [users, setUsers] = useState([]);
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get('http://localhost:5000/api/users'); 
+      setUsers(response.data);
+      setShowUsers(!showUsers); 
+    } catch (error) {
+      console.error('Error fetching users:', error);
+    }
+  };
+
   return (
     <React.Fragment>
       <Row>
         {/* order cards */}
         <Col md={6} xl={3}>
+        <div onClick={fetchUsers} style={{ cursor: 'pointer' }}>
           <OrderCard
             params={{
               title: 'Total Employees',
               class: 'bg-c-blue',
               icon: 'feather icon-users',
-              primaryText: '486',
+              primaryText: '',
               secondaryText: '',
               extraText: ''
             }}
           />
+          </div>
         </Col>
+         {/* Tableau des utilisateurs */}
+      {showUsers && (
+        <Col sm={12}>
+          <Card className="mt-4">
+            <Card.Header>
+              <Card.Title as="h5">Users List</Card.Title>
+            </Card.Header>
+            <Card.Body>
+              <PerfectScrollbar>
+                <Table responsive>
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+                  
+                      <th>Role</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {users.map((user, index) => (
+                      <tr key={index}>
+                        <td>{user.name}</td>
+                        <td>{user.email}</td>
+                        
+                        <td>{user.role}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </PerfectScrollbar>
+            </Card.Body>
+          </Card>
+        </Col>
+      )}
         <Col md={6} xl={3}>
           <OrderCard
             params={{
               title: 'Active Offers',
               class: 'bg-c-green',
               icon: 'feather icon-tag',
-              primaryText: '10',
+              primaryText: '',
               secondaryText: '',
               extraText: ''
             }}
@@ -58,7 +109,7 @@ const DashAnalytics = () => {
               title: 'Departements',
               class: 'bg-c-yellow',
               icon: 'feather icon-server',
-              primaryText: '8',
+              primaryText: '',
               secondaryText: '',
               extraText: ''
             }}
@@ -70,7 +121,7 @@ const DashAnalytics = () => {
               title: 'Attendance',
               class: 'bg-c-red',
               icon: 'feather icon-check-circle',
-              primaryText: '80%',
+              primaryText: '',
               secondaryText: '',
               extraText: ''
             }}

@@ -5,12 +5,13 @@ const HRMembers = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/rhmembers")
+    fetch("http://localhost:5000/api/RHMembers")
       .then((res) => res.json())
       .then((data) => {
         console.log("Données RH reçues :", data);
-        setHRMembers(data);
+        setHRMembers(data.rhMembers); 
         setLoading(false);
+  
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des membres RH :", error);
@@ -87,6 +88,12 @@ const HRMembers = () => {
                     fontWeight: '500',
                     fontSize: '16px'
                   }}>Email</th>
+                  <th style={{
+                    padding: '15px',
+                    textAlign: 'left',
+                    fontWeight: '500',
+                    fontSize: '16px'
+                  }}>Role</th>
                 </tr>
               </thead>
               <tbody>
@@ -109,6 +116,11 @@ const HRMembers = () => {
                       color: '#2c3e50',
                       fontSize: '14px'
                     }}>{member.email}</td>
+                    <td style={{
+                      padding: '15px',
+                      color: '#2c3e50',
+                      fontSize: '14px'
+                    }}>{member.role}</td>
                   </tr>
                 ))}
               </tbody>
