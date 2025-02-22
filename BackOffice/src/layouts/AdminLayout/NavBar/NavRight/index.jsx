@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 // react-bootstrap
 import { ListGroup, Dropdown, Card } from 'react-bootstrap';
@@ -15,11 +15,21 @@ import avatar1 from '../../../../assets/images/user/avatar-1.jpg';
 import avatar2 from '../../../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../../../assets/images/user/avatar-3.jpg';
 import avatar4 from '../../../../assets/images/user/avatar-4.jpg';
+import { useLogout } from 'hooks/useLogout';
 
 // ==============================|| NAV RIGHT ||============================== //
 
 const NavRight = () => {
   const [listOpen, setListOpen] = useState(false);
+
+  const nav = useNavigate()
+    const logout = useLogout()
+    
+
+    const handleLogout =()=>{
+        logout()
+        nav('/auth/signin-1')
+     }
 
   const notiData = [
     {
@@ -140,9 +150,9 @@ const NavRight = () => {
               <div className="pro-head">
                 <img src={avatar1} className="img-radius" alt="User Profile" />
                 <span>John Doe</span>
-                <Link to="/auth/signin-1" className="dud-logout" title="Logout">
+                <div className="dud-logout" title="Logout" onClick={()=>handleLogout()}>
                   <i className="feather icon-log-out" />
-                </Link>
+                </div>
               </div>
               <ListGroup as="ul" bsPrefix=" " variant="flush" className="pro-body">
                 <ListGroup.Item as="li" bsPrefix=" ">
@@ -166,9 +176,9 @@ const NavRight = () => {
                   </Link>
                 </ListGroup.Item>
                 <ListGroup.Item as="li" bsPrefix=" ">
-                  <Link to="#" className="dropdown-item">
+                  <div className="dropdown-item" onClick={()=>handleLogout()}>
                     <i className="feather icon-log-out" /> Logout
-                  </Link>
+                  </div>
                 </ListGroup.Item>
               </ListGroup>
             </Dropdown.Menu>
