@@ -15,54 +15,39 @@ import { useNavigate } from 'react-router-dom';
 const JWTLogin = () => {
   
   const navigate= useNavigate()
-
-   const signin= (values)=>{
-
-    event.preventDefault()
-
-    axios.post("http://localhost:8070/api/users/login",  values, {
-      "Access-Control-Allow-Origin": "*",
-    }) 
-    .then((res)=>{
-       console.log("res", res)
-            const user = res.data.user;
-                localStorage.setItem("token",res.data.token)
-                localStorage.setItem("userRole",user.role)
-                localStorage.setItem("user", JSON.stringify(user))
-                navigate('app/dashboard/analytics')
-           
-        
-     })
-    .catch((err)=>{
-        console.log("err",err);
-    })
-} 
+  let {signin, userError} = useLogin({})
+  const handleSignin= (values)=>{
+    event.preventDefault();
+    signin(values)
+  }
   
   return (
     <Formik
     initialValues={{
-      email: 'info@codedthemes.com',
-      password: '123456',
+      matricule: '',
+      password: '',
       submit: null
     }}
     validationSchema={Yup.object().shape({
-      email: Yup.string().max(255).required('Email is required'),
-      password: Yup.string().max(255).required('Password is required')
+      matricule: Yup.string().min(3).max(255).required('Matricule is required'),
+      password: Yup.string().min(3).max(255).required('Password is required'),
+
     })}
     >
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-        <form noValidate onSubmit={()=>signin({"matricule": values.email, "password": values.password})}>
+        
+        <form noValidate onSubmit={()=>handleSignin({"matricule": values.matricule, "password": values.password})}>
           <div className="form-group mb-3">
             <input
               className="form-control"
-              label="Email Address / Username"
-              name="email"
+              label="Matricule"
+              name="matricule"
               onBlur={handleBlur}
               onChange={handleChange}
-              type="email"
-              value={values.email}
+              type="matricule"
+              value={values.matricule}
             />
-            {touched.email && errors.email && <small className="text-danger form-text">{errors.email}</small>}
+            {touched.matricule && errors.matricule && <small className="text-danger form-text">{errors.matricule}</small>}
           </div>
           <div className="form-group mb-4">
             <input
@@ -79,19 +64,19 @@ const JWTLogin = () => {
 
 
 
-          {errors.submit && (
-            <Col sm={12}>
-              <Alert>{errors.submit}</Alert>
-            </Col>
-          )}
+          
 
           <Row>
             <Col mt={2}>
-              <Button className="btn-block mb-4" color="primary" disabled={isSubmitting} size="large" type="submit" variant="primary">
+              <Button className="btn-block mb-4" color="primary" disabled={errors.password || errors.matricule} size="large" type="submit" variant="primary">
                 Signin
               </Button>
             </Col>
           </Row>
+
+          {userError && (
+            <small className="text-danger form-text">{userError}</small>
+          )}
         </form>
       )}
     </Formik>
