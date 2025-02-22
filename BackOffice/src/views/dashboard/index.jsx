@@ -1,11 +1,10 @@
 import React ,{ useState } from 'react';
-
+import '/src/index.scss';
 import axios from 'axios';
 
 
 // react-bootstrap
-import { Row, Col, Card, Table, ListGroup } from 'react-bootstrap';
-
+import { Row, Col, Card, Table, ListGroup,Form, Button } from 'react-bootstrap';
 // third party
 import Chart from 'react-apexcharts';
 import PerfectScrollbar from 'react-perfect-scrollbar';
@@ -29,6 +28,10 @@ import imgGrid3 from '../../assets/images/gallery-grid/img-grd-gal-3.jpg';
 const DashAnalytics = () => {
   const [showUsers, setShowUsers] = useState(false);
   const [users, setUsers] = useState([]);
+  const [filterText, setFilterText] = useState('');
+  const [sortBy, setSortBy] = useState('');  
+  
+  const [sortOrder, setSortOrder] = useState('asc');
   const fetchUsers = async () => {
     try {
       const response = await axios.get('http://localhost:5000/api/users'); 
@@ -38,6 +41,29 @@ const DashAnalytics = () => {
       console.error('Error fetching users:', error);
     }
   };
+   // Sorting handler
+   const handleSort = (column) => {
+    if (sortBy === column) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(column);
+      setSortOrder('asc');
+    }
+  };
+
+  // Filter and sort users
+  const filteredUsers = users
+    .filter(user =>
+      Object.values(user).some(value =>
+        value.toString().toLowerCase().includes(filterText.toLowerCase())
+      )
+    )
+    .sort((a, b) => {
+      const modifier = sortOrder === 'asc' ? 1 : -1;
+      if (a[sortBy] < b[sortBy]) return -1 * modifier;
+      if (a[sortBy] > b[sortBy]) return 1 * modifier;
+      return 0;
+    });
 
   return (
     <React.Fragment>
@@ -58,39 +84,161 @@ const DashAnalytics = () => {
           </div>
         </Col>
          {/* Tableau des utilisateurs */}
-      {showUsers && (
-        <Col sm={12}>
-          <Card className="mt-4">
-            <Card.Header>
-              <Card.Title as="h5">Users List</Card.Title>
-            </Card.Header>
-            <Card.Body>
-              <PerfectScrollbar>
-                <Table responsive>
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-                  
-                      <th>Role</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {users.map((user, index) => (
-                      <tr key={index}>
-                        <td>{user.name}</td>
-                        <td>{user.email}</td>
-                        
-                        <td>{user.role}</td>
+         {showUsers && (
+  <Col sm={12}>
+   <Card className="mt-4">
+              <Card.Header className="d-flex justify-content-between align-items-center">
+              <Card.Header className="py-4 text-center border-bottom-0 position-relative">
+  <Card.Title 
+    as="h2" 
+    className="mb-0 position-relative d-inline-block"
+    style={{
+      fontFamily: "'Inter', sans-serif",
+      fontWeight: 600,
+      letterSpacing: '-0.03em',
+      color: '#2d3748',
+      padding: '0 2rem'
+    }}
+  >
+    <div className="title-decoration"></div>
+    <span className="position-relative">
+      <i className="feather icon-users me-2"></i>List of Users</span>
+  </Card.Title>
+</Card.Header>
+                <div className="d-flex gap-3">
+                  <Form.Control
+                    type="text"
+                    placeholder="Search users..."
+                    value={filterText}
+                    onChange={(e) => setFilterText(e.target.value)}
+                    style={{ width: '250px' }}
+                  />
+                  <Form.Select 
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                    style={{ width: '200px' }}
+                  >
+                    <option value="firstname">Sort by FirstName</option>
+                    <option value="lastname">Sort by LastName</option>
+                    <option value="mail">Sort by Mail</option>
+                    <option value="role">Sort by Role</option>
+                    <option value="statut">Sort by Statut</option>
+                  </Form.Select>
+                  <Button 
+                    variant="outline-secondary" 
+                    onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                  >
+                    {sortOrder === 'asc' ? '↓ Descending' : '↑ Ascending'}
+                  </Button>
+                </div>
+              </Card.Header>
+
+              <Card.Body>
+                <PerfectScrollbar>
+                  <Table responsive hover className="custom-status-table">
+                    <thead className="bg-light">
+                      <tr>
+                        {['firstname','lastname', 'mail', 'role', 'statut'].map((column) => (
+                          <th 
+                            key={column}
+                            className={sortBy === column ? 'active-sort' : ''}
+                            onClick={() => handleSort(column)}
+                            style={{ cursor: 'pointer', minWidth: '150px' }}
+                          >
+                            {column.charAt(0).toUpperCase() + column.slice(1)}
+                            {sortBy === column && (
+                              <span className="ms-2">
+                                {sortOrder === 'asc' ? '↑' : '↓'}
+                              </span>
+                            )}
+                          </th>
+                        ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
-              </PerfectScrollbar>
-            </Card.Body>
-          </Card>
-        </Col>
-      )}
+                    </thead>
+                    <tbody>
+                      {filteredUsers.map((user, index) => (
+                        <tr key={index}>
+                          <td className="align-middle">{user.firstname}</td>
+                          <td className="align-middle">{user.lastname}</td>
+                          <td className="align-middle">{user.mail}</td>
+                          <td className="align-middle text-capitalize">{user.role}</td>
+                          <td className="align-middle">
+  <div 
+  
+    className= {`status-indicator ${
+      user.statut === 'active' ? 'active' : 'inactive'
+    }`}
+
+    style={{
+      display: 'inline-block',
+     
+      width: '90px',
+      padding: '8px 12px',
+      borderRadius: '20px',
+      fontSize: '0.85rem',
+      fontWeight: 600, // Augmentation du poids de la police
+      transition: 'all 0.3s ease',
+      backgroundColor: user.statut === 'active' 
+        ? 'rgba(40, 167, 69, 0.15)' 
+        : 'rgba(220, 53, 69, 0.1)', // Rouge plus visible pour inactive
+      color: user.statut === 'active' 
+        ? '#28a745' 
+        : '#dc3545', // Couleur rouge pour inactive
+      border: `2px solid ${
+        user.statut === 'active' ? '#28a745' : 'rgba(220, 53, 69, 0.3)'
+      }`,
+      boxShadow: user.statut === 'active' 
+        ? '0 2px 12px rgba(40, 167, 69, 0.25)' 
+        : '0 2px 8px rgba(220, 53, 69, 0.15)',
+      position: 'relative',
+      overflow: 'hidden'
+    }}
+  >
+    <span 
+      className="status-glow"
+      style={{
+        position: 'absolute',
+        top: '-50%',
+        left: '-50%',
+        width: '200%',
+        height: '200%',
+        background: user.statut === 'active' 
+          ? 'radial-gradient(circle, rgba(40,167,69,0.15) 0%, transparent 60%)' 
+          : 'radial-gradient(circle, rgba(220,53,69,0.1) 0%, transparent 60%)',
+        pointerEvents: 'none'
+      }}
+    />
+    <span 
+      className="status-dot"
+      style={{
+        display: 'inline-block',
+        width: '10px',
+        height: '10px',
+        borderRadius: '50%',
+        marginRight: '8px',
+        backgroundColor: user.statut=== 'active' 
+          ? '#28a745' 
+          : '#dc3545', // Rouge vif pour inactive
+        boxShadow: user.statut === 'active' 
+          ? '0 0 8px rgba(40, 167, 69, 0.4)' 
+          : '0 0 6px rgba(220, 53, 69, 0.3)',
+        transform: 'translateZ(0)',
+        position: 'relative'
+      }}
+    />
+    {user.statut === 'active' ? 'Active' : 'Inactive'}
+  </div>
+</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        </PerfectScrollbar>
+      </Card.Body>
+    </Card>
+  </Col>
+)}
+
         <Col md={6} xl={3}>
           <OrderCard
             params={{

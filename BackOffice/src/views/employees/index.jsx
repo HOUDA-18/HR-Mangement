@@ -52,17 +52,18 @@ const Employees = () => {
         <table style={{ width: '100%', borderCollapse: 'collapse', boxShadow: '0 0 20px rgba(0, 0, 0, 0.1)' }}>
           <thead>
             <tr>
-              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Nom</th>
+              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>FirstName</th>
+              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>LastName</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Email</th>
-              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Role</th>
+
             </tr>
           </thead>
           <tbody>
             {employees.map((emp) => (
               <tr key={emp._id} style={{ borderBottom: '1px solid #dddddd' }}>
-                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.name}</td>
-                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.email}</td>
-                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.role}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.firstname}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.lastname}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.mail}</td>
               </tr>
             ))}
           </tbody>

@@ -81,19 +81,19 @@ const HRMembers = () => {
                     textAlign: 'left',
                     fontWeight: '500',
                     fontSize: '16px'
-                  }}>Nom</th>
+                  }}>FirstName</th>
                   <th style={{
                     padding: '15px',
                     textAlign: 'left',
                     fontWeight: '500',
                     fontSize: '16px'
-                  }}>Email</th>
+                  }}> LastName</th>
                   <th style={{
                     padding: '15px',
                     textAlign: 'left',
                     fontWeight: '500',
                     fontSize: '16px'
-                  }}>Role</th>
+                  }}> Email</th>
                 </tr>
               </thead>
               <tbody>
@@ -110,17 +110,17 @@ const HRMembers = () => {
                       padding: '15px',
                       color: '#2c3e50',
                       fontSize: '14px'
-                    }}>{member.name}</td>
+                    }}>{member.firstname}</td>
                     <td style={{
                       padding: '15px',
                       color: '#2c3e50',
                       fontSize: '14px'
-                    }}>{member.email}</td>
+                    }}>{member.lastname}</td>
                     <td style={{
                       padding: '15px',
                       color: '#2c3e50',
                       fontSize: '14px'
-                    }}>{member.role}</td>
+                    }}>{member.mail}</td>
                   </tr>
                 ))}
               </tbody>
