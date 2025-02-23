@@ -8,8 +8,19 @@ module.exports= app =>{
   //create a new user
     router.post("/users/register",validate(UserSchema), userController.register);
 
-    router.post('/users/login', validate(loginSchema), userController.login)
+    router.post('/users/login', validate(loginSchema), userController.login);
+
+    //reset password
+    router.post('/users/forget-password', userController.forgetPassword);
+
+    router.post('/users/reset-password/:token', userController.resetPassword);
+
+    router.post('/users/change-password', userController.changePassword);
+
 /* 
+
+
+
     router.post('/users/update/:id',verifyToken, userController.update)
 
     router.post('/users/delete/:id',verifyToken, userController.delete)
