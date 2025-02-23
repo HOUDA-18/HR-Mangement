@@ -87,6 +87,11 @@ export const routes = [
       },
       {
         exact: 'true',
+        path: '/app/dashboard/employees/add',
+        element: lazy(() => import('./views/form'))
+      },
+      {
+        exact: 'true',
         path: '/app/dashboard/events',
         element: lazy(() => import('./views/events'))
       },
