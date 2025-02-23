@@ -52,6 +52,12 @@ export const routes = [
     element: lazy(() => import('./views/auth/reset-password/ResetPassword1'))
   },
   {
+    exact: 'true',
+    path: '/auth/reset-password/:token',
+    element: lazy(() => import('./views/auth/reset-password-1/passwordReset'))
+  },
+  
+  {
     path: '*',
     layout: AdminLayout,
     routes: [

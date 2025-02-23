@@ -17,7 +17,7 @@ app.use(express.urlencoded({extended: false}));
 
 require("./routes/routes")(app);
 
-server.listen(3000,()=>{
+server.listen(8070,()=>{
     console.log('====================================');
     console.log("server is running");
     console.log('====================================');

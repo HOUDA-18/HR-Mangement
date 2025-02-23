@@ -105,7 +105,7 @@ exports.register= async (req,res)=>{
               from: "webdesignwalah@gmail.com",
               to: email,
               subject: "Password Reset Request",
-              text: `Click on this link to generate your new password ${process.env.CLIENT_URL}/reset-password/${token}`,
+              text: `Click on this link to generate your new password ${process.env.CLIENT_URL}/${token}`,
             };
         
             await transporter.sendMail(receiver);
