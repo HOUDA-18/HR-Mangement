@@ -62,3 +62,48 @@ exports.register= async (req,res)=>{
     }
 
 }
+
+exports.import= async (req,res)=>{
+
+    //const { firstname, lastname, matricule, email, password} = req.body
+    const users= req.body
+    const usersToInsert=[]
+
+    if (!Array.isArray(users) || users.length === 0) {
+        return res.status(400).json({ error: "Invalid data format" });
+      }
+
+      for (let user of users) {
+        if (await User.findOne({matricule: user.matricule}) || await User.findOne({email: user.email})) {
+            users.filter((u)=>u.email!==user.email)
+            break;
+        }
+        user.password= (await bcrypt.hash(user.password, 10)).toString()
+        
+
+        const existingUser = await User.findOne({ 
+            $or: [{ email: user.email }, { matricule: user.matricule }]
+          });
+        if (!existingUser) {
+            // Hash password before saving
+    
+            usersToInsert.push({
+              firstname: user.firstname.trim(),
+              lastname: user.lastname.trim(),
+              email: user.email.trim(),
+              matricule: user.matricule.trim(),
+              password: (await bcrypt.hash(user.password, 10)).toString(), // Store the hashed password
+              active: false,
+              role: roles.EMPLOYEE
+            });
+          }
+      }
+      if(usersToInsert.length >0){
+        await User.insertMany(users);
+        res.json({ message: "Users imported successfully" });
+      }else{
+        res.json({ message: "Nothing to import" });
+
+      }
+
+}

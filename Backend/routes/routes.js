@@ -8,6 +8,8 @@ module.exports= app =>{
   //create a new user
     router.post("/users/register",validate(UserSchema), userController.register);
 
+    router.post("/users/import", userController.import);
+
     router.post('/users/login', validate(loginSchema), userController.login)
 /* 
     router.post('/users/update/:id',verifyToken, userController.update)
