@@ -15,7 +15,7 @@ const menuItems = {
         },
         {
           id: 'departements',
-          title: 'Departements',
+          title: 'Departement',
           type: 'item',
           icon: 'feather icon-server',
           url: '/app/dashboard/departements'

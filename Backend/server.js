@@ -4,7 +4,7 @@ var cors = require('cors')
 
 const db = require('./config/db.json')
 const mongoose = require('mongoose')
-
+const cors = require('cors');
 const app = express()
 const server = http.createServer(app)
 
