@@ -102,10 +102,10 @@ exports.register= async (req,res)=>{
             });
         
             const receiver = {
-              from: "webdesignwalah@gmail.com",
+              from: "wassefammar17@gmail.com",
               to: email,
               subject: "Password Reset Request",
-              text: `Click on this link to generate your new password ${process.env.CLIENT_URL}/${token}`,
+              html: `Click on <a href="${process.env.CLIENT_URL}/${token}">this link</a> to generate your new password.`,
             };
         
             await transporter.sendMail(receiver);
