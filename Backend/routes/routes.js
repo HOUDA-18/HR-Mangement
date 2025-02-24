@@ -1,13 +1,16 @@
 
 module.exports= app =>{
-    const userController= require("../controllers/exampleController")
-
+    const userController= require("../controllers/userController")
+    const { UserSchema, loginSchema} = require("../models/user");
+    const validate = require('../middelwares/validate')
     var router = require("express").Router();
 
   //create a new user
-    router.post("/users/register", userController.register);
+    router.post("/users/register",validate(UserSchema), userController.register);
 
-    router.post('/users/login', userController.login)
+    router.post("/users/import", userController.import);
+
+    router.post('/users/login', validate(loginSchema), userController.login)
 /* 
     router.post('/users/update/:id',verifyToken, userController.update)
 
