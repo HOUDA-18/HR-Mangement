@@ -263,4 +263,23 @@ exports.getRHMembers = async (req, res) => {
     }
 };
 
-
+exports.update= async (req,res)=>{
+  const { id } = req.params;
+  const { firstname, lastname, matricule, email} = req.body
+  try {
+      const updatedProfile = await User.findOneAndUpdate(
+        {_id:id},
+        { firstname, lastname, matricule, email},
+        { new: true, runValidators: true }
+      );
+  
+      if (!updatedProfile) {
+        return res.status(404).json({ message: 'Profile not found' });
+      }
+  
+      res.status(200).json({ message: 'Profile updated successfully', data: updatedProfile });
+    } catch (err) {
+      console.error('Error updating profile:', err);
+      res.status(500).json({ message: 'Error updating profile', error: err });
+    }
+};

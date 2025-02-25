@@ -118,6 +118,16 @@ export const routes = [
       },
       {
         exact: 'true',
+        path: '/app/dashboard/profile',
+        element: lazy(() => import('./views/profile/profilePage'))
+      },
+      {
+        exact: 'true',
+        path: '/app/dashboard/updateProfile',
+        element: lazy(() => import('./views/profile/updateProfile'))
+      },
+      {
+        exact: 'true',
         path: '/app/dashboard/hr-member',
         element: lazy(() => import('./views/hr-member'))
       }/* ,
