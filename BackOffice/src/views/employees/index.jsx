@@ -1,8 +1,8 @@
-import { Add, ArrowCircleUp, ArrowCircleUpRounded } from '@mui/icons-material';
+import { Add, ArrowCircleUp, ArrowCircleUpRounded, Clear, DeleteForever, EditNote, Info, ModeEdit } from '@mui/icons-material';
 import axios from 'axios';
 import ConfirmationAlert from 'components/confirmationAlert/confirmationAlert';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as XLSX from "xlsx";
 
 import "./index.scss"
@@ -16,7 +16,10 @@ const Employees = () => {
   const [uploadedUsers, setUploadedUsers] = useState([]);
   const [validatedData, setValidatedData] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
-  
+  const [showAlertDelete, setShowAlertDelete] = useState(false);
+
+  const navigate = useNavigate()
+
   const validateUsers = (data) => {
     return data.map((user, index) => {
       if (!user.Firstname || !user.Lastname || !user.Email || !user.Matricule || !user.Password) {
@@ -34,6 +37,7 @@ const Employees = () => {
 
   const handleCancel = ()=>{
     setShowAlert(false)
+    setShowAlertDelete(false)
 
   }
 
@@ -76,6 +80,23 @@ const Employees = () => {
       console.error("Error reading file:", error);
     };
   };
+
+  const  handleModifier= (id)=>{
+      
+    }
+
+
+    const  handleView= (id)=>{
+      navigate(`/app/dashboard/profile`)
+    }
+
+    const  handleDelete= ()=>{
+      setShowAlertDelete(true)
+    }
+
+    const handleDeleteEmployee= (id)=>{
+
+    }
 
   useEffect(() => {
   
@@ -150,6 +171,7 @@ const Employees = () => {
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Email</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Role</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Status</th>
+              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Actions</th>
 
             </tr>
           </thead>
@@ -160,7 +182,20 @@ const Employees = () => {
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.lastname}</td>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.email}</td>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.role}</td>
-                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.active}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.active? "active":"inactive"}</td>
+                <td>
+                  <div className="cellAction">
+                    <div className="viewButton" onClick={()=>handleView(emp._id)}>
+                      <Info/>
+                    </div>
+                    <div className="editButton" onClick={()=>handleModifier(emp._id)}>
+                        <EditNote />
+                      </div>
+                    <div className="deleteButton" onClick={()=>handleDelete(emp._id)}>
+                      <DeleteForever/>
+                    </div>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>
@@ -172,6 +207,14 @@ const Employees = () => {
                                     <ConfirmationAlert
                                     message="Are you sure to add this list of users?"
                                     onConfirm={()=>handleConfirm()}
+                                    onCancel={handleCancel}
+                                    />
+                                )}
+
+                      {showAlertDelete && (
+                                    <ConfirmationAlert
+                                    message="Are you sure to delete this employee?"
+                                    onConfirm={()=>handleDeleteEmployee()}
                                     onCancel={handleCancel}
                                     />
                                 )}

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import {
   MDBCol,
@@ -18,12 +18,17 @@ import {
 } from 'mdb-react-ui-kit';
 import { use } from 'react';
 export default function ProfilePage( ){
+  const navigate = useNavigate()
   const user = JSON.parse(localStorage.getItem("user")) || {
     firstName: "Utilisateur",
     lastName: "Inconnu",
     matricule: "N/A",
     email: "inconnu@example.com"
   };
+
+  const handleUpdate = ()=>{
+      navigate('/app/dashboard/updateProfile')
+  }
 
   return (
     <section style={{ backgroundColor: '#eee' }}>
@@ -112,7 +117,7 @@ export default function ProfilePage( ){
                   </MDBCol>
                 </MDBRow>
                 <div className="d-flex justify-content-center mb-2">
-                  <MDBBtn > <Link to="/app/dashboard/updateProfile">Update</Link> </MDBBtn>
+                  <MDBBtn onClick={handleUpdate}> Update</MDBBtn>
                 </div>
               </MDBCardBody>
             </MDBCard>

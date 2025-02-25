@@ -12,8 +12,8 @@ import { useNavigate } from 'react-router-dom';
 
 export default function UpdateProfile() {
   const [userData, setUserData] = useState({
-    firstName: '',
-    lastName: '',
+    firstname: '',
+    lastname: '',
     email: '',
     matricule: '',
   });
@@ -60,12 +60,12 @@ export default function UpdateProfile() {
   
     try {
       const compareUser={
-        firstName: user.firstname,
-        lastName: user.lastname,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
         matricule: user.matricule,
       }
-      if(JSON.stringify(compareUser) !== JSON.stringify(userData)){
+      if(JSON.stringify(compareUser) === JSON.stringify(userData)){
         const response = await axios.put(
           `http://localhost:8070/api/users/update/${userId}`,
           userData
@@ -73,7 +73,7 @@ export default function UpdateProfile() {
     
         if (response.status === 200) {
           console.log("Profil mis à jour avec succès :", response.data);
-          localStorage.setItem("user", JSON.stringify(response.data)); // Mettre à jour localStorage
+          localStorage.setItem("user", JSON.stringify(response.data.data)); // Mettre à jour localStorage
         }
       }else{
           setErrors("Nothing to change")
@@ -93,7 +93,7 @@ export default function UpdateProfile() {
           <MDBCardText>First Name</MDBCardText>
         </MDBCol>
         <MDBCol sm="9">
-          <MDBInput type="text" name="firstName" value={userData.firstname} onChange={handleChange} />
+          <MDBInput type="text" name="firstname" value={userData.firstname} onChange={handleChange} />
         </MDBCol>
       </MDBRow>
       <hr />
@@ -102,7 +102,7 @@ export default function UpdateProfile() {
           <MDBCardText>Last Name</MDBCardText>
         </MDBCol>
         <MDBCol sm="9">
-          <MDBInput type="text" name="lastName" value={userData.lastname} onChange={handleChange} />
+          <MDBInput type="text" name="lastname" value={userData.lastname} onChange={handleChange} />
         </MDBCol>
       </MDBRow>
       <hr />

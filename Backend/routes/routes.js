@@ -16,6 +16,9 @@ module.exports= app =>{
 
     router.post('/users/login', validate(loginSchema), userController.login);
 
+    //update user
+    router.put("/users/update/:id", userController.update);
+
     //reset password
     router.post('/users/forget-password', userController.forgetPassword);
 

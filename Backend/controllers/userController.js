@@ -79,11 +79,10 @@ exports.import= async (req,res)=>{
 
       for (let user of users) {     
 
-/*         const existingUser = await User.findOne({ 
+         const existingUser = await User.findOne({ 
             $or: [{ email: user.email }, { matricule: user.matricule }]
           });
-        if (!existingUser) { */
-            // Hash password before saving
+        if (!existingUser) { 
     
             usersToInsert.push({
               firstname: user.firstname.trim(),
@@ -94,7 +93,7 @@ exports.import= async (req,res)=>{
               active: false,
               role: roles.EMPLOYEE
             });
-       //   }
+         }
       }
 
       if(usersToInsert.length >0){
