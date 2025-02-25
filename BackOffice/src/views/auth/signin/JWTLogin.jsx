@@ -44,7 +44,8 @@ const JWTLogin = () => {
               name="matricule"
               onBlur={handleBlur}
               onChange={handleChange}
-              type="matricule"
+              type="text"
+              placeholder='Enter matricule'
               value={values.matricule}
             />
             {touched.matricule && errors.matricule && <small className="text-danger form-text">{errors.matricule}</small>}
@@ -57,6 +58,7 @@ const JWTLogin = () => {
               onBlur={handleBlur}
               onChange={handleChange}
               type="password"
+              placeholder='Enter password'
               value={values.password}
             />
             {touched.password && errors.password && <small className="text-danger form-text">{errors.password}</small>}

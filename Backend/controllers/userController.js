@@ -71,23 +71,18 @@ exports.import= async (req,res)=>{
     //const { firstname, lastname, matricule, email, password} = req.body
     const users= req.body
     const usersToInsert=[]
+    
 
     if (!Array.isArray(users) || users.length === 0) {
         return res.status(400).json({ error: "Invalid data format" });
       }
 
-      for (let user of users) {
-        if (await User.findOne({matricule: user.matricule}) || await User.findOne({email: user.email})) {
-            users.filter((u)=>u.email!==user.email)
-            break;
-        }
-        user.password= (await bcrypt.hash(user.password, 10)).toString()
-        
+      for (let user of users) {     
 
-        const existingUser = await User.findOne({ 
+/*         const existingUser = await User.findOne({ 
             $or: [{ email: user.email }, { matricule: user.matricule }]
           });
-        if (!existingUser) {
+        if (!existingUser) { */
             // Hash password before saving
     
             usersToInsert.push({
@@ -99,11 +94,13 @@ exports.import= async (req,res)=>{
               active: false,
               role: roles.EMPLOYEE
             });
-          }
+       //   }
       }
+
       if(usersToInsert.length >0){
-        await User.insertMany(users);
-        res.json({ message: "Users imported successfully" });
+        await User.insertMany(usersToInsert);
+        res.json({ message: "Users imported successfully",
+                   users: usersToInsert });
       }else{
         res.json({ message: "Nothing to import" });
 
@@ -149,7 +146,7 @@ exports.import= async (req,res)=>{
               from: "webdesignwalah@gmail.com",
               to: email,
               subject: "Password Reset Request",
-              text: `Click on this link to generate your new password ${process.env.CLIENT_URL}/${token}`,
+              html: `Click on <a href="${process.env.CLIENT_URL}/${token}">this link</a> to generate your new password.`,
             };
         
             await transporter.sendMail(receiver);
@@ -238,7 +235,7 @@ exports.import= async (req,res)=>{
 exports.getEmployees = async (req, res) => {
     try {
     
-        const employees = await User.find({ role: 'EMPLOYEE' }, ' firstname lastname mail ');
+        const employees = await User.find({ role: 'EMPLOYEE' }, ' firstname lastname email role active');
         
         res.status(200).json(employees);
     } catch (err) {
@@ -249,7 +246,7 @@ exports.getEmployees = async (req, res) => {
 exports.getUsers = async (req, res) => {
     try {
     
-        const users = await User.find({  },  'firstname lastname mail role  statut');
+        const users = await User.find({  },  'firstname lastname email role  active');
         
         res.status(200).json(users);
     } catch (err) {

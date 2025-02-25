@@ -42,9 +42,10 @@ const Employees = () => {
       console.log(uploadedUsers)
       const respone = await axios.post("http://localhost:8070/api/users/import", validatedData);
       setShowAlert(false);
-      alert(JSON.stringify(respone));
+      alert(JSON.stringify(respone.data));
+      setEmployees([...employees, ...respone.data])
       setValidatedData([]);
-      console.log('Confirmed');
+      console.log("employees",employees);
     } catch (error) {
       console.log(error)
     }
@@ -78,7 +79,7 @@ const Employees = () => {
 
   useEffect(() => {
   
-    fetch("http://localhost:5000/api/employees")
+    fetch("http://localhost:8070/api/employees")
       .then((res) => {
         console.log("Réponse du serveur :", res);
         return res.json();
@@ -111,9 +112,8 @@ const Employees = () => {
                 <div className="file-upload">
                   <ArrowCircleUp className="upload-icon" />
                   <span>Upload users from excel file</span>
-                  <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
+                  <input type="file" accept=".xlsx, .xls" onChange={()=>handleFileUpload()} />
                 </div>
-                <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
           </div>
 
       </div>
@@ -121,7 +121,7 @@ const Employees = () => {
         
 
       <div style={{ 
-      flex: 1,
+      flex: 2,
       padding: '20px',
       backgroundColor: '#ffffff',
       borderRadius: '8px',
@@ -148,6 +148,8 @@ const Employees = () => {
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>FirstName</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>LastName</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Email</th>
+              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Role</th>
+              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Status</th>
 
             </tr>
           </thead>
@@ -156,7 +158,9 @@ const Employees = () => {
               <tr key={emp._id} style={{ borderBottom: '1px solid #dddddd' }}>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.firstname}</td>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.lastname}</td>
-                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.mail}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.email}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.role}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.active}</td>
               </tr>
             ))}
           </tbody>

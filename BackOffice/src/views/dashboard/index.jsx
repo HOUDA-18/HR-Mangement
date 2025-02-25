@@ -1,4 +1,4 @@
-import React ,{ useState } from 'react';
+import React ,{ useEffect, useState } from 'react';
 import '/src/index.scss';
 import axios from 'axios';
 
@@ -34,13 +34,19 @@ const DashAnalytics = () => {
   const [sortOrder, setSortOrder] = useState('asc');
   const fetchUsers = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/users'); 
+      const response = await axios.get('http://localhost:8070/api/users'); 
       setUsers(response.data);
+      console.log(response.data)
       setShowUsers(!showUsers); 
     } catch (error) {
       console.error('Error fetching users:', error);
     }
   };
+  useEffect(()=>{
+
+    fetchUsers(); 
+  },[])
+ 
    // Sorting handler
    const handleSort = (column) => {
     if (sortBy === column) {
@@ -84,7 +90,44 @@ const DashAnalytics = () => {
           </div>
         </Col>
          {/* Tableau des utilisateurs */}
-         {showUsers && (
+
+        <Col md={6} xl={3}>
+          <OrderCard
+            params={{
+              title: 'Active Offers',
+              class: 'bg-c-green',
+              icon: 'feather icon-tag',
+              primaryText: '',
+              secondaryText: '',
+              extraText: ''
+            }}
+          />
+        </Col>
+        <Col md={6} xl={3}>
+          <OrderCard
+            params={{
+              title: 'Departements',
+              class: 'bg-c-yellow',
+              icon: 'feather icon-server',
+              primaryText: '',
+              secondaryText: '',
+              extraText: ''
+            }}
+          />
+        </Col>
+        <Col md={6} xl={3}>
+          <OrderCard
+            params={{
+              title: 'Attendance',
+              class: 'bg-c-red',
+              icon: 'feather icon-check-circle',
+              primaryText: '',
+              secondaryText: '',
+              extraText: ''
+            }}
+          />
+        </Col>
+        {showUsers && (
   <Col sm={12}>
    <Card className="mt-4">
               <Card.Header className="d-flex justify-content-between align-items-center">
@@ -160,13 +203,13 @@ const DashAnalytics = () => {
                         <tr key={index}>
                           <td className="align-middle">{user.firstname}</td>
                           <td className="align-middle">{user.lastname}</td>
-                          <td className="align-middle">{user.mail}</td>
+                          <td className="align-middle">{user.email}</td>
                           <td className="align-middle text-capitalize">{user.role}</td>
                           <td className="align-middle">
   <div 
   
     className= {`status-indicator ${
-      user.statut === 'active' ? 'active' : 'inactive'
+      user.active ? 'active' : 'inactive'
     }`}
 
     style={{
@@ -178,16 +221,16 @@ const DashAnalytics = () => {
       fontSize: '0.85rem',
       fontWeight: 600, // Augmentation du poids de la police
       transition: 'all 0.3s ease',
-      backgroundColor: user.statut === 'active' 
+      backgroundColor: user.active
         ? 'rgba(40, 167, 69, 0.15)' 
         : 'rgba(220, 53, 69, 0.1)', // Rouge plus visible pour inactive
-      color: user.statut === 'active' 
+      color: user.active
         ? '#28a745' 
         : '#dc3545', // Couleur rouge pour inactive
       border: `2px solid ${
-        user.statut === 'active' ? '#28a745' : 'rgba(220, 53, 69, 0.3)'
+        user.active  ? '#28a745' : 'rgba(220, 53, 69, 0.3)'
       }`,
-      boxShadow: user.statut === 'active' 
+      boxShadow: user.active
         ? '0 2px 12px rgba(40, 167, 69, 0.25)' 
         : '0 2px 8px rgba(220, 53, 69, 0.15)',
       position: 'relative',
@@ -202,7 +245,7 @@ const DashAnalytics = () => {
         left: '-50%',
         width: '200%',
         height: '200%',
-        background: user.statut === 'active' 
+        background: user.active 
           ? 'radial-gradient(circle, rgba(40,167,69,0.15) 0%, transparent 60%)' 
           : 'radial-gradient(circle, rgba(220,53,69,0.1) 0%, transparent 60%)',
         pointerEvents: 'none'
@@ -216,17 +259,17 @@ const DashAnalytics = () => {
         height: '10px',
         borderRadius: '50%',
         marginRight: '8px',
-        backgroundColor: user.statut=== 'active' 
+        backgroundColor: user.active 
           ? '#28a745' 
           : '#dc3545', // Rouge vif pour inactive
-        boxShadow: user.statut === 'active' 
+        boxShadow: user.active 
           ? '0 0 8px rgba(40, 167, 69, 0.4)' 
           : '0 0 6px rgba(220, 53, 69, 0.3)',
         transform: 'translateZ(0)',
         position: 'relative'
       }}
     />
-    {user.statut === 'active' ? 'Active' : 'Inactive'}
+    {user.active ? 'Active' : 'Inactive'}
   </div>
 </td>
                 </tr>
@@ -238,43 +281,6 @@ const DashAnalytics = () => {
     </Card>
   </Col>
 )}
-
-        <Col md={6} xl={3}>
-          <OrderCard
-            params={{
-              title: 'Active Offers',
-              class: 'bg-c-green',
-              icon: 'feather icon-tag',
-              primaryText: '',
-              secondaryText: '',
-              extraText: ''
-            }}
-          />
-        </Col>
-        <Col md={6} xl={3}>
-          <OrderCard
-            params={{
-              title: 'Departements',
-              class: 'bg-c-yellow',
-              icon: 'feather icon-server',
-              primaryText: '',
-              secondaryText: '',
-              extraText: ''
-            }}
-          />
-        </Col>
-        <Col md={6} xl={3}>
-          <OrderCard
-            params={{
-              title: 'Attendance',
-              class: 'bg-c-red',
-              icon: 'feather icon-check-circle',
-              primaryText: '',
-              secondaryText: '',
-              extraText: ''
-            }}
-          />
-        </Col>
 
         <Col md={12} xl={6}>
           <Card>

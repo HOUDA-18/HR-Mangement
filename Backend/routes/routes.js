@@ -5,6 +5,10 @@ module.exports= app =>{
     const validate = require('../middelwares/validate')
     var router = require("express").Router();
 
+    //get all users
+    router.get('/employees', userController.getEmployees);
+    router.get('/users', userController.getUsers);
+
   //create a new user
     router.post("/users/register",validate(UserSchema), userController.register);
 
