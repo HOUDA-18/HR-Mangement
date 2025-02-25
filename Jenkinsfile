@@ -11,13 +11,15 @@ pipeline {
                         }
                     }
                 }
+                
                 stage('Fix Permissions') {
-      steps {
-        dir('Backend') {
-          sh 'chmod +x node_modules/.bin/mocha'
-        }
-      }
-    }
+                    steps {
+                        dir('Backend') {
+                            sh 'chmod +x node_modules/.bin/mocha'
+                        }
+                    }
+                }
+
                 stage('Backend: Unit Test') {
                     steps {
                         dir('Backend') {
@@ -25,43 +27,30 @@ pipeline {
                         }
                     }
                 }
-            stage('SonarQube Analysis') {
-   stage('SonarQube Analysis') {
-    steps {
-        dir('backend') {
-            script {
-                // 1. Installer le scanner
-                def scannerHome = tool name: 'sonarqube-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                
-                // 2. Exécuter l'analyse
-                withSonarQubeEnv('SonarQube Server') {
-                    sh """
-                        ${scannerHome}/bin/sonar-scanner \
-                        -Dproject.settings=./sonar-project.properties \
-                        -Dsonar.working.directory=.scannerwork
-                    """
+
+                stage('SonarQube Analysis') {
+                    steps {
+                        dir('Backend') {
+                            script {
+                                def scannerHome = tool name: 'sonarqube-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                                withSonarQubeEnv('SonarQube Server') {
+                                    sh """
+                                        ${scannerHome}/bin/sonar-scanner \
+                                        -Dproject.settings=./sonar-project.properties \
+                                        -Dsonar.working.directory=.scannerwork
+                                    """
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
-    }
-}
-    
-}
-             /*   stage('Backend: Build') {
-                    steps {
-                        dir('Backend') {
-                            sh 'npm run build-dev'
-                        }
-                    }
-                }*/
-            }
-        }
 
-        //  les étapes pour FrontOffice et BackOffice
+        // Les étapes pour FrontOffice et BackOffice (commentées)
         /*
         stage('Build All Components') {
             parallel {
-                // FrontOffice Pipeline
                 stage('FrontOffice') {
                     stages {
                         stage('FrontOffice: Install Dependencies') {
@@ -88,7 +77,6 @@ pipeline {
                     }
                 }
 
-                // BackOffice Pipeline
                 stage('BackOffice') {
                     stages {
                         stage('BackOffice: Install Dependencies') {
