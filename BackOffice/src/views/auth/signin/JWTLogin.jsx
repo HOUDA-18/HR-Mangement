@@ -42,6 +42,7 @@ const JWTLogin = () => {
               className="form-control"
               label="Matricule"
               name="matricule"
+              placeholder='Matricule'
               onBlur={handleBlur}
               onChange={handleChange}
               type="matricule"
@@ -54,6 +55,7 @@ const JWTLogin = () => {
               className="form-control"
               label="Password"
               name="password"
+              placeholder='Password'
               onBlur={handleBlur}
               onChange={handleChange}
               type="password"

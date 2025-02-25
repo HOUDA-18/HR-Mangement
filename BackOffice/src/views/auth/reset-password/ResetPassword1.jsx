@@ -41,7 +41,7 @@ const ResetPassword1 = () => {
       <Breadcrumb />
       <div className="auth-wrapper">
         <div className="auth-content text-center">
-          <Card className="borderless">
+          <Card className="login-card borderless">
             <Row className="align-items-center text-center">
               <Col>
                 <Card.Body className="card-body">
