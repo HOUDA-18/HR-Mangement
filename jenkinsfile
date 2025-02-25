@@ -30,6 +30,61 @@ pipeline {
                         }
                     }
                 }
-}
 
-             
+                // FrontOffice Pipeline
+                stage('FrontOffice') {
+                    stages {
+                        stage('FrontOffice: Install Dependencies') {
+                            steps {
+                                dir('FrontOffice') {
+                                    sh 'npm install'
+                                }
+                            }
+                        }
+                        stage('FrontOffice: Unit Test') {
+                            steps {
+                                dir('FrontOffice') {
+                                    sh 'npm test'
+                                }
+                            }
+                        }
+                        stage('FrontOffice: Build') {
+                            steps {
+                                dir('FrontOffice') {
+                                    sh 'npm run build-dev'
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // BackOffice Pipeline
+                stage('BackOffice') {
+                    stages {
+                        stage('BackOffice: Install Dependencies') {
+                            steps {
+                                dir('BackOffice') {
+                                    sh 'npm install'
+                                }
+                            }
+                        }
+                        stage('BackOffice: Unit Test') {
+                            steps {
+                                dir('BackOffice') {
+                                    sh 'npm test'
+                                }
+                            }
+                        }
+                        stage('BackOffice: Build') {
+                            steps {
+                                dir('BackOffice') {
+                                    sh 'npm run build-dev'
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
