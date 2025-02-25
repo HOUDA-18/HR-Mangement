@@ -25,6 +25,18 @@ pipeline {
                         }
                     }
                 }
+            stage('SonarQube Analysis') {
+    steps {
+        dir('backend') { 
+            script {
+                def scannerHome = tool 'scanner'
+                withSonarQubeEnv('SonarQube Server') { 
+                    sh "${scannerHome}/bin/sonar-scanner"
+                }
+            }
+        }
+    }
+}
              /*   stage('Backend: Build') {
                     steps {
                         dir('Backend') {
