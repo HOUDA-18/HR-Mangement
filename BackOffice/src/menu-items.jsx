@@ -1,4 +1,4 @@
-//roles : ['superadmin','chefdepartement','membrerh','adminrh','employee'] 'dev'
+//roles : ['SUPER_ADMIN','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR','EMPLOYEE'] 'dev'
 const menuItems = {
   items: [
     {
@@ -13,7 +13,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-home',
           url: '/app/dashboard/analytics',
-          roles: ['admin','superadmin','chefdepartement','membrerh','adminrh','employee','dev']
+          roles: ['admin','SUPER_ADMIN','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR','EMPLOYEE','dev']
         },
         {
           id: 'departements',
@@ -21,7 +21,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-server',
           url: '/app/dashboard/departements',
-          roles: ['superadmin','dev']
+          roles: ['SUPER_ADMIN','dev']
         }
       ]
     },
@@ -37,16 +37,16 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-user',
           url: '/app/dashboard/hr-member',
-          roles: ['superadmin','dev']
+          roles: ['SUPER_ADMIN','dev']
         },
         ,
         {
-          id: 'Employees',
+          id: 'employees',
           title: 'Employees',
           type: 'item',
           icon: 'feather icon-users',
           url: '/app/dashboard/employees',
-          roles: ['superadmin','dev']
+          roles: ['SUPER_ADMIN','dev']
         }
       ]
     },
@@ -62,7 +62,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-bookmark',
           url: '/app/dashboard/leaves',
-          roles: ['superadmin','chefdepartement','employee','dev']
+          roles: ['SUPER_ADMIN','HEAD_DEPARTEMENT','EMPLOYEE','dev']
         },
         {
           id: 'Attendance',
@@ -70,7 +70,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-check-circle',
           url: '/app/dashboard/attendance',
-          roles: ['superadmin','chefdepartement','employee','dev']
+          roles: ['SUPER_ADMIN','HEAD_DEPARTEMENT','EMPLOYEE','dev']
         }
       ]
     },
@@ -86,7 +86,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-briefcase',
           url: '/app/dashboard/workshops',
-          roles: ['superadmin','chefdepartement','adminrh','employee','dev']
+          roles: ['SUPER_ADMIN','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','dev']
         },
         {
           id: 'Events',
@@ -94,7 +94,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-calendar',
           url: '/app/dashboard/events',
-          roles: ['superadmin','chefdepartement','adminrh','employee','dev']
+          roles: ['SUPER_ADMIN','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','dev']
         }
         ,
         {
@@ -103,7 +103,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-file-plus',
           url: '/app/dashboard/offers',
-          roles: ['superadmin','chefdepartement','membrerh','adminrh','employee','dev']
+          roles: ['SUPER_ADMIN','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR','EMPLOYEE','dev']
         }
       ]
     },
@@ -119,7 +119,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-message-circle',
           url: '/app/dashboard/chat-rooms',
-          roles: ['superadmin','adminrh','employee','dev']
+          roles: ['SUPER_ADMIN','ADMIN_HR','EMPLOYEE','dev']
         },
         {
           id: 'Complaints',
@@ -127,7 +127,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-message-square',
           url: '/app/dashboard/complaints',
-          roles: ['superadmin','adminrh','employee','dev']
+          roles: ['SUPER_ADMIN','ADMIN_HR','EMPLOYEE','dev']
         }
       ]
     },
