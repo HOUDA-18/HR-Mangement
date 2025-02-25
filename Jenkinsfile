@@ -26,15 +26,25 @@ pipeline {
                     }
                 }
             stage('SonarQube Analysis') {
+   stage('SonarQube Analysis') {
     steps {
-        dir('backend') { 
+        dir('backend') {
             script {
-                def scannerHome = tool 'scanner'
-                withSonarQubeEnv('scanner') { 
-                    sh "${scannerHome}/bin/sonar-scanner"
+                // 1. Installer le scanner
+                def scannerHome = tool name: 'sonarqube-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                
+                // 2. Exécuter l'analyse
+                withSonarQubeEnv('SonarQube Server') {
+                    sh """
+                        ${scannerHome}/bin/sonar-scanner \
+                        -Dproject.settings=./sonar-project.properties \
+                        -Dsonar.working.directory=.scannerwork
+                    """
                 }
             }
         }
+    }
+}
     }
 }
              /*   stage('Backend: Build') {
