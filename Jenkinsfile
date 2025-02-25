@@ -18,13 +18,13 @@ pipeline {
                         }
                     }
                 }
-                stage('Backend: Build') {
+             /*   stage('Backend: Build') {
                     steps {
                         dir('Backend') {
                             sh 'npm run build-dev'
                         }
                     }
-                }
+                }*/
             }
         }
 
