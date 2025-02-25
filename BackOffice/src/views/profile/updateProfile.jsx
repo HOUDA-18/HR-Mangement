@@ -8,10 +8,13 @@ import {
   MDBBtn,
   MDBInput,
 } from 'mdb-react-ui-kit';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { isEqual } from "lodash";
 
 export default function UpdateProfile() {
+  const [initialUser, setInitialUser] = useState({})
   const [userData, setUserData] = useState({
+    _id:'',
     firstname: '',
     lastname: '',
     email: '',
@@ -21,12 +24,14 @@ export default function UpdateProfile() {
   const navigate= useNavigate()
 
   const [errors, setErrors]=useState('')
+  const location = useLocation();
 
   // Charger les données depuis localStorage au montage du composant
   useEffect(() => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = location.state?.values || JSON.parse(localStorage.getItem('user'));
     if (storedUser) {
-      setUserData(JSON.parse(storedUser));
+      setInitialUser(storedUser);
+      setUserData(storedUser);
     }
   }, []);
 
@@ -39,41 +44,34 @@ export default function UpdateProfile() {
   };
 
   const onCancel = ()=>{
-    navigate('/app/dashboard/profile')
+    navigate('/app/dashboard/profile', {state:{values: userData}})
   }
 
   // Sauvegarder les modifications
   const handleSave = async () => {
     event.preventDefault()
-    // Récupérer l'objet utilisateur depuis localStorage
-    const storedUser = localStorage.getItem("user");
-  
-    if (!storedUser) {
-      console.error("Erreur : Aucun utilisateur trouvé dans localStorage !");
-      return;
-    }
-  
-    const user = JSON.parse(storedUser); // Convertir en objet JS
-    const userId = user._id; // Extraire l'ID
     
-    console.log("ID récupéré de localStorage :", userId);
   
     try {
-      const compareUser={
-        firstname: user.firstname,
-        lastname: user.lastname,
-        email: user.email,
-        matricule: user.matricule,
-      }
-      if(JSON.stringify(compareUser) === JSON.stringify(userData)){
+      
+      if(!isEqual(userData, initialUser)){
+        setErrors("")
+
+
         const response = await axios.put(
-          `http://localhost:8070/api/users/update/${userId}`,
+          `http://localhost:8070/api/users/update/${userData._id}`,
           userData
         );
     
         if (response.status === 200) {
           console.log("Profil mis à jour avec succès :", response.data);
-          localStorage.setItem("user", JSON.stringify(response.data.data)); // Mettre à jour localStorage
+          if(isEqual(JSON.parse(localStorage.getItem('user')), initialUser)){
+            localStorage.setItem("user", JSON.stringify(response.data.data)); // Mettre à jour localStorage
+            navigate('/app/dashboard/profile')
+          }else{
+            navigate('/app/dashboard/employees')
+          }
+
         }
       }else{
           setErrors("Nothing to change")

@@ -17,6 +17,7 @@ const Employees = () => {
   const [validatedData, setValidatedData] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [showAlertDelete, setShowAlertDelete] = useState(false);
+  const [deleteId, setDeleteId]= useState('')
 
   const navigate = useNavigate()
 
@@ -81,22 +82,33 @@ const Employees = () => {
     };
   };
 
-  const  handleModifier= (id)=>{
-      
+  const  handleModifier= (emp)=>{
+      navigate('/app/dashboard/updateProfile',{state:{ values: emp}})
+
     }
 
 
-    const  handleView= (id)=>{
-      navigate(`/app/dashboard/profile`)
+    const  handleView= (emp)=>{
+      navigate(`/app/dashboard/profile`,{state:{ values: emp}})
     }
 
-    const  handleDelete= ()=>{
+    const  handleDelete= (id)=>{
       setShowAlertDelete(true)
+      setDeleteId(id)
     }
 
-    const handleDeleteEmployee= (id)=>{
-
-    }
+    const handleDeleteEmployee= async(id)=>{
+        try {
+          setEmployees(employees.filter((emp)=>emp._id!=id))
+          const response = await axios.delete(`http://localhost:8070/api/users/delete/${id}`);
+          console.log('User deleted:', response.data);
+          // Refresh the list of users after deletion
+          setShowAlertDelete(false)
+        } catch (error) {
+          console.error('Error deleting user:', error);
+        }
+      
+    };
 
   useEffect(() => {
   
@@ -182,13 +194,61 @@ const Employees = () => {
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.lastname}</td>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.email}</td>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.role}</td>
-                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{emp.active? "active":"inactive"}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>
+                  <div 
+                      
+                      className= {`status-indicator ${
+                        emp.active ? 'active' : 'inactive'
+                      }`}
+
+                      style={{
+                        display: 'inline-block',
+                      
+                        width: '90px',
+                        padding: '8px 12px',
+                        borderRadius: '20px',
+                        fontSize: '0.85rem',
+                        fontWeight: 600, // Augmentation du poids de la police
+                        transition: 'all 0.3s ease',
+                        backgroundColor: emp.active
+                          ? 'rgba(40, 167, 69, 0.15)' 
+                          : 'rgba(220, 53, 69, 0.1)', // Rouge plus visible pour inactive
+                        color: emp.active
+                          ? '#28a745' 
+                          : '#dc3545', // Couleur rouge pour inactive
+                        border: `2px solid ${
+                          emp.active  ? '#28a745' : 'rgba(220, 53, 69, 0.3)'
+                        }`,
+                        boxShadow: emp.active
+                          ? '0 2px 12px rgba(40, 167, 69, 0.25)' 
+                          : '0 2px 8px rgba(220, 53, 69, 0.15)',
+                        position: 'relative',
+                        overflow: 'hidden'
+                      }}
+                    >
+                      <span 
+                        className="status-glow"
+                        style={{
+                          position: 'absolute',
+                          top: '-50%',
+                          left: '-50%',
+                          width: '200%',
+                          height: '200%',
+                          background: emp.active 
+                            ? 'radial-gradient(circle, rgba(40,167,69,0.15) 0%, transparent 60%)' 
+                            : 'radial-gradient(circle, rgba(220,53,69,0.1) 0%, transparent 60%)',
+                          pointerEvents: 'none'
+                        }}
+                      />
+                      {emp.active ? 'Active' : 'Inactive'}
+                    </div>
+                </td>
                 <td>
                   <div className="cellAction">
-                    <div className="viewButton" onClick={()=>handleView(emp._id)}>
+                    <div className="viewButton" onClick={()=>handleView(emp)}>
                       <Info/>
                     </div>
-                    <div className="editButton" onClick={()=>handleModifier(emp._id)}>
+                    <div className="editButton" onClick={()=>handleModifier(emp)}>
                         <EditNote />
                       </div>
                     <div className="deleteButton" onClick={()=>handleDelete(emp._id)}>
@@ -214,7 +274,7 @@ const Employees = () => {
                       {showAlertDelete && (
                                     <ConfirmationAlert
                                     message="Are you sure to delete this employee?"
-                                    onConfirm={()=>handleDeleteEmployee()}
+                                    onConfirm={()=>handleDeleteEmployee(deleteId)}
                                     onCancel={handleCancel}
                                     />
                                 )}

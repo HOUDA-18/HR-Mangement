@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 import {
   MDBCol,
@@ -16,18 +16,20 @@ import {
   MDBProgress,
   MDBProgressBar,
 } from 'mdb-react-ui-kit';
-import { use } from 'react';
 export default function ProfilePage( ){
   const navigate = useNavigate()
-  const user = JSON.parse(localStorage.getItem("user")) || {
+  const location = useLocation();
+
+  const user = location.state?.values || JSON.parse(localStorage.getItem("user")) || {
     firstName: "Utilisateur",
     lastName: "Inconnu",
     matricule: "N/A",
     email: "inconnu@example.com"
   };
 
+
   const handleUpdate = ()=>{
-      navigate('/app/dashboard/updateProfile')
+      navigate('/app/dashboard/updateProfile',{state:{ values: user}})
   }
 
   return (
