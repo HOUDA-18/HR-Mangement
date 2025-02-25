@@ -32,8 +32,8 @@ pipeline {
                     steps {
                         dir('Backend') {
                             script {
-                                def scannerHome = tool name: 'sonarqube-scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
-                                withSonarQubeEnv('SonarQube Server') {
+                                def scannerHome = tool name: 'scanner', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
+                                withSonarQubeEnv('scanner') {
                                     sh """
                                         ${scannerHome}/bin/sonar-scanner \
                                         -Dproject.settings=./sonar-project.properties \
