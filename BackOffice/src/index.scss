@@ -198,3 +198,97 @@ td {
     }
   }
 }
+
+.status-indicator {
+  position: relative;
+  overflow: hidden;
+  backface-visibility: hidden;
+}
+
+.status-indicator.active {
+  animation: pulse-active 1.5s infinite;
+}
+
+.status-indicator.inactive {
+  animation: pulse-inactive 2s infinite;
+}
+
+@keyframes pulse-active {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pulse-inactive {
+  0% { opacity: 0.9; }
+  50% { opacity: 1; }
+  100% { opacity: 0.9; }
+}
+
+/* Animation d'entrée */
+@keyframes titleEntrance {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.title-decoration {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 4em;
+  font-weight: 900;
+  color: rgba(45, 55, 72, 0.03);
+  content: "USERS";
+  pointer-events: none;
+  z-index: 0;
+}
+
+.Card.Title {
+  animation: titleEntrance 0.6s ease-out;
+}
+
+.Card.Title span {
+  position: relative;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.Card.Title:hover span {
+  color: #4a5568;
+}
+
+.Card.Title:hover .title-decoration {
+  color: rgba(45, 55, 72, 0.05);
+}
+
+.feather.icon-users {
+  transition: transform 0.3s ease;
+}
+
+.Card.Title:hover .feather.icon-users {
+  transform: rotate(-15deg) scale(1.1);
+}
+.active-sort {
+  background-color: #f8f9fa;
+  border-bottom: 2px solid #0d6efd !important;
+}
+
+.custom-status-table th {
+  transition: all 0.2s ease;
+  border-bottom: 2px solid transparent;
+}
+
+.custom-status-table th:hover {
+  background-color: #f8f9fa;
+}
+
+.form-control:focus, .form-select:focus {
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
+}

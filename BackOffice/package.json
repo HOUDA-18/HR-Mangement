@@ -10,9 +10,14 @@
     "prettier": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\""
   },
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/icons-material": "^6.4.5",
+    "@mui/material": "^6.4.5",
     "@tanem/react-nprogress": "^5.0.51",
-    "@vitejs/plugin-react": "^4.2.1",
+    "@vitejs/plugin-react": "^1.3.2",
     "apexcharts": "^3.49.0",
+    "axios": "^1.7.9",
     "bootstrap": "^5.3.3",
     "formik": "^2.4.6",
     "react": "18.2.0",
@@ -26,6 +31,7 @@
     "vite": "^5.2.11",
     "vite-jsconfig-paths": "^2.0.1",
     "web-vitals": "^3.5.2",
+    "xlsx": "^0.18.5",
     "yup": "^1.4.0"
   },
   "resolutions": {
