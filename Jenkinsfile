@@ -11,6 +11,13 @@ pipeline {
                         }
                     }
                 }
+                stage('Fix Permissions') {
+      steps {
+        dir('Backend') {
+          sh 'chmod +x node_modules/.bin/mocha'
+        }
+      }
+    }
                 stage('Backend: Unit Test') {
                     steps {
                         dir('Backend') {
