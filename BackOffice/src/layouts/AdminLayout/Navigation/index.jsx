@@ -8,6 +8,7 @@ import NavContent from './NavContent';
 import navigation from '../../../menu-items';
 
 // ==============================|| NAVIGATION ||============================== //
+const user = JSON.parse(localStorage.getItem("user"));      // Retrieve user info
 
 const Navigation = () => {
   const configContext = useContext(ConfigContext);
@@ -28,16 +29,48 @@ const Navigation = () => {
     navClass = [...navClass, 'navbar-collapsed'];
   }
 
+// Function to filter menu items based on role
+const filterMenuItems = (items) => {
+  // Ensure user and user.role exist
+  if (!user || !user.role) {
+    return [];
+  }
+  
+  return items
+    .map((group) => {
+      const filteredChildren = group.children
+        ? group.children.filter((item) => {
+            // Check if item.roles exists and is an array
+            if (Array.isArray(item.roles)) {
+              return item.roles.includes(user.role);
+            }
+            return false;
+          })
+        : [];
+      return { ...group, children: filteredChildren };
+    })
+    .filter((group) => group.children.length > 0);
+};
+
+
+
+// Apply filtering
+const filteredNavigation = filterMenuItems(navigation.items);
+
+
+
   let navBarClass = ['navbar-wrapper'];
   let navContent = (
     <div className={navBarClass.join(' ')}>
-      <NavContent navigation={navigation.items} />
+      <NavContent navigation={filteredNavigation} />
     </div>
   );
+
+
   if (windowSize.width < 992) {
     navContent = (
       <div className="navbar-wrapper">
-        <NavContent navigation={navigation.items} />
+        <NavContent navigation={filteredNavigation} />
       </div>
     );
   }
