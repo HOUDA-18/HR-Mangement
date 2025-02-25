@@ -130,12 +130,12 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/hr-member',
         element: lazy(() => import('./views/hr-member'))
-      }/* ,
+      } ,
       {
         exact: 'true',
         path: '/basic/button',
         element: lazy(() => import('./views/ui-elements/BasicButton'))
-      },
+      },/*
       {
         exact: 'true',
         path: '/basic/badges',

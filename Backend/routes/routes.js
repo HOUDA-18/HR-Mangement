@@ -23,6 +23,9 @@ module.exports= app =>{
 
     router.post('/users/change-password', userController.changePassword);
 
+    //delete user
+    router.delete('/users/:id', userController.deleteUser);
+
 /* 
 
 

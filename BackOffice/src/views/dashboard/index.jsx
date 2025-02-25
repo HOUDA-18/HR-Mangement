@@ -56,7 +56,17 @@ const DashAnalytics = () => {
       setSortOrder('asc');
     }
   };
-
+  const deleteUser = async (userId) => {
+    try {
+      const response = await axios.delete(`http://localhost:8070/api/users/${userId}`);
+      console.log('User deleted:', response.data);
+      // Refresh the list of users after deletion
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting user:', error);
+    }
+  };
+  
   // Filter and sort users
   const filteredUsers = users
     .filter(user =>
@@ -181,7 +191,7 @@ const DashAnalytics = () => {
                   <Table responsive hover className="custom-status-table">
                     <thead className="bg-light">
                       <tr>
-                        {['firstname','lastname', 'mail', 'role', 'statut'].map((column) => (
+                        {['firstname','lastname', 'mail', 'role', 'statut','manage'].map((column) => (
                           <th 
                             key={column}
                             className={sortBy === column ? 'active-sort' : ''}
@@ -272,6 +282,21 @@ const DashAnalytics = () => {
     {user.active ? 'Active' : 'Inactive'}
   </div>
 </td>
+<td className="align-middle">
+  <button
+    type="button"
+    className="text-capitalize mx-2 btn btn-danger"
+    onClick={() => {
+      if (window.confirm('Are you sure you want to delete this user?')) {
+        deleteUser(user._id);
+      }
+    }}
+  >
+    <i className="feather icon-slash mx-2"></i>
+    Delete
+  </button>
+</td>
+
                 </tr>
               ))}
             </tbody>
