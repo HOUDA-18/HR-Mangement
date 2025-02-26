@@ -14,7 +14,7 @@ services:
 
   app:
     build: .
-    image: 192.168.65.129:8070/backend:6.0
+    image: 192.168.65.129:8083/backend:6.0
     restart: always
     container_name: back
     ports:
