@@ -65,7 +65,7 @@ pipeline {
                         dir('Backend') {
                             script {
                                 docker.withRegistry("http://${registry}", registryCredentials) {
-                                    sh 'docker push $registry/nodemongoapp:5.0'
+                                    sh 'docker push $registry/backend:6.0'
                                 }
                             }
                         }
