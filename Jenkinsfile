@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build Backend') {
             stages {
-                stage('Backend: Install Dependencies') {
+                stage('Install Dependencies') {
                     steps {
                         dir('Backend') {
                             sh 'npm install'
@@ -20,7 +20,7 @@ pipeline {
                     }
                 }
 
-                stage('Backend: Unit Test') {
+                stage('Run Unit Tests') {
                     steps {
                         dir('Backend') {
                             sh 'npm test'
@@ -44,30 +44,40 @@ pipeline {
                         }
                     }
                 }
+
+                stage('Build Docker Images') {
+                    steps {
+                        dir('Backend') {
+                            script {
+                                sh 'docker-compose build'
+                            }
+                        }
+                    }
+                }
             }
         }
 
-        // Les étapes pour FrontOffice et BackOffice (commentées)
+        /* Uncomment if you want to build FrontOffice and BackOffice */
         /*
         stage('Build All Components') {
             parallel {
-                stage('FrontOffice') {
+                stage('Build FrontOffice') {
                     stages {
-                        stage('FrontOffice: Install Dependencies') {
+                        stage('Install Dependencies') {
                             steps {
                                 dir('FrontOffice') {
                                     sh 'npm install'
                                 }
                             }
                         }
-                        stage('FrontOffice: Unit Test') {
+                        stage('Run Unit Tests') {
                             steps {
                                 dir('FrontOffice') {
                                     sh 'npm test'
                                 }
                             }
                         }
-                        stage('FrontOffice: Build') {
+                        stage('Build Application') {
                             steps {
                                 dir('FrontOffice') {
                                     sh 'npm run build-dev'
@@ -77,23 +87,23 @@ pipeline {
                     }
                 }
 
-                stage('BackOffice') {
+                stage('Build BackOffice') {
                     stages {
-                        stage('BackOffice: Install Dependencies') {
+                        stage('Install Dependencies') {
                             steps {
                                 dir('BackOffice') {
                                     sh 'npm install'
                                 }
                             }
                         }
-                        stage('BackOffice: Unit Test') {
+                        stage('Run Unit Tests') {
                             steps {
                                 dir('BackOffice') {
                                     sh 'npm test'
                                 }
                             }
                         }
-                        stage('BackOffice: Build') {
+                        stage('Build Application') {
                             steps {
                                 dir('BackOffice') {
                                     sh 'npm run build-dev'
