@@ -73,6 +73,17 @@ pipeline {
                 }
             }
         }
+        stage('Run application ') {
+steps{
+script {
+docker.withRegistry("http://"+registry, registryCredentials
+) {
+sh('docker pull $registry/backend:6.0 ')
+sh('docker-compose up -d ')
+}
+}
+}
+}
 
         /* Uncomment if you want to build FrontOffice and BackOffice */
         /*
