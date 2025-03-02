@@ -42,10 +42,10 @@ const DashAnalytics = () => {
       console.error('Error fetching users:', error);
     }
   };
-  useEffect(()=>{
+/*   useEffect(()=>{
 
     fetchUsers(); 
-  },[])
+  },[]) */
  
    // Sorting handler
    const handleSort = (column) => {
@@ -76,7 +76,7 @@ const DashAnalytics = () => {
       <Row>
         {/* order cards */}
         <Col md={6} xl={3}>
-        <div onClick={fetchUsers} style={{ cursor: 'pointer' }}>
+        <div onClick={()=>fetchUsers()} style={{ cursor: 'pointer' }}>
           <OrderCard
             params={{
               title: 'Total Employees',

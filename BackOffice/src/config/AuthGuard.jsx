@@ -1,6 +1,4 @@
 import { Navigate } from 'react-router-dom';
-localStorage.setItem("user", JSON.stringify({ role: "dev" })); // Set user role to admin
-//localStorage.clear();
 const AuthGuard = ({ children, allowedRoles }) => {
     const user = JSON.parse(localStorage.getItem("user")); // Retrieve user info
 
