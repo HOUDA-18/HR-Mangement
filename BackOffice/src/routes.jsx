@@ -56,6 +56,12 @@ export const routes = [
     path: '/auth/reset-password/:token',
     element: lazy(() => import('./views/auth/reset-password-1/passwordReset'))
   },
+  {
+    exact: 'true',
+    path: '/auth/2fa/',
+    element: lazy(() => import('./views/auth/2fa/TwoFASetup'))
+  },
+  
   
   {
     path: '*',

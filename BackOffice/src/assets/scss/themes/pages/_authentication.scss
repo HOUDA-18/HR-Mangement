@@ -1,130 +1,117 @@
 /**  =====================
       Authentication css start
 ==========================  **/
+
+@keyframes gradientBG {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.code-input {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  border-radius: 4px;
+  border: 2px solid #333; /* Dark border */
+  background-color: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+  color: #fff; /* White text */
+  margin: 0 5px; /* Adds spacing between inputs */
+  transition: border-color 0.3s ease; /* Smooth transition for hover/focus */
+}
+
+/* Change border color on focus/hover for better UX */
+.code-input:focus,
+.code-input:hover {
+  border-color: #555; /* Slightly lighter dark border on focus/hover */
+  outline: none; /* Remove default outline */
+}
+
 .auth-wrapper {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Centers the content inside the wrapper */
   overflow: hidden;
-  min-width: 100%;
-  min-height: 100vh;
-  background: linear-gradient(45deg, $primary-color, lighten($primary-color, 13%));
-  @media (min-width: 1200px) {
-    .container {
-      max-width: 1140px;
-    }
-  }
-  @media (-ms-high-contrast: none), (-ms-high-contrast: active) {
-    display: block;
-    margin: 0 auto;
+  width: 100%;
+  height: 100vh;
+  background: url('/src/assets/images/R.png');
+  background-size: contain; /* Ensures full image visibility */
+  background-repeat: no-repeat;
+  background-position: left center; /* Keeps the background image fixed */
+  padding: 0 5%;
+}
 
-    > .row {
-      min-height: 100vh;
 
-      > .aut-bg-img {
-        min-height: 100vh;
-      }
-    }
-  }
 
-  .saprator {
-    position: relative;
-    margin: 8px 0;
+.auth-content {
+  position: relative;
+  padding: 45px;
+  z-index: 5;
+  width: 40%; /* Ensures it doesn't shrink too much */
+  max-width: 450px;
+  margin-left: auto; /* Pushes it to the right */
+  margin-right: 50; /* Ensures it doesn't overlap the image */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 
-    span {
-      background: #fff;
-      position: relative;
-      padding: 0 10px;
-      z-index: 5;
-      font-size: 20px;
-    }
 
-    &:after {
-      content: '';
-      position: absolute;
-      top: 15px;
-      left: 0;
-      width: 100%;
-      height: 1px;
-      background: $theme-border;
-      z-index: 1;
-    }
-  }
+.login-card {
+  position: relative;
+  background: linear-gradient(-45deg, rgba(55, 115, 219, 0.8), rgba(255, 255, 255, 0.9), rgba(55, 115, 219, 0.8), rgb(255, 255, 255));
+  background-size: 300% 300%;
+  animation: gradientBG 6s infinite ease-in-out;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  padding: 30px;
+  width: 100%;
+  max-width: 400px; /* Restricts card width */
+  border-radius: 10px;
+  text-align: center;
+}
 
-  a,
-  p > a {
-    color: $theme-heading-color;
-    font-weight: 600;
-  }
+/* Login Logo */
+.login-logo {
+  width: 80px;
+  margin-bottom: 15px;
+}
 
-  .input-group {
-    background: transparent;
-  }
-
-  .card {
-    margin-bottom: 0;
-    padding: 8px;
-    box-shadow: 0 2px 18px -2px rgba(0, 0, 0, 0.5);
-
-    .card-body {
-      padding: 20px 25px 20px 40px;
-    }
-    @media (-ms-high-contrast: none), (-ms-high-contrast: active) {
-      display: block;
-    }
-  }
-
-  > div {
-    z-index: 5;
+/* Responsive Design */
+@media only screen and (max-width: 1024px) {
+  .auth-wrapper {
+    flex-direction: column;
+    align-items: center;
+    background-size: cover; /* Adjusts for tablets */
+    background-position: center;
+    padding: 5% 0;
   }
 
   .auth-content {
-    position: relative;
-    padding: 15px;
-    z-index: 5;
-
-    &:not(.container) {
-      width: 400px;
-
-      .card-body {
-        padding: 40px 35px;
-      }
-    }
-    @media (-ms-high-contrast: none), (-ms-high-contrast: active) {
-      margin: 0 auto;
-    }
-  }
-
-  @media only screen and (max-width: 767px) {
-    .card {
-      .card-body {
-        padding: 30px 15px;
-      }
-    }
-  }
-
-  .card-body .carousel-indicators {
-    margin: 15px 0 10px;
-    bottom: 0;
-
-    li {
-      width: 50px;
-      background-color: transparentize($primary-color, 0.6);
-      border-radius: 5px;
-      height: 4px;
-
-      &.active {
-        background-color: $primary-color;
-      }
-    }
-  }
-
-  .img-logo-overlay {
-    position: absolute;
-    top: 40px;
-    left: 50px;
+    width: 90%;
+    margin: auto;
   }
 }
+
+@media only screen and (max-width: 767px) {
+  .auth-wrapper {
+    background-position: top center; /* Adjusts for mobile */
+    padding: 10% 0;
+  }
+
+  .auth-content {
+    width: 90%;
+    text-align: center;
+  }
+
+  .card {
+    max-width: 90%;
+  }
+}
+
+
 
 /**====== Authentication css end ======**/

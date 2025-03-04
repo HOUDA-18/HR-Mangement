@@ -29,6 +29,8 @@ module.exports= app =>{
 
     router.post('/users/change-password', userController.changePassword);
 
+    router.post('/users/verfy-account',userController.sendVerificationCode)
+
 /* 
 
 

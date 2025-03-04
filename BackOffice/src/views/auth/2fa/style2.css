@@ -1,0 +1,142 @@
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+  
+  .auth-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center; /* Centers the content inside the wrapper */
+    overflow: hidden;
+    width: 100%;
+    height: 100vh;
+    background: url('/src/assets/images/R.png');
+    background-size: contain; /* Ensures full image visibility */
+    background-repeat: no-repeat;
+    background-position: left center; /* Keeps the background image fixed */
+    padding: 0 5%;
+  }
+  
+  
+  
+  .auth-content {
+    position: relative;
+    padding: 45px;
+    z-index: 5;
+    width: 40%; /* Ensures it doesn't shrink too much */
+    max-width: 450px;
+    margin-right: 50; /* Ensures it doesn't overlap the image */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  
+  .login-card {
+    position: relative;
+    background: linear-gradient(-45deg, rgba(55, 115, 219, 0.8), rgba(255,255,255), rgba(55, 115, 219, 0.8), rgb(255, 255, 255));
+    background-size: 300% 300%;
+    animation: gradientBG 6s infinite ease-in-out;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(15px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    padding: 30px;
+    width: 100%;
+    max-width: 400px; /* Restricts card width */
+    border-radius: 10px;
+    text-align: center;
+  }
+  
+  /* Login Logo */
+  .login-logo {
+    width: 80px;
+    margin-bottom: 15px;
+  }
+  
+  /* Responsive Design */
+  @media only screen and (max-width: 1024px) {
+    .auth-wrapper {
+      flex-direction: column;
+      align-items: center;
+      background-size: cover; /* Adjusts for tablets */
+      background-position: center;
+      padding: 5% 0;
+    }
+  
+    .auth-content {
+      width: 90%;
+      margin: auto;
+    }
+  }
+  
+  @media only screen and (max-width: 767px) {
+    .auth-wrapper {
+      background-position: top center; /* Adjusts for mobile */
+      padding: 10% 0;
+    }
+  
+    .auth-content {
+      width: 90%;
+      text-align: center;
+    }
+  
+    .card {
+      max-width: 90%;
+    }
+  }
+  /* Code Inputs */
+.code-inputs {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* Individual Code Input */
+/* Individual Code Input */
+.code-input {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  font-size: 18px;
+  border-radius: 4px;
+  border: 2px solid #333; /* Dark border */
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #000000;
+  margin: 0 5px; /* Adds spacing between inputs */
+  transition: border-color 0.3s ease; /* Smooth transition for hover/focus */
+}
+
+/* Change border color on focus/hover for better UX */
+.code-input:focus,
+.code-input:hover {
+  border-color: #555; /* Slightly lighter dark border on focus/hover */
+  outline: none; /* Remove default outline */
+}
+
+/* Verify Button */
+.verify-button {
+  width: 100%;
+  background-color: #3773db;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+/* Resend Link */
+.resend {
+  margin-top: 10px;
+  color: #3773db;
+  cursor: pointer;
+}
+.error{
+
+  color: red;
+
+}
+  
