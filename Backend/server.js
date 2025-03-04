@@ -8,7 +8,7 @@ const app = express()
 const server = http.createServer(app)
 
 //connexion a la base de données
-mongoose.connect(db.mongo.uri, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(db.mongo.uri)
   .then(async () => {
     console.log('Connected to MongoDB')});
 app.use(cors()) 

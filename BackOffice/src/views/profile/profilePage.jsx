@@ -24,7 +24,9 @@ export default function ProfilePage( ){
     firstName: "Utilisateur",
     lastName: "Inconnu",
     matricule: "N/A",
-    email: "inconnu@example.com"
+    email: "inconnu@example.com",
+    phone: "N/A",
+    image : "https://mdbootstrap.com/img/new/avatars/2.jpg",
   };
 
 
@@ -39,15 +41,16 @@ export default function ProfilePage( ){
           <MDBCol lg="4">
             <MDBCard className="mb-4">
               <MDBCardBody className="text-center">
-                <MDBCardImage
-                  src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
-                  alt="avatar"
-                  className="rounded-circle"
-                  style={{ width: '150px' }}
-                  fluid
-                />
+              <MDBCardImage
+  src="https://scontent.ftun16-1.fna.fbcdn.net/v/t39.30808-6/417481696_1788065228370873_7033853198704674306_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=qwlSvO3MlmcQ7kNvgFnln4x&_nc_oc=AdgCJlBnX3oq5k7BNMHaKDsPuPUUIInCT5vs36JOKiPJIKxP5rmiUFXPHgueqscDbvI&_nc_zt=23&_nc_ht=scontent.ftun16-1.fna&_nc_gid=AgQ6xsgKNoSMGdw_ZZL6V_z&oh=00_AYCI_CUVISPCyCtKpf-qdG7XWmLsTNnYmEuLiQfesiH49w&oe=67CC0939"  // Your image URL here
+  alt="avatar"
+  className="rounded-circle"
+  style={{ width: '150px' }}
+  fluid
+/>
+
                 <p className="text-muted mb-1">Full Stack Developer</p>
-                <p className="text-muted mb-4">Bay Area, San Francisco, CA</p>
+                <p className="text-muted mb-4">La petite ariana, TUNIS</p>
                 <div className="d-flex justify-content-center mb-2">
                   <MDBBtn>Follow</MDBBtn>
                   <MDBBtn outline className="ms-1">
@@ -62,7 +65,7 @@ export default function ProfilePage( ){
                 <MDBListGroup flush className="rounded-3">
                   <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                     <MDBIcon fas icon="globe fa-lg text-warning" />
-                    <MDBCardText>https://mdbootstrap.com</MDBCardText>
+                    <MDBCardText>https://HrMangment.com</MDBCardText>
                   </MDBListGroupItem>
                   <MDBListGroupItem className="d-flex justify-content-between align-items-center p-3">
                     <MDBIcon fab icon="github fa-lg" style={{ color: '#333333' }} />
@@ -107,6 +110,15 @@ export default function ProfilePage( ){
                   </MDBCol>
                   <MDBCol sm="9">
                     <MDBCardText className="text-muted">{user.email}</MDBCardText>
+                  </MDBCol>
+                </MDBRow>
+                <hr />
+                <MDBRow>
+                  <MDBCol sm="3">
+                    <MDBCardText>Phone</MDBCardText>
+                  </MDBCol>
+                  <MDBCol sm="9">
+                    <MDBCardText className="text-muted">{user.phone}</MDBCardText>
                   </MDBCol>
                 </MDBRow>
                 <hr />
