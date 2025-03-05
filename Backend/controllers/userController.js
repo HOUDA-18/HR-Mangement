@@ -40,12 +40,14 @@ exports.login= async (req,res)=>{
 
 exports.register= async (req,res)=>{
 
-    const { firstname, lastname, matricule, email, password} = req.body
+    const { firstname, lastname, matricule, email,phone,image,  password} = req.body
     const u = new User({
         firstname: firstname,
         lastname: lastname,
         matricule: matricule,
         email: email,
+        phone: phone,
+        image: image,
         password: (await bcrypt.hash(password, 10)).toString(),
         active: false,
         role: roles.EMPLOYEE
@@ -89,6 +91,8 @@ exports.import= async (req,res)=>{
             usersToInsert.push({
               firstname: user.firstname.trim(),
               lastname: user.lastname.trim(),
+              phone: user.phone.trim(),
+              image: user.image.trim(),
               email: user.email.trim(),
               matricule: user.matricule.trim(),
               password: (await bcrypt.hash(user.password, 10)).toString(), // Store the hashed password
@@ -266,11 +270,11 @@ exports.getRHMembers = async (req, res) => {
 
 exports.update= async (req,res)=>{
   const { id } = req.params;
-  const { firstname, lastname, matricule, email} = req.body
+  const { firstname, lastname, matricule, email,phone,image} = req.body
   try {
       const updatedProfile = await User.findOneAndUpdate(
         {_id:id},
-        { firstname, lastname, matricule, email},
+        { firstname, lastname, matricule, email,phone,image },
         { new: true, runValidators: true }
       );
   

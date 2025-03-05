@@ -7,6 +7,8 @@ const user = new mongoose.Schema({
     lastname: {type: String, required: true},
     matricule: {type: String, unique: true, required: true},
     email: {type: String, unique: true, required: true},
+    phone : {type: String, required: true},
+    image : {type: String, required: true},
     password: {type: String, required: true},
     active: Boolean,
     telephone: String,
@@ -25,6 +27,8 @@ const UserSchema = yup.object({
             lastname: yup.string().min(3).max(20).required("lastname is required"),
             matricule: yup.string().min(3).max(20).required("matricule is required"),
             email: yup.string().email("Invalid email format").required("Email is required"),
+            phone: yup.string().required("phone is required"),
+            image: yup.string().required("image is required"),
             password: yup.string().required("password is required"),
             telephone: yup.string()
         })
