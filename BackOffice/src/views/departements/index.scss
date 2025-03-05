@@ -22,6 +22,7 @@
       text-decoration: none;
       font-weight: bold;
       transition: background 0.3s ease;
+      cursor: pointer;
   
       &:hover {
         background-color: #218838;
@@ -122,8 +123,8 @@
       color: red;
       cursor: pointer;
     }
-    .groupButton{
-      color: blueviolet;
+    .acceptButton{
+      color: green;
       cursor: pointer;
     }
   }

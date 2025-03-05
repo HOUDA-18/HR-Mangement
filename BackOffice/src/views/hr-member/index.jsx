@@ -1,17 +1,38 @@
+import { AdminPanelSettings, Info, PersonOff } from '@mui/icons-material';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-
+import './index.scss'
 const HRMembers = () => {
   const [hrMembers, setHRMembers] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const  handleMakeHeadDepartement = (emp, idDept)=>{
+    axios.post(`http://localhost:8070/api/departements/assignChefDepartement/${idDept}/${emp._id}`)
+    .then(()=>{
+       window.location.reload();
+    }).catch((err)=>{
+       console.log("error:",err)
+    })
+ }
+
+ const handleExitDepartement = (id, idDept)=>{
+   axios.put(`http://localhost:8070/api/departements/detachEmployee/${idDept}/${id}`)
+   .then((res)=>{
+      window.location.reload();
+   }).catch((err)=>{
+      console.log("error:",err)
+   })
+ }
+ const  handleView= (emp)=>{
+   navigate(`/app/dashboard/profile`,{state:{ values: emp}})
+ }
   useEffect(() => {
-    fetch("http://localhost:5000/api/RHMembers")
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Données RH reçues :", data);
-        setHRMembers(data.rhMembers); 
+    axios.get("http://localhost:8070/api/HRmembers")
+      .then((res) => {
+        console.log(res)
+        console.log("Données RH reçues :", res);
+        setHRMembers(res.data); 
         setLoading(false);
-  
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des membres RH :", error);
@@ -94,6 +115,12 @@ const HRMembers = () => {
                     fontWeight: '500',
                     fontSize: '16px'
                   }}> Email</th>
+                  <th style={{
+                    padding: '15px',
+                    textAlign: 'left',
+                    fontWeight: '500',
+                    fontSize: '16px'
+                  }}> Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -120,7 +147,22 @@ const HRMembers = () => {
                       padding: '15px',
                       color: '#2c3e50',
                       fontSize: '14px'
-                    }}>{member.mail}</td>
+                    }}>{member.email}</td>
+                    <td>
+                                                    <div className="cellAction">
+                                                        <div className="viewButton" onClick={()=>handleView(member)}>
+                                                            <Info/>
+                                                        </div>
+                                                            {member.role!=="ADMIN_HR" &&
+                                                                ( <div className="editButton" onClick={()=>handleMakeHeadDepartement(member, member.departement)}>
+                                                                    <AdminPanelSettings />
+                                                                    </div>
+                                                                    )}
+                                                        <div className="deleteButton" onClick={()=>handleExitDepartement(member._id, member.departement)}>
+                                                            <PersonOff/>
+                                                        </div>
+                                                    </div>
+                                                </td>
                   </tr>
                 ))}
               </tbody>

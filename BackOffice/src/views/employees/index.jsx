@@ -1,4 +1,4 @@
-import { Add, ArrowCircleUp, ArrowCircleUpRounded, Clear, DeleteForever, EditNote, Info, ModeEdit } from '@mui/icons-material';
+import { Add, ArrowCircleUp, ArrowCircleUpRounded, Clear, DeleteForever, EditNote, GroupAdd, Info, ModeEdit } from '@mui/icons-material';
 import axios from 'axios';
 import ConfirmationAlert from 'components/confirmationAlert/confirmationAlert';
 import React, { useEffect, useState } from 'react';
@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as XLSX from "xlsx";
 
 import "./index.scss"
+import AffectationAlert from 'components/AffectAlert/affectation';
 
 // ==============================|| DASHBOARD ANALYTICS ||============================== //
 
@@ -17,6 +18,9 @@ const Employees = () => {
   const [validatedData, setValidatedData] = useState([]);
   const [showAlert, setShowAlert] = useState(false);
   const [showAlertDelete, setShowAlertDelete] = useState(false);
+  const [showAlertAffectation, setShowAlertAffectation] = useState(false);
+  const [employeeToAffect, setEmployeeToAffect]= useState({})
+
   const [deleteId, setDeleteId]= useState('')
 
   const navigate = useNavigate()
@@ -39,6 +43,8 @@ const Employees = () => {
   const handleCancel = ()=>{
     setShowAlert(false)
     setShowAlertDelete(false)
+    setShowAlertAffectation(false)
+
 
   }
 
@@ -109,6 +115,11 @@ const Employees = () => {
         }
       
     };
+
+    const handleAddToDepartement = (emp)=>{
+        setEmployeeToAffect(emp)
+        setShowAlertAffectation(true)
+    }
 
   useEffect(() => {
   
@@ -251,6 +262,11 @@ const Employees = () => {
                     <div className="editButton" onClick={()=>handleModifier(emp)}>
                         <EditNote />
                       </div>
+                      {emp.departement==null && (
+                        <div className="groupButton" onClick={()=>handleAddToDepartement(emp)}>
+                        <GroupAdd />
+                      </div>
+                      )}
                     <div className="deleteButton" onClick={()=>handleDelete(emp._id)}>
                       <DeleteForever/>
                     </div>
@@ -278,6 +294,16 @@ const Employees = () => {
                                     onCancel={handleCancel}
                                     />
                                 )}
+
+                      {showAlertAffectation && (
+                                    <AffectationAlert
+                                    message="Are you sure to delete this employee?"
+                                    data={employeeToAffect}
+                                    onConfirm={()=>AddToDepartement()}
+                                    onCancel={handleCancel}
+                                    />
+                                )}
+                      
 
     </React.Fragment>
   );

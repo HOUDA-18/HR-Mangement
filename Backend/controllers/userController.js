@@ -234,7 +234,7 @@ exports.import= async (req,res)=>{
 exports.getEmployees = async (req, res) => {
     try {
     
-        const employees = await User.find({ role: 'EMPLOYEE' }, ' firstname lastname email matricule role active');
+        const employees = await User.find({ role: 'EMPLOYEE' }, ' firstname lastname email matricule role active telephone departement');
         
         res.status(200).json(employees);
     } catch (err) {
@@ -245,7 +245,7 @@ exports.getEmployees = async (req, res) => {
 exports.getUsers = async (req, res) => {
     try {
     
-        const users = await User.find({  },  'firstname lastname email role  active');
+        const users = await User.find({  },  'firstname lastname email role active telephone departement');
         
         res.status(200).json(users);
     } catch (err) {
@@ -255,8 +255,8 @@ exports.getUsers = async (req, res) => {
 
 exports.getRHMembers = async (req, res) => {
     try {
-        const rhMembers = await User.find({ role: 'MEMBRE_HR' }, 'firstname lastname mail');
-        res.status(200).json({ rhMembers });
+        const rhMembers = await User.find({$or:[{role: 'MEMBRE_HR'},{role: "ADMIN_HR"}]  }, 'firstname lastname email role active telephone departement');
+        res.status(200).json( rhMembers );
     } catch (err) {
         res.status(500).json({ message: err.message });
     }

@@ -11,7 +11,8 @@ const user = new mongoose.Schema({
     active: Boolean,
     telephone: String,
     role: { type: String,
-            enum: Object.values(roles)}
+            enum: Object.values(roles)},
+    departement: { type: mongoose.Schema.Types.ObjectId, ref: 'departement' }
 
 })
 

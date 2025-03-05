@@ -1,13 +1,16 @@
 
 module.exports= app =>{
     const userController= require("../controllers/userController")
+    const departementController = require("../controllers/departementController")
     const { UserSchema, loginSchema} = require("../models/user");
+    const {DepartementSchema}=require("../models/departement")
     const validate = require('../middelwares/validate')
     var router = require("express").Router();
 
     //get all users
     router.get('/employees', userController.getEmployees);
     router.get('/users', userController.getUsers);
+    router.get('/HRmembers',userController.getRHMembers)
 
   //create a new user
     router.post("/users/register",validate(UserSchema), userController.register);
@@ -28,6 +31,27 @@ module.exports= app =>{
     router.post('/users/reset-password/:token', userController.resetPassword);
 
     router.post('/users/change-password', userController.changePassword);
+
+    //departements management
+    router.get('/departements', departementController.getDepartements)
+
+    router.get('/departements/getById/:id', departementController.getDepartementById)
+
+    router.get('/departements/:id', departementController.getEmployeesByDepartement)
+
+    router.post('/departements',validate(DepartementSchema), departementController.addDepartement)
+
+    router.put('/departements/:id',validate(DepartementSchema), departementController.update)
+
+    router.delete('/departements/:id', departementController.deleteDepartement)
+
+    router.put('/departements/assignEmployee/:idDepartement/:idEmployee', departementController.AssignEmployeeToDepartement)
+
+    router.put('/departements/detachEmployee/:idDepartement/:idEmployee', departementController.detachEmployeeFromDepartement)
+
+    router.post('/departements/assignChefDepartement/:idDepartement/:idEmployee', departementController.AssignChefDepartementToDepartement)
+
+
 
 /* 
 
