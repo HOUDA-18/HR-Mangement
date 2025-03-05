@@ -24,7 +24,12 @@ export const useLogin = ()=>{
                     localStorage.setItem("userRole",user.role)
                     localStorage.setItem("user", JSON.stringify(user))
                     dispatch({type:"login", payload: {"role":user.role, "id":user.id}})
-                    navigate('app/dashboard/analytics')
+                    axios.post("http://localhost:8070/api/users/verfy-account", {email:res.data.user.email}).then((ress)=>{
+                        navigate('/auth/2fa/', {state:{ values: ress.data.code}})
+                    }).catch((errr)=>{
+                        console.log({error: errr})
+                    })
+                    
                
             }
          })

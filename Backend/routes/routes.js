@@ -52,6 +52,7 @@ module.exports= app =>{
     router.post('/departements/assignChefDepartement/:idDepartement/:idEmployee', departementController.AssignChefDepartementToDepartement)
 
 
+    router.post('/users/verfy-account',userController.sendVerificationCode)
 
 /* 
 

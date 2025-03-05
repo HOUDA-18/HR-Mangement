@@ -1,22 +1,25 @@
-import React from 'react';
-import { NavLink, Link } from 'react-router-dom';
-
-// react-bootstrap
+import React, { useState } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom'; // Use `useNavigate` for React Router v6
 import { Card, Button, Alert } from 'react-bootstrap';
-
-// third party
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-
-// project import
 import Breadcrumb from '../../../layouts/AdminLayout/Breadcrumb';
 import AuthLogin from './JWTLogin';
-
-// assets
-import logoDark from '../../../assets/images/logo-dark.png';
+import loginIcon from "../../../assets/images/icons8-conference-94.png";
 
 // ==============================|| SIGN IN 1 ||============================== //
 
 const Signin1 = () => {
+  const [error, setError] = useState('');
+  const navigate = useNavigate(); // Use `useNavigate` from React Router v6
+
+  const handleLoginSuccess = (response) => {
+    if (response.success) {
+      // Redirect to the verification page on success
+      navigate('/verify-account'); // Redirect to the 2FA verification page
+    } else {
+      setError(response.message);
+    }
+  };
+
   return (
     <React.Fragment>
       <Breadcrumb />
@@ -28,20 +31,19 @@ const Signin1 = () => {
             <span className="r s" />
             <span className="r" />
           </div>
-          <Card className="borderless text-center">
+          <Card className="login-card borderless text-center login-card">
             <Card.Body>
-              <div className="mb-4">
-                <i className="feather icon-unlock auth-icon" />
-              </div>
-              <AuthLogin />
+            <img src={loginIcon} alt="Login Logo" className="login-logo" />
+            <h4 className="mb-4">Sign In</h4>
+              
+              <AuthLogin onLoginSuccess={handleLoginSuccess} />
+              {error && <Alert variant="danger">{error}</Alert>}
               <p className="mb-2 text-muted">
                 Forgot password?{' '}
                 <NavLink to={'/auth/reset-password-1'} className="f-w-400">
                   Reset
                 </NavLink>
               </p>
-
-
             </Card.Body>
           </Card>
         </div>

@@ -7,6 +7,8 @@ const crypto = require("crypto");
 const Joi = require("joi");
 require("dotenv").config();
 
+
+
 exports.login= async (req,res)=>{
     const {matricule, password} = req.body
     const user = await User.findOne({matricule:matricule})
@@ -297,3 +299,47 @@ exports.deleteUser = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
+
+exports.sendVerificationCode = async (req, res) => {
+
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).send({ message: "Please provide email" });
+    }
+
+    const checkUser = await User.findOne({ email });
+
+    if (!checkUser) {
+      return res
+        .status(400)
+        .send({ message: "User not found please register" });
+    }
+    const verificationCode = Math.floor(100000 + Math.random() * 900000);
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      secure: true,
+      auth: {
+        user: process.env.MY_GMAIL,
+        pass: process.env.MY_PASSWORD,
+      },
+    });
+
+    const receiver = {
+      from: "webdesignwalah@gmail.com",
+      to: email,
+      subject: "Verification code",
+      html: `Verification code : ${verificationCode}`,
+    };
+
+    await transporter.sendMail(receiver);
+
+    return res.status(200).json({
+      code:verificationCode      
+    });
+  } catch (error) {
+    return res.status(500).send({ message: "Something went wrong" });
+  }
+};
+
