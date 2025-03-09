@@ -9,12 +9,13 @@ const user = new mongoose.Schema({
     email: {type: String, unique: true, required: true},
     phone : {type: String, required: true},
     image : {type: String, required: true},
+    faceDescriptor: { type: [Number], required: false } ,// Descripteur facial
     password: {type: String, required: true},
     active: Boolean,
     telephone: String,
     role: { type: String,
             enum: Object.values(roles)},
-    departement: { type: mongoose.Schema.Types.ObjectId, ref: 'departement' }
+    departement: { type: mongoose.Schema.Types.ObjectId, ref: 'departement' , required: false }
 
 })
 
