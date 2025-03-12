@@ -1,13 +1,171 @@
 const {User, UserSchema} = require("../models/user");
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt')
-const roles = require('../models/rolesEnum')
+const bcrypt = require('bcrypt');
+const faceapi = require("face-api.js");
+const canvas = require("canvas");
+const { Canvas, Image, ImageData } = canvas;
+const path = require("path");
+const roles = require('../models/rolesEnum');
 const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const Joi = require("joi");
 require("dotenv").config();
+const multer = require('multer');
+
+// Configuration initiale
+faceapi.env.monkeyPatch({ Canvas, Image, ImageData });
+const upload = multer({ storage: multer.memoryStorage() });
+// Chargement des modèles IA
+const MODEL_PATH = path.join(__dirname, '../models');
+Promise.all([
+  faceapi.nets.ssdMobilenetv1.loadFromDisk(MODEL_PATH),
+  faceapi.nets.faceLandmark68Net.loadFromDisk(MODEL_PATH),
+  faceapi.nets.faceRecognitionNet.loadFromDisk(MODEL_PATH)
+]).then(() => console.log('🤖 Modèles IA chargés'))
+  .catch(err => console.error('💥 Erreur modèles IA:', err));
+  // Fonction pour vérifier le format de l'image
+function isSupportedImageType(imageData) {
+  const base64Regex = /data:image\/(jpeg|png);base64,/;
+  const match = imageData.match(base64Regex);
+  
+  if (!match) {
+    console.error('❌ Format d\'image non valide');
+    return false;
+  }
+
+  const fileType = match[1];
+  console.log("📂 Type d'image détecté :", fileType);
+  return ['jpeg', 'png'].includes(fileType);
+}
 
 
+// Fonction d'extraction du descripteur facial
+const extractFaceDescriptor = async (imageData) => {
+  try {
+    const buffer = Buffer.from(imageData.split(',')[1], 'base64');
+    const img = await canvas.loadImage(buffer);
+    const canvasObj = faceapi.createCanvasFromMedia(img);
+    const detections = await faceapi
+      .detectAllFaces(canvasObj)
+      .withFaceLandmarks()
+      .withFaceDescriptors();
+      
+    return Array.from(detections[0].descriptor); // Conversion critique
+  } catch (error) {
+    throw new Error(`Erreur extraction visage: ${error.message}`);
+  }
+};
+
+// Route d'inscription
+exports.signupface = async (req, res) => {
+  try {
+    const { 
+      firstname,
+      lastname,
+      matricule,
+      email,
+      phone,
+      password,
+      role = roles.EMPLOYEE
+      
+    } = req.body;
+
+    // Validation du rôle
+    if (!Object.values(roles).includes(role)) {
+      return res.status(400).json({ error: 'Rôle invalide' });
+    }
+
+    // Traitement de l'image
+    const imageData = `data:image/jpeg;base64,${req.file.buffer.toString('base64')}`;
+    const faceDescriptor = await extractFaceDescriptor(imageData);
+    const faceDescriptorArray = Array.from(faceDescriptor);
+    // Création de l'utilisateur
+    const user = new User({
+      firstname,
+      lastname,
+      matricule,
+      email,
+      phone,
+      image: imageData,
+      faceDescriptor: faceDescriptorArray,
+      password: await bcrypt.hash(password, 10),
+      role
+    });
+
+    await user.save();
+    res.status(201).json({ message: 'Utilisateur enregistré' });
+
+  } catch (error) {
+    console.error('Erreur inscription:', error.message);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.loginface = async (req, res) => {
+  try {
+    const { imageData } = req.body;
+
+    // 1. Vérification de base de l'image
+    if (!imageData?.startsWith('data:image/jpeg;base64')) {
+      throw new Error('Format image invalide (JPEG requis)');
+    }
+
+    // 2. Extraction du descripteur facial
+    const capturedDescriptor = await extractFaceDescriptor(imageData);
+    console.log('🔍 Descripteur capturé:', capturedDescriptor.length, 'éléments');
+
+    // 3. Récupération des utilisateurs avec vérification
+    const users = await User.find({ faceDescriptor: { $exists: true, $ne: null } });
+    if (users.length === 0) throw new Error('Aucun utilisateur enregistré');
+
+    // 4. Recherche de correspondance
+    let closestUser = null;
+    let minDistance = Infinity;
+
+    for (const user of users) {
+      try {
+        // Conversion du tableau stocké vers Float32Array
+        const storedDescriptor = new Float32Array(user.faceDescriptor);
+        
+        
+
+        // Calcul de la distance
+        const distance = faceapi.euclideanDistance(capturedDescriptor, storedDescriptor);
+        console.log(`📊 ${user.email} - Distance: ${distance.toFixed(4)}`);
+
+        if (distance < minDistance) {
+          minDistance = distance;
+          closestUser = user;
+        }
+      } catch (e) {
+        console.error(`🚨 Erreur avec ${user.email}: ${e.message}`);
+      }
+    }
+
+    // 5. Vérification finale
+    if (!closestUser || minDistance > 0.6) { // Seuil ajusté à 0.6
+      throw new Error(`Aucune correspondance valide (meilleure distance: ${minDistance.toFixed(2)})`);
+    }
+
+    // 6. Réponse réussie
+    res.json({
+      user: {
+        firstname: closestUser.firstname,
+        lastname: closestUser.lastname,
+        email: closestUser.email,
+        role: closestUser.role
+      },
+      confidence: (1 - minDistance).toFixed(2) // Indice de confiance
+    });
+
+  } catch (error) {
+    console.error('❌ Erreur connexion:', error.message);
+    res.status(401).json({ 
+      error: error.message,
+      details: error.message.includes('distance') ? null : error.stack 
+    });
+  }
+};
 
 exports.login= async (req,res)=>{
     const {matricule, password} = req.body
@@ -41,13 +199,23 @@ exports.login= async (req,res)=>{
 exports.register= async (req,res)=>{
 
     const { firstname, lastname, matricule, email,phone,image,  password} = req.body
+     // Traitement de l'image
+     if (!req.file) {
+      return res.status(400).json("Image obligatoire");
+    }
+    const imageData = `data:image/jpeg;base64,${req.file.buffer.toString("base64")}`;
+
+    // Extraction du descripteur facial
+    const faceDescriptor = await extractFaceDescriptor(imageData);
+    const faceDescriptorArray = Array.from(faceDescriptor);
     const u = new User({
         firstname: firstname,
         lastname: lastname,
         matricule: matricule,
         email: email,
         phone: phone,
-        image: image,
+        image: `data:image/jpeg;base64,${req.file.buffer.toString("base64")}`,
+        faceDescriptor: faceDescriptorArray,
         password: (await bcrypt.hash(password, 10)).toString(),
         active: false,
         role: roles.EMPLOYEE

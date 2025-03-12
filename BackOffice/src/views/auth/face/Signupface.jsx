@@ -56,7 +56,7 @@ function SignUpface() {
       Object.entries(formData).forEach(([key, value]) => form.append(key, value));
       form.append('imageData', imageFile);
 
-      const response = await fetch('http://localhost:8070/signupface', {
+      const response = await fetch('http://localhost:8070/api/signupface', {
         method: 'POST',
         body: form
       });

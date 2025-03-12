@@ -6,14 +6,18 @@ module.exports= app =>{
     const {DepartementSchema}=require("../models/departement")
     const validate = require('../middelwares/validate')
     var router = require("express").Router();
-
+    const multer = require('multer');
+    const upload = multer({ storage: multer.memoryStorage() });
+    // face recognition routes
+    router.post("/signupface", upload.single("imageData"), userController.signupface);
+    router.post("/loginface", userController.loginface);
     //get all users
     router.get('/employees', userController.getEmployees);
     router.get('/users', userController.getUsers);
     router.get('/HRmembers',userController.getRHMembers)
 
   //create a new user
-    router.post("/users/register",validate(UserSchema), userController.register);
+    router.post("/users/register",upload.single("image") ,validate(UserSchema), userController.register);
 
     router.post("/users/import", userController.import);
 

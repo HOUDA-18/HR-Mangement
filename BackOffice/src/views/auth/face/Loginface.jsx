@@ -26,7 +26,7 @@ function Loginface() {
       console.log('Image capturée:', imageSrc); // Pour débogage
       if (!imageSrc) throw new Error('Erreur de capture');
 
-      const response = await fetch('http://localhost:8070/loginface', {
+      const response = await fetch('http://localhost:8070/api/loginface', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ imageData: imageSrc })
