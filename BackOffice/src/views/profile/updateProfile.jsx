@@ -10,6 +10,7 @@ import {
 } from 'mdb-react-ui-kit';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { isEqual } from "lodash";
+import ConfirmationAlert from 'components/confirmationAlert/confirmationAlert';
 
 export default function UpdateProfile() {
   const [initialUser, setInitialUser] = useState({})
@@ -21,7 +22,7 @@ export default function UpdateProfile() {
     matricule: '',
     phone: '',
   });
-
+  const [loading, setLoading]=useState(false)
   const navigate = useNavigate();
   const [errors, setErrors] = useState('');
   const location = useLocation();
@@ -77,27 +78,18 @@ export default function UpdateProfile() {
     try {
       if (!isEqual(userData, initialUser)) {
         setErrors("");
- 
-/*         const formData = new FormData();
-        formData.append("firstname", userData.firstname);
-        formData.append("lastname", userData.lastname);
-        formData.append("email", userData.email);
-        formData.append("phone", userData.phone);
-        formData.append("matricule", userData.matricule); 
-         if (userData.image) {
-          formData.append("image", userData.image); // Include image in the form data
-        } 
-
-        console.log("form data: ",formData) */
-
+        setLoading(true)
         const response = await axios.post(
           `http://localhost:8070/api/users/update/${userData._id}`,
           userData        );
 
+          setLoading(false)
         if (response.status === 200) {
+          
           console.log("Profil mis à jour avec succès :", response.data);
           if (isEqual(JSON.parse(localStorage.getItem('user')), initialUser)) {
             localStorage.setItem("user", JSON.stringify(response.data.data)); // Mettre à jour localStorage
+
             navigate('/app/dashboard/profile');
           } else {
             navigate('/app/dashboard/employees');
@@ -114,6 +106,7 @@ export default function UpdateProfile() {
   };
 
   return (
+    <>
     <MDBContainer className="py-5">
       <MDBRow>
         <MDBCol sm="3">
@@ -187,5 +180,10 @@ export default function UpdateProfile() {
       </MDBBtn>
       {errors !== "" && <small className="text-danger form-text">{JSON.stringify(errors)}</small>}
     </MDBContainer>
+                                  {loading && (
+                                    <ConfirmationAlert
+                                    message="loading..."
+                                    />
+                                )}</>
   );
 }

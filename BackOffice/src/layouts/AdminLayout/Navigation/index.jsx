@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
 // project import
 import { ConfigContext } from '../../../contexts/ConfigContext';
@@ -8,9 +8,10 @@ import NavContent from './NavContent';
 import navigation from '../../../menu-items';
 
 // ==============================|| NAVIGATION ||============================== //
-const user = JSON.parse(localStorage.getItem("user"));      // Retrieve user info
 
 const Navigation = () => {
+  const user = JSON.parse(localStorage.getItem("user"));      // Retrieve user info
+
   const configContext = useContext(ConfigContext);
   const { layoutType, collapseMenu } = configContext.state;
   const windowSize = useWindowSize();
@@ -28,6 +29,8 @@ const Navigation = () => {
   } else if (collapseMenu) {
     navClass = [...navClass, 'navbar-collapsed'];
   }
+
+
 
 // Function to filter menu items based on role
 const filterMenuItems = (items) => {
@@ -55,7 +58,7 @@ const filterMenuItems = (items) => {
 
 
 // Apply filtering
-const filteredNavigation = filterMenuItems(navigation.items);
+const [filteredNavigation,setFilteredNavigation] = useState([]) ;
 
 
 
@@ -74,7 +77,12 @@ const filteredNavigation = filterMenuItems(navigation.items);
       </div>
     );
   }
+
+  useEffect(()=>{
+    setFilteredNavigation( filterMenuItems(navigation.items))
+  },[])
   return (
+
     <React.Fragment>
       <nav className={navClass.join(' ')}>{navContent}</nav>
     </React.Fragment>

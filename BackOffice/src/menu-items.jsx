@@ -21,7 +21,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-server',
           url: '/app/dashboard/departements',
-          roles: ['SUPER_ADMIN', 'HEAD_DEPARTEMENT','EMPLOYEE']
+          roles: ['SUPER_ADMIN', 'HEAD_DEPARTEMENT']
         }
       ]
     },
@@ -119,7 +119,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-message-circle',
           url: '/app/dashboard/chat-rooms',
-          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT']
+          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT','EMPLOYEE']
         },
         {
           id: 'Complaints',
@@ -127,7 +127,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-message-square',
           url: '/app/dashboard/complaints',
-          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT']
+          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT','EMPLOYEE']
         }
       ]
     },

@@ -91,7 +91,12 @@ exports.signupface = async (req, res) => {
       image: imageData,
       faceDescriptor: faceDescriptorArray,
       password: await bcrypt.hash(password, 10),
-      role
+      role: Roles.EMPLOYEE,
+      status: Status.Inactive,
+      departement: null,
+      employmentType : employmentType.CONTRACT,
+        createdAt: (new Date()).toDateString(),
+        updatedAt :(new Date()).toDateString()
     });
 
     await user.save();
@@ -149,14 +154,11 @@ exports.loginface = async (req, res) => {
       throw new Error(`Aucune correspondance valide (meilleure distance: ${minDistance.toFixed(2)})`);
     }
 
+   const user =  await User.findByIdAndUpdate(closestUser._id,{status: Status.Active}, {new: true} )
+
     // 6. Réponse réussie
     res.json({
-      user: {
-        firstname: closestUser.firstname,
-        lastname: closestUser.lastname,
-        email: closestUser.email,
-        role: closestUser.role
-      },
+      user: user,
       confidence: (1 - minDistance).toFixed(2) // Indice de confiance
     });
 
@@ -215,7 +217,7 @@ exports.register= async (req,res)=>{
         matricule: matricule,
         email: email,
         phone: phone || "",
-        image: `data:image/jpeg;base64,${req.file.buffer.toString("base64")}`,
+        image: "",
         faceDescriptor: faceDescriptorArray,
         password: (await bcrypt.hash(password, 10)).toString(),
         status: Status.Inactive,
@@ -556,8 +558,13 @@ exports.update= async (req,res)=>{
   const { firstname, lastname, matricule, email,phone,image} = req.body
   console.log("image: ", image)
   try {
+    if(image){
+      var faceDescriptor = await extractFaceDescriptor(image);
+      var faceDescriptorArray = Array.from(faceDescriptor);
+    }
+    
       const updatedProfile = await User.findByIdAndUpdate(id,
-        { firstname: firstname, lastname: lastname, matricule: matricule, email: email,phone: phone,image: image },
+        { firstname: firstname, lastname: lastname, matricule: matricule, email: email,phone: phone,image: image, faceDescriptor:faceDescriptorArray },
         { new: true}
       );
   
