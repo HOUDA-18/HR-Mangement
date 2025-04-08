@@ -44,6 +44,18 @@ const Signin1 = () => {
                   Reset
                 </NavLink>
               </p>
+              <p className="mb-2 text-muted">
+                login in another way?{' '}
+                <NavLink to={'/auth/face-login'} className="f-w-400">
+                  use facial recognition
+                </NavLink>
+              </p>
+              <p className="mb-2 text-muted">
+                signup in another way?{' '}
+                <NavLink to={'/auth/face-signup'} className="f-w-400">
+                  use facial recognition
+                </NavLink>
+              </p>
             </Card.Body>
           </Card>
         </div>

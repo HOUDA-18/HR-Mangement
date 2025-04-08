@@ -9,12 +9,12 @@ const user = new mongoose.Schema({
     email: {type: String, unique: true, required: true},
     phone : {type: String},
     image : {type: String},
+    faceDescriptor: { type: [Number], required: false },// Descripteur facial
     password: {type: String, required: true},
     employmentType: { type: String,
                       enum: Object.values(employmentType)},
     status: { type: String,
               enum: Object.values(Status)},
-    phone: String,
     role: { type: String,
             enum: Object.values(Roles)},
     createdAt: String,

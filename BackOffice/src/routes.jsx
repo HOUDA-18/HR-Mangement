@@ -57,6 +57,19 @@ export const routes = [
     element: lazy(() => import('./views/auth/reset-password-1/passwordReset'))
   },
   {
+    exact: true,
+    path: '/auth/face-login',
+    element: lazy(() => import('./views/auth/face/Loginface')),
+    guard: (props) => <AuthGuard allowedRoles={['public']}>{props.children}</AuthGuard>
+  },
+  {
+    exact: true,
+    path: '/auth/face-signup',
+    element: lazy(() => import('./views/auth/face/Signupface')),
+    guard: (props) => <AuthGuard allowedRoles={['public']}>{props.children}</AuthGuard>
+  },
+
+  {
     exact: 'true',
     path: '/auth/2fa/',
     element: lazy(() => import('./views/auth/2fa/TwoFASetup'))
@@ -201,6 +214,22 @@ export const routes = [
         path: '/sample-page',
         element: lazy(() => import('./views/extra/SamplePage'))
       } */,
+       
+  // Nouvelle route pour le login facial
+  {
+    exact: 'true',
+    path: '/auth/face-login',
+    element: lazy(() => import('./views/auth/face/Loginface')), // Adaptez le chemin
+    guard: (props) => <AuthGuard allowedRoles={['public']}>{props.children}</AuthGuard>
+  },
+
+  // Nouvelle route pour l'inscription faciale
+  {
+    exact: 'true',
+    path: '/auth/face-signup',
+    element: lazy(() => import('./views/auth/face/Signupface')), // Adaptez le chemin
+    guard: (props) => <AuthGuard allowedRoles={['public']}>{props.children}</AuthGuard>
+  },
       {
         path: '*',
         exact: 'true',
