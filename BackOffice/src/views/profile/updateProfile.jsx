@@ -20,7 +20,6 @@ export default function UpdateProfile() {
     email: '',
     matricule: '',
     phone: '',
-    image: '' // Add image field
   });
 
   const navigate = useNavigate();
@@ -45,17 +44,27 @@ export default function UpdateProfile() {
   };
 
   const onCancel = () => {
-    navigate('/app/dashboard/profile', { state: { values: userData } });
+    if (isEqual(JSON.parse(localStorage.getItem('user')), initialUser)) {
+      navigate('/app/dashboard/profile');
+    } else {
+      navigate('/app/dashboard/employees');
+    }
   }
 
   // Handle image change
-  const handleImageChange = (e) => {
+  const handleImageChange = async (e) => {
     const file = e.target.files[0];
     if (file) {
-      setUserData((prevState) => ({
-        ...prevState,
-        image: URL.createObjectURL(file), // Temporary local image URL
-      }));
+      const reader = new FileReader();
+      reader.readAsDataURL(file); // Convert to Base64
+      reader.onload = async () => {
+        try {
+            const base64Image = reader.result;
+            setUserData((prev) => ({ ...prev, image: base64Image })); // Store URL
+        } catch (error) {
+          console.error("Image upload failed:", error);
+        }
+      };
     }
   };
 
@@ -63,25 +72,27 @@ export default function UpdateProfile() {
   const handleSave = async (event) => {
     event.preventDefault();
 
+    console.log("userData", JSON.stringify(userData))
+
     try {
       if (!isEqual(userData, initialUser)) {
         setErrors("");
-
-        const formData = new FormData();
+ 
+/*         const formData = new FormData();
         formData.append("firstname", userData.firstname);
         formData.append("lastname", userData.lastname);
         formData.append("email", userData.email);
         formData.append("phone", userData.phone);
-        formData.append("matricule", userData.matricule);
-        if (userData.image) {
+        formData.append("matricule", userData.matricule); 
+         if (userData.image) {
           formData.append("image", userData.image); // Include image in the form data
-        }
+        } 
 
-        const response = await axios.put(
+        console.log("form data: ",formData) */
+
+        const response = await axios.post(
           `http://localhost:8070/api/users/update/${userData._id}`,
-          formData,
-          { headers: { 'Content-Type': 'multipart/form-data' } }
-        );
+          userData        );
 
         if (response.status === 200) {
           console.log("Profil mis à jour avec succès :", response.data);
@@ -149,17 +160,24 @@ export default function UpdateProfile() {
         </MDBCol>
       </MDBRow>
       <hr />
-      <MDBRow>
+      {initialUser._id === JSON.parse(localStorage.getItem("user"))._id &&<MDBRow>
         <MDBCol sm="3">
           <MDBCardText>Profile Picture</MDBCardText>
         </MDBCol>
         <MDBCol sm="9">
           <input type="file" name="image" onChange={handleImageChange} />
+          <input 
+                                    type="file" 
+                                    id="fileInput" 
+                                    style={{ display: 'none' }} 
+                                    accept="image/jpeg" 
+                                    onChange={handleImageChange} 
+                                />
           {userData.image && (
             <img src={userData.image} alt="Profile Preview" style={{ width: '100px', height: '100px', objectFit: 'cover', marginTop: '10px' }} />
           )}
         </MDBCol>
-      </MDBRow>
+      </MDBRow>}
       <hr />
       <MDBBtn type="button" color="primary" onClick={handleSave}>
         Save Changes

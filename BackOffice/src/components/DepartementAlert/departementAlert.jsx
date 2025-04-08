@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import formValidation from './formValidator';
 
 
-const DepartementAlert = ({data, onCancel, onConfirm, type }) => {
+const DepartementAlert = ({data, onCancel, onConfirm, type}) => {
     const [values, setValues]=useState(data)
     const [errors, setErrors]= useState({});
     const [errorsSepc, setErrorsSepc]= useState({});
@@ -18,7 +18,7 @@ const DepartementAlert = ({data, onCancel, onConfirm, type }) => {
     }
 
     const handleConfirm= (event)=>{
-        console.log(data)
+        console.log("data:",data)
         setErrorsSepc(formValidation(values)[0])
         console.log("errSpec", formValidation(values)[0])
      
@@ -44,6 +44,28 @@ const DepartementAlert = ({data, onCancel, onConfirm, type }) => {
                     setError(err.response.data.type[0])
                 });
             }
+            else if(type==="addTeam"){
+              axios.post(`http://localhost:8070/api/addTeam`,  values) 
+              .then((res)=>{
+                      onConfirm()
+                      window.location.reload();
+               })
+              .catch((err)=>{
+                  console.log("err",err);
+                  setError(err.response.data.type[0])
+              });
+          }
+          else if(type==="updateTeam"){
+            axios.put(`http://localhost:8070/api/updateTeam/${data._id}`,  values) 
+            .then((res)=>{
+                    onConfirm()
+                    window.location.reload();
+             })
+            .catch((err)=>{
+                console.log("err",err);
+                setError(err.response.data)
+            });
+        }
 
  
          }

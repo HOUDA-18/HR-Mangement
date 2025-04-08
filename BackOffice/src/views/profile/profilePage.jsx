@@ -42,12 +42,12 @@ export default function ProfilePage( ){
             <MDBCard className="mb-4">
               <MDBCardBody className="text-center">
               <MDBCardImage
-  src="https://scontent.ftun16-1.fna.fbcdn.net/v/t39.30808-6/417481696_1788065228370873_7033853198704674306_n.jpg?_nc_cat=101&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=qwlSvO3MlmcQ7kNvgFnln4x&_nc_oc=AdgCJlBnX3oq5k7BNMHaKDsPuPUUIInCT5vs36JOKiPJIKxP5rmiUFXPHgueqscDbvI&_nc_zt=23&_nc_ht=scontent.ftun16-1.fna&_nc_gid=AgQ6xsgKNoSMGdw_ZZL6V_z&oh=00_AYCI_CUVISPCyCtKpf-qdG7XWmLsTNnYmEuLiQfesiH49w&oe=67CC0939"  // Your image URL here
-  alt="avatar"
-  className="rounded-circle"
-  style={{ width: '150px' }}
-  fluid
-/>
+                src={user.image}  // Your image URL here
+                alt="avatar"
+                className="rounded-circle"
+                style={{ width: '150px' }}
+                fluid
+              />
 
                 <p className="text-muted mb-1">Full Stack Developer</p>
                 <p className="text-muted mb-4">La petite ariana, TUNIS</p>
@@ -91,17 +91,9 @@ export default function ProfilePage( ){
             <MDBCard className="mb-4">
               <MDBCardBody>
                 <MDBRow>
-                <MDBCol sm="3"><MDBCardText>FirstName</MDBCardText></MDBCol>
-                <MDBCol sm="9"><MDBCardText className="text-muted"> {user.firstname}</MDBCardText></MDBCol>
+                <MDBCol sm="3"><MDBCardText>Full name</MDBCardText></MDBCol>
+                <MDBCol sm="9"><MDBCardText className="text-muted"> {user.firstname +  " "+ user.lastname}</MDBCardText></MDBCol>
                  
-                </MDBRow>
-                <hr />
-
-                <MDBRow>
-                <MDBCol sm="3"><MDBCardText>LastName</MDBCardText></MDBCol>
-                  <MDBCol sm="9">
-                    <MDBCardText className="text-muted"> {user.lastname}</MDBCardText>
-                  </MDBCol>
                 </MDBRow>
                 <hr />
                 <MDBRow>

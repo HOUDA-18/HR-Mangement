@@ -1,4 +1,4 @@
-const roles = require('./rolesEnum')
+const {Status, Roles, employmentType} = require('./Enums')
 const mongoose = require('mongoose')
 const yup = require('yup')
 
@@ -7,13 +7,18 @@ const user = new mongoose.Schema({
     lastname: {type: String, required: true},
     matricule: {type: String, unique: true, required: true},
     email: {type: String, unique: true, required: true},
-    phone : {type: String, required: true},
-    image : {type: String, required: true},
+    phone : {type: String},
+    image : {type: String},
     password: {type: String, required: true},
-    active: Boolean,
-    telephone: String,
+    employmentType: { type: String,
+                      enum: Object.values(employmentType)},
+    status: { type: String,
+              enum: Object.values(Status)},
+    phone: String,
     role: { type: String,
-            enum: Object.values(roles)},
+            enum: Object.values(Roles)},
+    createdAt: String,
+    updatedAt: String,
     departement: { type: mongoose.Schema.Types.ObjectId, ref: 'departement' }
 
 })
@@ -27,10 +32,8 @@ const UserSchema = yup.object({
             lastname: yup.string().min(3).max(20).required("lastname is required"),
             matricule: yup.string().min(3).max(20).required("matricule is required"),
             email: yup.string().email("Invalid email format").required("Email is required"),
-            phone: yup.string().required("phone is required"),
-            image: yup.string().required("image is required"),
             password: yup.string().required("password is required"),
-            telephone: yup.string()
+            employmentType: yup.string().required("employement type is required")
         })
 })
 

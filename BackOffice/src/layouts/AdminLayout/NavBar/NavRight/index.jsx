@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 // react-bootstrap
@@ -21,7 +21,12 @@ import { useLogout } from 'hooks/useLogout';
 
 const NavRight = () => {
   const [listOpen, setListOpen] = useState(false);
+  const [user, setUser]= useState({})
+  useEffect(()=>{
+    setUser( JSON.parse(localStorage.getItem('user')))
+    console.log(JSON.parse(localStorage.getItem('user')))
 
+  },[])
   const nav = useNavigate()
     const logout = useLogout()
     
@@ -144,12 +149,12 @@ const NavRight = () => {
         <ListGroup.Item as="li" bsPrefix=" ">
           <Dropdown align="end" className="drp-user">
             <Dropdown.Toggle as={Link} variant="link" to="#" id="dropdown-basic">
-              <img src={avatar1} className="img-radius wid-40" alt="User Profile" />
+              <img src={user.image || "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&w=600"} className="img-radius wid-40" alt="User Profile" />
             </Dropdown.Toggle>
             <Dropdown.Menu align="end" className="profile-notification">
               <div className="pro-head">
-                <img src={avatar1} className="img-radius" alt="User Profile" />
-                <span>John Doe</span>
+                <img src={user.image || "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&w=600"} className="img-radius" alt="User Profile" />
+                <span>{user.firstname + " "+user.lastname}</span>
                 <div className="dud-logout" title="Logout" onClick={()=>handleLogout()}>
                   <i className="feather icon-log-out" />
                 </div>

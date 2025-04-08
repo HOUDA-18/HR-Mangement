@@ -2,8 +2,10 @@
 module.exports= app =>{
     const userController= require("../controllers/userController")
     const departementController = require("../controllers/departementController")
+    const teamController = require("../controllers/teamController")
     const { UserSchema, loginSchema} = require("../models/user");
     const {DepartementSchema}=require("../models/departement")
+    const {TeamSchema}= require("../models/team")
     const validate = require('../middelwares/validate')
     var router = require("express").Router();
 
@@ -19,8 +21,10 @@ module.exports= app =>{
 
     router.post('/users/login', validate(loginSchema), userController.login);
 
+    router.get('/users/getById/:id', userController.getUserByID);
+
     //update user
-    router.put("/users/update/:id", userController.update);
+    router.post("/users/update/:id", userController.update);
 
     //delete user
     router.delete('/users/delete/:id', userController.deleteUser);
@@ -32,8 +36,15 @@ module.exports= app =>{
 
     router.post('/users/change-password', userController.changePassword);
 
+    router.get('/users/totalUsers', userController.getUsersCount)
+
+    router.get('/user-distribution',userController.userDistributionByRole);
+    router.get('/user-status-distribution', userController.StatusDistribution);
+    router.get('/user-department-distribution', userController.DepartementDistribution);
+
     //departements management
     router.get('/departements', departementController.getDepartements)
+    router.get('/departements/totalDepartements', departementController.getDepartementsCount)
 
     router.get('/departements/getById/:id', departementController.getDepartementById)
 
@@ -53,6 +64,27 @@ module.exports= app =>{
 
 
     router.post('/users/verfy-account',userController.sendVerificationCode)
+
+
+    // teams routes
+    router.get('/teamsByDepartement/:id', teamController.getTeamsByDepartement)
+
+    router.get('/employeesByTeam/:id', teamController.getEmployeesByTeam)
+
+    router.get('/teams/:id', teamController.getTeamById)
+
+    router.post('/addTeam',validate(TeamSchema), teamController.addTeam)
+
+    router.put('/updateTeam/:id',validate(TeamSchema), teamController.update)
+
+    router.delete('/deleteTeam/:id', teamController.deleteTeam)
+
+    router.put('/teams/assignEmployee/:idTeam/:idEmployee', teamController.AssignEmployeeToTeam)
+
+    router.put('/teams/detachEmployee/:idTeam/:idEmployee', teamController.detachEmployeeFromTeam)
+
+    router.post('/teams/assignHeadTeam/:idTeam/:idEmployee', teamController.AssignHeadTeamToTeam)
+    
 
 /* 
 

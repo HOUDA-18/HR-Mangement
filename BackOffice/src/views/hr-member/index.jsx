@@ -2,9 +2,14 @@ import { AdminPanelSettings, Info, PersonOff } from '@mui/icons-material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import './index.scss'
+import { useNavigate } from 'react-router-dom';
 const HRMembers = () => {
   const [hrMembers, setHRMembers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const limit = 2;
+  const navigate = useNavigate()
 
   const  handleMakeHeadDepartement = (emp, idDept)=>{
     axios.post(`http://localhost:8070/api/departements/assignChefDepartement/${idDept}/${emp._id}`)
@@ -24,21 +29,22 @@ const HRMembers = () => {
    })
  }
  const  handleView= (emp)=>{
-   navigate(`/app/dashboard/profile`,{state:{ values: emp}})
- }
+  navigate(`/app/dashboard/employees/employeeDetails`,{state:{ values: emp._id}})
+}
   useEffect(() => {
-    axios.get("http://localhost:8070/api/HRmembers")
+    axios.get(`http://localhost:8070/api/HRmembers?page=${currentPage}&limit=${limit}`)
       .then((res) => {
         console.log(res)
         console.log("Données RH reçues :", res);
-        setHRMembers(res.data); 
+        setHRMembers(res.data.rhMembers); 
+        setTotalPages(res.data.totalPages)
         setLoading(false);
       })
       .catch((error) => {
         console.error("Erreur lors de la récupération des membres RH :", error);
         setLoading(false);
       });
-  }, []);
+  }, [currentPage]);
 
   if (loading) {
     return <div style={{ textAlign: 'center', padding: '20px', color: '#666' }}>Chargement...</div>;
@@ -120,6 +126,12 @@ const HRMembers = () => {
                     textAlign: 'left',
                     fontWeight: '500',
                     fontSize: '16px'
+                  }}> Role</th>
+                  <th style={{
+                    padding: '15px',
+                    textAlign: 'left',
+                    fontWeight: '500',
+                    fontSize: '16px'
                   }}> Actions</th>
                 </tr>
               </thead>
@@ -148,6 +160,11 @@ const HRMembers = () => {
                       color: '#2c3e50',
                       fontSize: '14px'
                     }}>{member.email}</td>
+                    <td style={{
+                      padding: '15px',
+                      color: '#2c3e50',
+                      fontSize: '14px'
+                    }}>{member.role}</td>
                     <td>
                                                     <div className="cellAction">
                                                         <div className="viewButton" onClick={()=>handleView(member)}>
@@ -167,6 +184,21 @@ const HRMembers = () => {
                 ))}
               </tbody>
             </table>
+            <div className='pagination'>
+              <button 
+                disabled={currentPage === 1} 
+                onClick={() => setCurrentPage(currentPage - 1)}
+              >
+                Prev
+              </button>
+              <span className='page-info'> Page {currentPage} of {totalPages} </span>
+              <button 
+                disabled={currentPage === totalPages} 
+                onClick={() => setCurrentPage(currentPage + 1)}
+              >
+                Next
+              </button>
+            </div>
           </div>
         )}
       </div>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from 'react-router-dom';
 import '../2fa/style2.css'; // Import the CSS file
+import axios from "axios";
 
 const TwoFASetup = () => {
     const [code, setCode] = useState(["", "", "", "", "", ""]);

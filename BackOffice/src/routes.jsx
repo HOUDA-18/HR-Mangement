@@ -71,43 +71,49 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/analytics',
         element: lazy(() => import('./views/dashboard')),
-        guard: (props) => <AuthGuard allowedRoles={['admin','SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR','EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['admin','SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR','EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/departements',
         element: lazy(() => import('./views/departements')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/departements/details',
         element: lazy(() => import('./views/departements/viewDepartement')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
+      },
+      {
+        exact: 'true',
+        path: '/app/dashboard/departements/details/team/details',
+        element: lazy(() => import('./views/departements/viewTeam/index')),
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/offers',
         element: lazy(() => import('./views/offer')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR','EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR','EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/leaves',
         element: lazy(() => import('./views/leaves')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/workshops',
         element: lazy(() => import('./views/workshops')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/employees',
         element: lazy(() => import('./views/employees')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','MEMBRE_HR']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
@@ -116,27 +122,32 @@ export const routes = [
       },
       {
         exact: 'true',
+        path: '/app/dashboard/employees/employeeDetails',
+        element: lazy(() => import('./views/employees/employeeDetails/index'))
+      },
+      {
+        exact: 'true',
         path: '/app/dashboard/events',
         element: lazy(() => import('./views/events')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/attendance',
         element: lazy(() => import('./views/attendance')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/complaints',
         element: lazy(() => import('./views/complaint')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','ADMIN_HR','EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/chat-rooms',
         element: lazy(() => import('./views/chat-rooms')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','ADMIN_HR','EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
@@ -152,7 +163,7 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/hr-member',
         element: lazy(() => import('./views/hr-member')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','MEMBRE_HR']}>{props.children}</AuthGuard>
       }/* ,
       {
         exact: 'true',

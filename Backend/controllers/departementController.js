@@ -47,6 +47,15 @@ exports.getDepartements = async (req, res) => {
     }
 };
 
+exports.getDepartementsCount = async (req, res) => {
+    try {
+    
+      const totalDepartements = await Departement.countDocuments();      
+        res.status(200).json(totalDepartements);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+  };
 
 exports.AssignEmployeeToDepartement = async (req, res) => {
     const {idDepartement, idEmployee} = req.params
@@ -230,13 +239,35 @@ exports.import= async (req,res)=>{
 
 exports.getEmployeesByDepartement = async (req, res) => {
     const { id } = req.params;
-    const departement = await Departement.findById(id);
-    if(!departement){
-        return res.status(404).json("Departement not found")
-    }
-    try {   
-        const employees = await User.find({departement: id})     
-        res.status(200).json(employees);
+
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const status = req.query.status || 'ALL';
+
+    try {       
+        const departement = await Departement.findById(id);
+        if(!departement){
+            return res.status(404).json("Departement not found")
+        }
+        const query = { departement: id };
+    
+        if (status !== 'ALL') {
+          query.status = status;
+        }
+    
+        const projection = 'firstname lastname email matricule role status employmentType phone departement image';
+    
+        const employees = await User.find(query, projection)
+          .skip((page - 1) * limit)
+          .limit(limit);
+    
+        const totalUsers = await User.countDocuments(query);
+
+        res.status(200).json({
+            employees: employees,
+            totalPages: Math.ceil(totalUsers / limit),
+            currentPage: page,
+          });
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
@@ -282,6 +313,7 @@ exports.update= async (req,res)=>{
 exports.deleteDepartement = async (req, res) => {
   try {
     const { id } = req.params;
+    await User.find({departement: id}, {departement: null}, {new: true})
     const departement = await Departement.findByIdAndDelete(id);
 
     if (!departement) {

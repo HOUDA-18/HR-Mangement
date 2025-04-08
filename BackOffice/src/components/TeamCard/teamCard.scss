@@ -1,0 +1,100 @@
+.team-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+    width: 300px;
+  
+    &:hover {
+      transform: scale(1.02);
+    }
+  
+    .icon {
+      background: #007bff;
+      color: white;
+      padding: 10px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  
+    .details {
+      flex-grow: 1;
+      margin-left: 15px;
+  
+      .team-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #333;
+      }
+  
+      .team-code,
+      .team-members,
+      .team-head {
+        font-size: 14px;
+        color: #666;
+      }
+  
+      .team-head span {
+        font-weight: bold;
+      }
+    }
+  
+    .actions {
+        display: flex;
+        flex-direction: column;  // Arrange buttons vertically
+        gap: 10px;  // Space between the buttons
+    
+        .update-btn,
+        .delete-btn,
+        .details-btn{
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          border: none;
+          padding: 6px 10px;
+          border-radius: 6px;
+          font-size: 14px;
+          cursor: pointer;
+          transition: background 0.3s;
+          width: 100%;  // Make the buttons take full width of their container
+    
+          svg {
+            width: 16px;
+            height: 16px;
+          }
+        }
+    
+        .update-btn {
+          background: #ffc107;
+          color: #333;
+    
+          &:hover {
+            background: #e0a800;
+          }
+        }
+    
+        .delete-btn {
+          background: #dc3545;
+          color: white;
+    
+          &:hover {
+            background: #c82333;
+          }
+        }
+        .details-btn {
+            background: #007bff;
+            color: white;
+      
+            &:hover {
+              background: #0056b3;
+            }
+          }
+      }
+  }
+  

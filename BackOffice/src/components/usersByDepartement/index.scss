@@ -1,0 +1,39 @@
+// UserDistributionByDepartment.scss
+
+.bar-chart-container {
+    width: 650px;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    padding: 1rem;
+    transition: background 0.3s ease;
+  
+    // Optional for dark mode
+    @media (prefers-color-scheme: dark) {
+      background-color: #18181b;
+      color: #f3f3f3;
+    }
+  }
+  
+  .bar-chart-inner {
+    padding: 0.5rem;
+  }
+  
+  .bar-chart-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #6366f1; // Accent color for title
+  }
+  
+  .bar-chart-box {
+    height: 19rem; // Same height as the chart
+  }
+  
+  .bar-chart-box p {
+    text-align: center;
+    font-size: 1rem;
+    color: #888;
+  }
+  

@@ -62,7 +62,7 @@ const filteredNavigation = filterMenuItems(navigation.items);
   let navBarClass = ['navbar-wrapper'];
   let navContent = (
     <div className={navBarClass.join(' ')}>
-      <NavContent navigation={navigation.items} />
+      <NavContent navigation={filteredNavigation} />
     </div>
   );
 
@@ -70,7 +70,7 @@ const filteredNavigation = filterMenuItems(navigation.items);
   if (windowSize.width < 992) {
     navContent = (
       <div className="navbar-wrapper">
-        <NavContent navigation={navigation.items} />
+        <NavContent navigation={filteredNavigation} />
       </div>
     );
   }

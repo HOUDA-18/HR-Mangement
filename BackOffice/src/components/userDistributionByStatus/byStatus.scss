@@ -1,0 +1,40 @@
+// UserDistributionByStatus.scss
+
+.donut-chart-container {
+    width: 620px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: background 0.3s ease;
+  
+    // Dark mode styling (optional)
+    @media (prefers-color-scheme: dark) {
+      background-color: #18181b;
+      color: #f3f3f3;
+    }
+  }
+  
+  .donut-chart-inner {
+    padding: 1rem;
+  }
+  
+  .donut-chart-title {
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: #6366f1; // Accent color for title
+  }
+  
+  .donut-chart-box {
+    height: 300px;  // Set height for the chart container
+  }
+  
+  .donut-chart-box p {
+    text-align: center;
+    font-size: 1rem;
+    color: #888;
+  }
+  

@@ -42,5 +42,21 @@ export const employeeInputs = [
       type: "password",
       placeholder: "confirm password",
     }
+    ,
+    {
+      id: 7,
+      label: "Phone Number:",
+      name : "phone",
+      type: "text",
+      placeholder: "enter phone number",
+    }
+    ,
+    {
+      id: 8,
+      label: "Employement Type:",
+      name : "employmentType",
+      type: "select",
+      placeholder: "enter employement Type",
+    }
 
   ];

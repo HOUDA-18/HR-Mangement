@@ -1,3 +1,4 @@
+
 function formValidation(values){
     let errorsSpec = {};
     let erreur= false;
@@ -9,6 +10,8 @@ function formValidation(values){
         email: false,
         password: false,
         password_confirmation: false,
+        phone: false,
+        employementType: false
     };
     let emailPattern = /^[^@]+@[^@]+\.[^@]+$/;
   
@@ -27,6 +30,17 @@ function formValidation(values){
         errorsSpec.matricule="Required field"
         erreur= true;
        }
+    if(values.phone === ""){
+        errors.phone= true
+        errorsSpec.phone="Required field"
+        erreur= true;
+       }
+
+    if( values.employementType===""){
+        errors.employementType= true
+        errorsSpec.employementType="Required field"
+        erreur= true;
+    }
     
     if(values.email === ""){
       errors.email= true

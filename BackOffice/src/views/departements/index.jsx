@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import "./index.scss"
 import DepartementAlert from 'components/DepartementAlert/departementAlert';
+import { OverlayTrigger, Tooltip } from 'react-bootstrap';
 
 // ==============================|| DASHBOARD ANALYTICS ||============================== //
 
@@ -19,6 +20,7 @@ const Departements = () => {
   const [deleteId, setDeleteId]= useState('')
 
   const navigate = useNavigate()
+  const currentUser = JSON.parse(localStorage.getItem("user"))
 
 
   const handleCancel = ()=>{
@@ -95,10 +97,10 @@ const Departements = () => {
     <React.Fragment>
       <div className="buttons">
         <h1>Departements</h1>
-          <div className="link" onClick={handleAdd}>
+          {(currentUser.role ==="ADMIN_HR" || currentUser.role==="MEMBRE_HR") && <div className="link" onClick={handleAdd}>
                   <Add/>
                     Add Departement
-          </div>
+          </div>}
 
       </div>
         
@@ -132,6 +134,7 @@ const Departements = () => {
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Code</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Name</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Employees count</th>
+              <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Teams count</th>
               <th style={{ padding: '12px 15px', textAlign: 'left', backgroundColor: '#007bff', color: 'white', fontWeight: 'bold' }}>Actions</th>
 
             </tr>
@@ -139,20 +142,53 @@ const Departements = () => {
           <tbody>
             {departements.map((dept) => (
               <tr key={dept._id} style={{ borderBottom: '1px solid #dddddd' }}>
-                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{dept.code}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}><strong>{dept.code}</strong> </td>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{dept.name}</td>
                 <td style={{ padding: '12px 15px', textAlign: 'left' }}>{dept.employees.length}</td>
+                <td style={{ padding: '12px 15px', textAlign: 'left' }}>{dept.teams.length}</td>
                 <td>
                   <div className="cellAction">
-                    <div className="viewButton" onClick={()=>handleView(dept)}>
-                      <Info/>
-                    </div>
-                    <div className="editButton" onClick={()=>handleModifier(dept)}>
-                        <EditNote />
-                      </div>
-                    <div className="deleteButton" onClick={()=>handleDelete(dept._id)}>
-                      <DeleteForever/>
-                    </div>
+                  <OverlayTrigger
+                              placement="top"
+                              overlay={
+                                <Tooltip id={`tooltip-view-user`}>
+                                  View Departement details
+                                </Tooltip>
+                              }
+                            >
+                              <div className="viewButton" onClick={()=>handleView(dept._id)}>
+                                <Info />
+                              </div>
+                  </OverlayTrigger>
+
+                    {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ||(currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement === dept._id) ) && 
+                        <OverlayTrigger
+                                  placement="top"
+                                  overlay={
+                                    <Tooltip id={`tooltip-view-user`}>
+                                      Edit departement informations
+                                    </Tooltip>
+                                  }
+                                >
+                                  <div className="editButton" onClick={()=>handleModifier(dept)}>
+                                    <EditNote />
+                                  </div>
+                      </OverlayTrigger>}
+
+                      {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ||(currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement === dept._id) ) &&
+                      <OverlayTrigger
+                                placement="top"
+                                overlay={
+                                  <Tooltip id={`tooltip-view-user`}>
+                                    Delete departement permanently
+                                  </Tooltip>
+                                }
+                              >
+                                <div className="deleteButton" onClick={()=>handleDelete(dept._id)}>
+                                  <DeleteForever/>
+                                </div>
+                    </OverlayTrigger>
+                      }
                   </div>
                 </td>
               </tr>

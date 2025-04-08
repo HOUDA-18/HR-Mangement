@@ -1,4 +1,8 @@
-.Livrable {
+.departement-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-between; 
+  .Livrable {
     -webkit-box-shadow: 2px 4px 10px 1px rgba(0, 0, 0, 0.47);
     box-shadow: 2px 4px 10px 1px rgba(201, 201, 201, 0.47);
     padding: 10px;
@@ -6,6 +10,7 @@
     width: 50%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
 
     .detailItem {
@@ -56,6 +61,30 @@
         }
     }
 }
+.link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-color: #28a745;
+  color: white;
+  padding: 10px 15px;
+  border-radius: 5px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background 0.3s ease;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #218838;
+  }
+
+  svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+}
+
 
 .title{
     margin-top: 10px;
@@ -110,3 +139,50 @@
       cursor: pointer;
     }
   }
+
+  .team-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); // 4 cards per row
+    gap: 20px; // Spacing between cards
+    padding: 20px;
+  
+    @media (max-width: 1024px) {
+      grid-template-columns: repeat(2, 1fr); // 2 cards per row on tablets
+    }
+  
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(1, 1fr); // 1 card per row on mobile
+    }
+  }  
+
+
+
+  .button-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center; // Centers the button
+    margin-top: 20px;
+
+    .toggle-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #007bff;
+    color: white;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+
+    &:hover {
+      background: #0056b3;
+      transform: scale(1.05);
+    }
+
+    .svg {
+      transition: transform 0.3s;
+    }
+  }}

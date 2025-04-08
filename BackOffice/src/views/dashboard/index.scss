@@ -1,0 +1,17 @@
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    padding: 0.5rem;
+    max-width: 1200px;
+    margin-right: 20px;
+    margin-left: 20px;
+    justify-items: space-around;
+    justify-content: space-between;  // Ensures space between the rows as well
+  
+    @media (max-width: 768px) {
+      grid-template-columns: 1fr;
+      justify-items: center;
+    }
+  }
+  

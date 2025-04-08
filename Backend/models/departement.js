@@ -5,6 +5,7 @@ const departement = new mongoose.Schema({
     code: {type: String, required: true},
     name: {type: String, required: true},
     chefDepartement: { type: mongoose.Schema.Types.ObjectId, ref: 'user' , default:null},
+    teams: [{ type: mongoose.Schema.Types.ObjectId, ref: 'team' }],
     employees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }]
 
 })
@@ -15,7 +16,7 @@ const DepartementSchema = yup.object({
     body:
         yup.object({
             code: yup.string().min(3).max(20).required("Departement code is required"),
-            name: yup.string().min(2).max(20).required("Departement name is required")
+            name: yup.string().min(2).max(50).required("Departement name is required")
         })
 })
 
