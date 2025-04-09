@@ -4,7 +4,7 @@ const {User}= require("../models/user")
 const nodemailer = require("nodemailer");
 
 exports.addTeam= async (req,res)=>{
-    const {code, name, departement} = req.body
+    const {code, name, departement,skills} = req.body
     if(await Team.findOne({code:code})){
         return res.status(405).json("Team with same code already exists")
     }
@@ -15,6 +15,7 @@ exports.addTeam= async (req,res)=>{
         const newTeam = new Team({
             code: code,
             name: name,
+            skills: skills|| [],
             departement: departement
         })
         Team.create(newTeam)

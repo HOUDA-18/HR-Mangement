@@ -3,6 +3,7 @@ import './departementAlert.scss';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import formValidation from './formValidator';
+import MultiSelectInput from 'components/multi-select';
 
 
 const DepartementAlert = ({data, onCancel, onConfirm, type}) => {
@@ -12,6 +13,13 @@ const DepartementAlert = ({data, onCancel, onConfirm, type}) => {
     const [error, setError]=useState("");
     const navigate = useNavigate()
 
+
+    const setSkills = (newSkills) => {
+      setValues((prevData) => ({
+        ...prevData,
+        skills: newSkills,
+      }));
+    };
     
     const handleInput = (event)=>{
         setValues(prev => ({...prev, [event.target.name] : event.target.value}));
@@ -19,11 +27,13 @@ const DepartementAlert = ({data, onCancel, onConfirm, type}) => {
 
     const handleConfirm= (event)=>{
         console.log("data:",data)
+        
         setErrorsSepc(formValidation(values)[0])
         console.log("errSpec", formValidation(values)[0])
      
          if(formValidation(values)[1]==false){
             if(type==="add"){
+              data.skills=skills
                 axios.post('http://localhost:8070/api/departements',  values) 
                 .then((res)=>{
                        onConfirm()
@@ -88,6 +98,14 @@ const DepartementAlert = ({data, onCancel, onConfirm, type}) => {
             <input name='name' type="text" value={values.name || ""} placeholder='Enter departement name' onChange={handleInput}/>
             {errorsSepc.name!="" && (<small className="text-danger form-text">{errorsSepc.name}</small>)}
         </div>
+        {type=="addTeam" && 
+           
+           <div className="field">
+           <label >Skills: </label>
+           <MultiSelectInput skills={data.skills} setSkills={setSkills}></MultiSelectInput>
+           </div>
+           
+        }
         <div className="confirmation-buttons">
           <button onClick={()=>handleConfirm()} className="confirm-button">Save</button>
           <button onClick={()=>onCancel()} className="cancel-button">Cancel</button>

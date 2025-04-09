@@ -3,9 +3,13 @@ module.exports= app =>{
     const userController= require("../controllers/userController")
     const departementController = require("../controllers/departementController")
     const teamController = require("../controllers/teamController")
+    const offerController = require("../controllers/offreController")
+
+
     const { UserSchema, loginSchema} = require("../models/user");
     const {DepartementSchema}=require("../models/departement")
     const {TeamSchema}= require("../models/team")
+    const {offerSchema}= require("../models/offre")
     const validate = require('../middelwares/validate')
     var router = require("express").Router();
     const multer = require('multer');
@@ -88,6 +92,11 @@ module.exports= app =>{
     router.put('/teams/detachEmployee/:idTeam/:idEmployee', teamController.detachEmployeeFromTeam)
 
     router.post('/teams/assignHeadTeam/:idTeam/:idEmployee', teamController.AssignHeadTeamToTeam)
+
+
+    // offre routes
+    router.post('/offre/addoffre', validate(offerSchema),offerController.addOffer )
+    router.get('/offre/all',offerController.getAllOffers )
     
 
 /* 

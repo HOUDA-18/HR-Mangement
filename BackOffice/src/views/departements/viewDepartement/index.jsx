@@ -120,6 +120,7 @@ const handleAddToTeam = (emp)=>{
     setTeam({
       code: "",
       name: "",
+      skills: [''],
       departement: departementId
     })
     setShowAlertAddTeam(true)

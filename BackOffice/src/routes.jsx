@@ -96,13 +96,13 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/departements/details',
         element: lazy(() => import('./views/departements/viewDepartement')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
         path: '/app/dashboard/departements/details/team/details',
         element: lazy(() => import('./views/departements/viewTeam/index')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','dev']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
