@@ -11,6 +11,7 @@ RUN apt-get update && apt-get install -y \
     libpango1.0-dev \
     libjpeg-dev \
     libgif-dev \
+    librsvg2-dev \   # Ajout de librsvg pour résoudre les problèmes avec rsvg_handle_render_document
     && rm -rf /var/lib/apt/lists/*
 
 # Définir le répertoire de travail
