@@ -1,6 +1,7 @@
 # Use official Node.js 20 Alpine image
 FROM node:20-alpine
-# Dépendances pour compiler canvas
+
+# Dépendances nécessaires pour la compilation des modules natifs comme bcrypt
 RUN apk add --no-cache \
     python3 \
     make \
@@ -10,21 +11,21 @@ RUN apk add --no-cache \
     pango-dev \
     jpeg-dev \
     giflib-dev
-# Set working directory (recommended to keep even if not strictly required)
+
+# Set working directory (recommandé, même si ce n'est pas strictement nécessaire)
 WORKDIR /app
 
-# Copy package files first for better layer caching
+# Copie les fichiers de package.json pour une meilleure mise en cache des couches
 COPY package*.json ./
 
-# Install dependencies
-# Installation des dépendances (assurez-vous que les dépendances natives soient compilées pour l'architecture cible)
+# Installation des dépendances (forcera la recompilation des modules natifs comme bcrypt)
 RUN npm install --build-from-source
 
-# Copy all application files
+# Copie tous les fichiers de l'application
 COPY . .
 
-# Expose the port your app runs on
+# Expose le port sur lequel ton app écoute
 EXPOSE 8070
 
-# Start the application
+# Lancer l'application
 CMD ["node", "server.js"]
