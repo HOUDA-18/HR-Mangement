@@ -10,14 +10,14 @@ pipeline {
     stages {
         stage('Build Backend') {
             stages {
-                // Commenté le stage 'Install Dependencies' comme demandé
-                // stage('Install Dependencies') {
-                //     steps {
-                //         dir('Backend') {
-                //             sh 'npm install' // ← PROBLÈME ICI
-                //         }
-                //     }
-                // }
+             
+                 stage('Install Dependencies') {
+                    steps {
+                        dir('Backend') {
+                           sh 'npm install' 
+                         }
+                    }
+                 }
                 
                 stage('Fix Permissions') {
                     steps {
