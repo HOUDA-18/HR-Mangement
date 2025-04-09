@@ -1,9 +1,9 @@
-# Utiliser une image Node.js 20 basée sur Debian Slim
 FROM node:20-slim
 
-# Installer les dépendances système pour canvas
+# Étape critique : Mise à jour et installation des dépendances
 RUN apt-get update && \
     apt-get install -y \
+    build-essential \
     python3 \
     make \
     g++ \
@@ -11,19 +11,23 @@ RUN apt-get update && \
     libpango1.0-dev \
     libjpeg-dev \
     libgif-dev \
-    librsvg2-dev && \
-    rm -rf /var/lib/apt/lists/*
+    librsvg2-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
+# Nettoyage des modules existants et cache
+RUN rm -rf node_modules && \
+    npm cache clean --force
+
 COPY package*.json ./
 
-# Installation des dépendances et recompilation
-RUN npm install --build-from-source
+# Installation en mode production avec reconstruction native
+ENV NODE_ENV=production
+RUN npm ci --build-from-source --python=/usr/bin/python3
 RUN npm rebuild canvas --build-from-source
 
 COPY . .
 
 EXPOSE 8070
-
 CMD ["node", "server.js"]
