@@ -9,14 +9,15 @@ pipeline {
 
     stages {
         stage('Build Backend') {
-           // stages {
-               // stage('Install Dependencies') {
-                    //steps {
-                       // dir('Backend') {
-                           // sh 'npm install'
-                        //}
-                    //}
-                //}
+            stages {
+                // Commenté le stage 'Install Dependencies' comme demandé
+                // stage('Install Dependencies') {
+                //     steps {
+                //         dir('Backend') {
+                //             sh 'npm install' // ← PROBLÈME ICI
+                //         }
+                //     }
+                // }
                 
                 stage('Fix Permissions') {
                     steps {
@@ -96,13 +97,17 @@ pipeline {
         stage('Build All Components') {
             parallel {
                 stage('Build FrontOffice') {
-                    stages { ... }
+                    steps {
+                        // Ajoutez ici les étapes nécessaires pour le FrontOffice
+                    }
                 }
                 stage('Build BackOffice') {
-                    stages { ... }
+                    steps {
+                        // Ajoutez ici les étapes nécessaires pour le BackOffice
+                    }
                 }
             }
         }
         */
     }
-
+}
