@@ -1,5 +1,5 @@
 # Utiliser une image Node.js 20 basée sur Debian (plus compatible avec les dépendances natives)
-FROM node:20
+FROM node:20-alpine
 
 # Installer les dépendances nécessaires pour la compilation des modules natifs comme bcrypt
 RUN apt-get update && apt-get install -y \
