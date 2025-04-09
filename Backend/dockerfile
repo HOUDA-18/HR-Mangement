@@ -1,30 +1,31 @@
-# Use official Node.js 20 Alpine image
-FROM node:20-alpine
+# Utiliser une image Node.js 20 basée sur Debian (plus compatible avec les dépendances natives)
+FROM node:20
 
-# Dépendances nécessaires pour la compilation des modules natifs comme bcrypt
-RUN apk add --no-cache \
+# Installer les dépendances nécessaires pour la compilation des modules natifs comme bcrypt
+RUN apt-get update && apt-get install -y \
     python3 \
     make \
     g++ \
-    pixman-dev \
-    cairo-dev \
-    pango-dev \
-    jpeg-dev \
-    giflib-dev
+    libpixman-1-dev \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Set working directory (recommandé, même si ce n'est pas strictement nécessaire)
+# Définir le répertoire de travail
 WORKDIR /app
 
-# Copie les fichiers de package.json pour une meilleure mise en cache des couches
+# Copier les fichiers de package.json pour une meilleure mise en cache des couches
 COPY package*.json ./
 
 # Installation des dépendances (forcera la recompilation des modules natifs comme bcrypt)
 RUN npm install --build-from-source
 
-# Copie tous les fichiers de l'application
+# Copier tous les fichiers de l'application
 COPY . .
 
-# Expose le port sur lequel ton app écoute
+# Exposer le port sur lequel ton app écoute
 EXPOSE 8070
 
 # Lancer l'application
