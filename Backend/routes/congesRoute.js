@@ -1,0 +1,98 @@
+const express = require('express');
+const router = express.Router();
+const { Conges, CongesSchema } = require('../models/conges'); // Fix schema name capitalization
+const validate = require('../middlewares/validate');
+const { User } = require('../models/user');
+
+// POST - Create new leave request
+router.post('/', validate(CongesSchema), async (req, res) => {
+    try {
+        // Check if employee exists
+        const employee = await User.findById(req.body.id_employee);
+        if (!employee) return res.status(404).json({ message: 'Employee not found' });
+
+        const newLeave = new Conges(req.body);
+        await newLeave.save();
+        res.status(201).json(newLeave);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// GET - Get all leave requests (filterable by employee ID and status)
+router.get('/', async (req, res) => {
+    try {
+        const filters = {};
+        if (req.query.id_employee) filters.id_employee = req.query.id_employee;
+        if (req.query.status) filters.status = req.query.status;
+
+        const leaves = await Conges.find(filters);
+        res.json(leaves);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// GET - Get single leave request by ID
+router.get('/:id', async (req, res) => {
+    try {
+        const leave = await Conges.findById(req.params.id);
+        if (!leave) return res.status(404).json({ message: 'Leave request not found' });
+        res.json(leave);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// PUT - Update leave request details
+router.put('/:id', validate(CongesSchema), async (req, res) => {
+    try {
+        // Prevent changing employee ID after creation
+        delete req.body.id_employee;
+
+        const updatedLeave = await Conges.findByIdAndUpdate(
+            req.params.id,
+            req.body,
+            { new: true }
+        );
+        
+        if (!updatedLeave) return res.status(404).json({ message: 'Leave request not found' });
+        res.json(updatedLeave);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// PUT - Update leave request status
+router.put('/:id/status', async (req, res) => {
+    try {
+        const { status } = req.body;
+        if (!['pending', 'accepted', 'rejected'].includes(status)) {
+            return res.status(400).json({ message: 'Invalid status value' });
+        }
+
+        const updatedLeave = await Conges.findByIdAndUpdate(
+            req.params.id,
+            { status },
+            { new: true }
+        );
+
+        if (!updatedLeave) return res.status(404).json({ message: 'Leave request not found' });
+        res.json(updatedLeave);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// DELETE - Delete leave request
+router.delete('/:id', async (req, res) => {
+    try {
+        const deletedLeave = await Conges.findByIdAndDelete(req.params.id);
+        if (!deletedLeave) return res.status(404).json({ message: 'Leave request not found' });
+        res.json({ message: 'Leave request deleted successfully' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+module.exports = router;
