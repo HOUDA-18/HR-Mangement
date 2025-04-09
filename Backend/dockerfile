@@ -17,7 +17,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Install dependencies
-RUN npm install
+# Installation des dépendances (assurez-vous que les dépendances natives soient compilées pour l'architecture cible)
+RUN npm install --build-from-source
 
 # Copy all application files
 COPY . .
