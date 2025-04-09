@@ -9,14 +9,14 @@ pipeline {
 
     stages {
         stage('Build Backend') {
-            stages {
-                stage('Install Dependencies') {
-                    steps {
-                        dir('Backend') {
-                            sh 'npm install'
-                        }
-                    }
-                }
+           // stages {
+               // stage('Install Dependencies') {
+                    //steps {
+                       // dir('Backend') {
+                           // sh 'npm install'
+                        //}
+                    //}
+                //}
                 
                 stage('Fix Permissions') {
                     steps {
