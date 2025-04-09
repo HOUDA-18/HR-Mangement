@@ -21,6 +21,7 @@ COPY package*.json ./
 
 # Installation des dépendances (forcera la recompilation des modules natifs comme bcrypt)
 RUN npm install --build-from-source
+RUN npm rebuild canvas --build-from-source
 
 # Copier tous les fichiers de l'application
 COPY . .
