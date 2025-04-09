@@ -1,33 +1,29 @@
-# Utiliser une image Node.js 20 basée sur Alpine
-FROM node:20-alpine
+# Utiliser une image Node.js 20 basée sur Debian Slim
+FROM node:20-slim
 
-# Installer les dépendances nécessaires pour la compilation des modules natifs comme bcrypt
-RUN apk add --no-cache \
+# Installer les dépendances système pour canvas
+RUN apt-get update && \
+    apt-get install -y \
     python3 \
     make \
     g++ \
-    cairo-dev \
-    pango-dev \
-    jpeg-dev \
-    giflib-dev \
-    librsvg-dev \
-    && rm -rf /var/lib/apt/lists/*
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    librsvg2-dev && \
+    rm -rf /var/lib/apt/lists/*
 
-# Définir le répertoire de travail
 WORKDIR /app
 
-# Copier les fichiers de package.json pour une meilleure mise en cache des couches
 COPY package*.json ./
 
-# Installation des dépendances (forcera la recompilation des modules natifs comme bcrypt)
+# Installation des dépendances et recompilation
 RUN npm install --build-from-source
 RUN npm rebuild canvas --build-from-source
 
-# Copier tous les fichiers de l'application
 COPY . .
 
-# Exposer le port sur lequel ton app écoute
 EXPOSE 8070
 
-# Lancer l'application
 CMD ["node", "server.js"]
