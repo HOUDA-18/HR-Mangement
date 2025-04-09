@@ -1,6 +1,15 @@
 # Use official Node.js 20 Alpine image
 FROM node:20-alpine
-
+# Dépendances pour compiler canvas
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    pixman-dev \
+    cairo-dev \
+    pango-dev \
+    jpeg-dev \
+    giflib-dev
 # Set working directory (recommended to keep even if not strictly required)
 WORKDIR /app
 
