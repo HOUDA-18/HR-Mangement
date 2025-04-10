@@ -4,18 +4,20 @@ pipeline {
     environment {
         registryCredentials = "nexus"
         registry = "192.168.65.129:8083"
+        DOCKER_IMAGE = "${registry}/backend:6.0"
     }
 
     stages {
         stage('Build Backend') {
             stages {
-                stage('Install Dependencies') {
+             
+                 stage('Install Dependencies') {
                     steps {
                         dir('Backend') {
-                            sh 'npm install'
-                        }
+                           sh 'npm install' 
+                         }
                     }
-                }
+                 }
                 
                 stage('Fix Permissions') {
                     steps {
@@ -54,7 +56,7 @@ pipeline {
                     steps {
                         dir('Backend') {
                             script {
-                                sh 'docker-compose build'
+                                sh 'docker-compose build --no-cache --pull app'
                             }
                         }
                     }
@@ -65,7 +67,7 @@ pipeline {
                         dir('Backend') {
                             script {
                                 docker.withRegistry("http://${registry}", registryCredentials) {
-                                    sh 'docker push $registry/backend:6.0'
+                                    sh "docker push ${DOCKER_IMAGE}"
                                 }
                             }
                         }
@@ -73,71 +75,35 @@ pipeline {
                 }
             }
         }
-        stage('Run application ') {
-steps{ dir('Backend'){
-script {
-docker.withRegistry("http://"+registry, registryCredentials
-) {
-sh('docker pull $registry/backend:6.0 ')
-sh('docker-compose up -d ')
-}}
-}
-}
-}
 
-        /* Uncomment if you want to build FrontOffice and BackOffice */
+        stage('Run Application') {
+            steps {
+                dir('Backend') {
+                    script {
+                        docker.withRegistry("http://${registry}", registryCredentials) {
+                            sh """
+                                docker-compose down --volumes --remove-orphans
+                                docker-compose pull
+                                docker-compose up -d --force-recreate --build
+                            """
+                        }
+                    }
+                }
+            }
+        }
+
+        /* Décommenter pour build FrontOffice et BackOffice */
         /*
         stage('Build All Components') {
             parallel {
                 stage('Build FrontOffice') {
-                    stages {
-                        stage('Install Dependencies') {
-                            steps {
-                                dir('FrontOffice') {
-                                    sh 'npm install'
-                                }
-                            }
-                        }
-                        stage('Run Unit Tests') {
-                            steps {
-                                dir('FrontOffice') {
-                                    sh 'npm test'
-                                }
-                            }
-                        }
-                        stage('Build Application') {
-                            steps {
-                                dir('FrontOffice') {
-                                    sh 'npm run build-dev'
-                                }
-                            }
-                        }
+                    steps {
+                        // Ajoutez ici les étapes nécessaires pour le FrontOffice
                     }
                 }
-
                 stage('Build BackOffice') {
-                    stages {
-                        stage('Install Dependencies') {
-                            steps {
-                                dir('BackOffice') {
-                                    sh 'npm install'
-                                }
-                            }
-                        }
-                        stage('Run Unit Tests') {
-                            steps {
-                                dir('BackOffice') {
-                                    sh 'npm test'
-                                }
-                            }
-                        }
-                        stage('Build Application') {
-                            steps {
-                                dir('BackOffice') {
-                                    sh 'npm run build-dev'
-                                }
-                            }
-                        }
+                    steps {
+                        // Ajoutez ici les étapes nécessaires pour le BackOffice
                     }
                 }
             }

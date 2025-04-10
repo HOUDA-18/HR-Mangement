@@ -1,20 +1,33 @@
-# Use official Node.js 16 Alpine image
-FROM node:16-alpine
+FROM node:20-slim
 
-# Set working directory (recommended to keep even if not strictly required)
+# Étape critique : Mise à jour et installation des dépendances
+RUN apt-get update && \
+    apt-get install -y \
+    build-essential \
+    python3 \
+    make \
+    g++ \
+    libcairo2-dev \
+    libpango1.0-dev \
+    libjpeg-dev \
+    libgif-dev \
+    librsvg2-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
-# Copy package files first for better layer caching
+# Nettoyage des modules existants et cache
+RUN rm -rf node_modules && \
+    npm cache clean --force
+
 COPY package*.json ./
 
-# Install dependencies
-RUN npm install
+# Installation en mode production avec reconstruction native
+ENV NODE_ENV=production
+RUN npm ci --build-from-source --python=/usr/bin/python3
+RUN npm rebuild canvas --build-from-source
 
-# Copy all application files
 COPY . .
 
-# Expose the port your app runs on
 EXPOSE 8070
-
-# Start the application
 CMD ["node", "server.js"]
