@@ -1,7 +1,7 @@
 import axios from "axios";
 
 export default class JobAdvertService {
-  controllerUrl = `${process.env.REACT_APP_API_URL}/jobadverts`;
+ /* controllerUrl = `${process.env.REACT_APP_API_URL}/jobadverts`;
 
   add({
     applicationDeadline,
@@ -15,7 +15,7 @@ export default class JobAdvertService {
     minSalary,
     numberOfOpenPositions,
   }) {
-    return axios.post(`${this.controllerUrl}`, {
+   /* return axios.post(`${this.controllerUrl}`, {
       applicationDeadline,
       city,
       description,
@@ -33,16 +33,16 @@ export default class JobAdvertService {
     return axios.put(`${this.controllerUrl}/verify/byid`, null, {
       params: { id },
     });
-  }
+  }*/
 
   getAll() {
-    return axios.get(`${this.controllerUrl}/getall`);
+    return axios.get(`http://localhost:8070/api/offre/all`);
   }
 
-  getAllByIsActive(isActive, page, size, sortDirection, sortProperties) {
+  /*getAllByIsActive(isActive, page, size, sortDirection, sortProperties) {
     return axios.get(`${this.controllerUrl}/byisactive`, {
       params: {
-        isActive,
+      isActive,
         page,
         size,
         sortDirection,
@@ -127,5 +127,5 @@ export default class JobAdvertService {
       minSalary,
       numberOfOpenPositions,
     });
+  }*/
   }
-}

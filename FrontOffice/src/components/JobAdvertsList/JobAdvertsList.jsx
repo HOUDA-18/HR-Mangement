@@ -14,8 +14,8 @@ import WorkingTimeService from "../../services/workingTimeService";
 import lodash from "lodash";
 
 export default function JobAdvertsList({ size = 10, pagination = true }) {
-  const [jobAdverts, setJobAdverts] = useState(null),
-    [filter, setFilter] = useState(null),
+  const [jobAdverts, setJobAdverts] = useState(null)
+/*     [filter, setFilter] = useState(null),
     jobAdvertService = useMemo(() => new JobAdvertService(), []),
     getAllByIsActiveForList = useCallback(
       async (pageNumber = 0, pageSize = 10) => {
@@ -86,13 +86,21 @@ export default function JobAdvertsList({ size = 10, pagination = true }) {
     validationSchema = Yup.object().shape({
       city: Yup.object(),
       workingTime: Yup.object(),
-    });
+    }); */
 
   useEffect(() => {
-    getAllByIsActiveForList(0, size);
+    const jobsService = new JobAdvertService()
+    jobsService.getAll().then((res)=>{
+      console.log(res.data)
+      setJobAdverts(res.data)
+    }).catch((err)=>{
+        console.log("error: ", err)
+    })
+    //setJobAdverts(response.data)
+/*     getAllByIsActiveForList(0, size);
     getAllCities();
-    getAllWorkingTimes();
-  }, [getAllByIsActiveForList, getAllCities, getAllWorkingTimes, size]);
+    getAllWorkingTimes(); */
+  }, [/* getAllByIsActiveForList // , getAllCities, getAllWorkingTimes, size */]);
 
   return (
     <div className='p-4'>
@@ -114,12 +122,13 @@ export default function JobAdvertsList({ size = 10, pagination = true }) {
       </div>
       {jobAdverts === null ? (
         <LoadingSpinner />
-      ) : jobAdverts.content.length > 0 ? (
+      ) : (
         <div className='row justify-content-center'>
-          {jobAdverts.content.map((jobAdvert) => (
-            <JobAdvertsListItem key={jobAdvert.id} jobAdvert={jobAdvert} />
+          {jobAdverts.map((jobAdvert) => (
+            <JobAdvertsListItem key={jobAdvert.id} offer={jobAdvert} />
           ))}
-          {/* Pagination */}
+    </div>)}
+          {/* Pagination 
           {pagination && (
             <nav>
               <ul className='pagination justify-content-center'>
@@ -169,8 +178,8 @@ export default function JobAdvertsList({ size = 10, pagination = true }) {
           <i className='bi bi-file-earmark-x text-danger me-2 fs-2' />
           No job adverts were found suitable.
         </div>
-      )}
-      <div
+      )} */}
+     {/*  <div
         className='offcanvas offcanvas-start'
         tabIndex='-1'
         id='jobAdvertsListFilter'
@@ -210,7 +219,7 @@ export default function JobAdvertsList({ size = 10, pagination = true }) {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
