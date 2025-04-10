@@ -1,10 +1,11 @@
 const express = require('express');
+require('dotenv').config(); 
 const http = require('http');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const db = require('./config/db.json');
-const congesRouter = require('./routes/conges');
+const congesRouter = require('./routes/congesRoute');
 
 // Configuration initiale
 
@@ -22,7 +23,7 @@ mongoose.connect(db.mongo.uri)
   .catch(err => console.error('❌ Erreur MongoDB:', err));
 
 
-app.use('/conges', congesRouter); 
+app.use('/api/conges', congesRouter); 
 require("./routes/routes")(app); 
 
 

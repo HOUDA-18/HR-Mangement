@@ -1,14 +1,16 @@
 import React from 'react';
+import LeavesForm from './EmployeeLeaves';
+import HRLeaves from './HRLeaves';
 
+const Dashboard = () => {
+  const currentUser = JSON.parse(localStorage.getItem("user"));
 
-// ==============================|| DASHBOARD ANALYTICS ||============================== //
-
-const Leaves = () => {
   return (
-    <React.Fragment>
-        <h1>Leaves</h1>
-    </React.Fragment>
+    <div>
+      {currentUser.role === 'EMPLOYEE' && <LeavesForm />}
+      {currentUser.role === 'HEAD_DEPARTEMENT' && <HRLeaves />}
+    </div>
   );
 };
 
-export default Leaves;
+export default Dashboard;

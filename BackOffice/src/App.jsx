@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-
+import 'react-datepicker/dist/react-datepicker.css';
 // project-import
 import renderRoutes, { routes } from './routes';
 
