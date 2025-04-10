@@ -97,8 +97,8 @@ module.exports= app =>{
     // offre routes
     router.post('/offre/addoffre', validate(offerSchema),offerController.addOffer )
     router.get('/offre/all',offerController.getAllOffers )
-    
-
+    router.put('/offre/:id/positions', offerController.updateNumberOfPositions);
+    router.put('/offre/:id/status', offerController.updateOfferStatus);
 /* 
 
 
