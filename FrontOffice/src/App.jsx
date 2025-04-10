@@ -15,6 +15,7 @@ import JobAdvertsVerify from "./pages/JobAdverts/Verify/JobAdvertsVerify";
 import JobSeekerCVUpdate from "./pages/JobSeekers/CV/Update/JobSeekerCVUpdate";
 import Navbar from "./layouts/Navbar/Navbar";
 import { ToastContainer } from "react-toastify";
+import PdfAnalyzer from "./pages/PDFAnalayzer/pdfAnalayzer";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route exact path='/' component={Home} />
             <Route exact path='/companystaff/update' component={CompanyStaffUpdate} />
             <Route exact path='/jobadvert' component={JobAdverts} />
+            <Route exact path='/pdfAnalyze' component={PdfAnalyzer} />
             <Route exact path='/jobadvert/add' component={JobAdvertsAdd} />
             <Route exact path='/jobadvert/add/verify' component={JobAdvertsVerify} />
             <Route exact path='/jobseeker/cv/update' component={JobSeekerCVUpdate} />

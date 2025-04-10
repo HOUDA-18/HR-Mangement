@@ -3,6 +3,7 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import './index.scss'
 import { useNavigate } from 'react-router-dom';
+import PdfUpload from 'components/pdfUpload/pdfUpload';
 const HRMembers = () => {
   const [hrMembers, setHRMembers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -202,6 +203,7 @@ const HRMembers = () => {
           </div>
         )}
       </div>
+      <PdfUpload></PdfUpload>
     </div>
   );
 };

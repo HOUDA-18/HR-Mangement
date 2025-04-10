@@ -46,7 +46,7 @@ const handleInput = (event)=>{
             window.location.reload()
           }).catch ((error)=> {
           console.error('Error deleting departement:', error);
-          setErreur(error.response.data);
+          setErreur(error.response.data.message);
         })
       }
     } 

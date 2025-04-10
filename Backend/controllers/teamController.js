@@ -62,48 +62,50 @@ exports.getTeamsByDepartement = async (req, res) => {
 
 
 exports.AssignEmployeeToTeam = async (req, res) => {
-    const {idTeam, idEmployee} = req.params
+    const { idTeam, idEmployee } = req.params;
+  
     try {
-        const team = await Team.findById(idTeam);
-
-        if (team) {
-            const employee = await User.findById(idEmployee)
-            if(employee){
-                 if(!team.teamMembers.includes(employee._id)){
-                    Team.findByIdAndUpdate(idTeam, 
-                                                  { $push: { teamMembers: idEmployee } }, 
-                                                  { new: true })
-                                                  .then((team)=>{
-                                                        return res.status(201).json(team)
-                                                  }).catch((err)=>{
-                                                    return res.status(400).json({error: err})
-    
-                                                  })
-                }
-                else if(await Team.findOne({
-                    $and: [
-                      { teamMembers: { $in: [idEmployee] } }, // Check if the employee is in the teamMembers array
-                      { _id: { $ne: idTeam } } // Ensure the team ID is not the excluded one
-                    ]
-                  })){
-                    return res.status(400).json("Already in another team")
-                }
-               else{
-                    return res.status(400).json("Already in this team")
-                }
-            }
-            else{
-                return res.status(400).json("Employee not found")
-
-            }
-        }else{
-            return res.status(404).json({ message: 'Team not found' });
-
-        }
+      // Find the team by its ID
+      const team = await Team.findById(idTeam);
+      if (!team) {
+        return res.status(404).json({ message: 'Team not found' });
+      }
+  
+      // Find the employee by their ID
+      const employee = await User.findById(idEmployee);
+      if (!employee) {
+        return res.status(404).json({ message: 'Employee not found' });
+      }
+  
+      // 1. Check if employee is already in ANY other team
+      const otherTeam = await Team.findOne({
+        _id: { $ne: idTeam }, // Exclude the current team
+        teamMembers: employee._id // Check if employee is in the teamMembers of any other team
+      });
+  
+      if (otherTeam) {
+        return res.status(400).json({ message: 'Employee already in another team' });
+      }
+  
+      // 2. Check if employee is already in the current team
+      if (team.teamMembers.includes(employee._id)) {
+        return res.status(400).json({ message: 'Employee already in this team' });
+      }
+  
+      // 3. Assign the employee to the current team
+      const updatedTeam = await Team.findByIdAndUpdate(
+        idTeam,
+        { $push: { teamMembers: employee._id } }, // Add employee to the team
+        { new: true } // Return the updated team object
+      );
+  
+      return res.status(201).json(updatedTeam); // Return the updated team with the new member
     } catch (err) {
-        res.status(500).json({ message: err.message });
+      console.error(err);
+      return res.status(500).json({ message: err.message });
     }
-};
+  };
+  
 
 exports.AssignHeadTeamToTeam = async (req, res) => {
     const {idTeam, idEmployee} = req.params
@@ -151,7 +153,7 @@ exports.detachEmployeeFromTeam = async (req, res)=>{
         if (team) {
                 const employee = await User.findById(idEmployee)
                 if(employee){
-                    if(team.headTeam.equals(employee._id)){
+                    if(team.headTeam!==null && team.headTeam.equals(employee._id)){
                        await Team.findByIdAndUpdate(idTeam, {headTeam: null}, {new: true})
                     }
                     if(team.teamMembers.includes(employee._id)){                        
@@ -159,6 +161,7 @@ exports.detachEmployeeFromTeam = async (req, res)=>{
                                                           { $pull: { teamMembers: employee._id }  }, 
                                                           { new: true })
                                                           .then((team)=>{
+                                                            User.findByIdAndUpdate(employee._id, {team: null}, {new: true})
                                                                 return res.status(201).json(team)
                                                           }).catch((err)=>{
                                                             return res.status(400).json({error: err})

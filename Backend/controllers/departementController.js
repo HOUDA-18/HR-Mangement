@@ -2,6 +2,7 @@ const {Departement, DepartementSchema} = require("../models/departement");
 const {User}= require("../models/user")
 const nodemailer = require("nodemailer");
 const Roles = require("../models/rolesEnum");
+const { Team } = require("../models/team");
 
 exports.addDepartement= async (req,res)=>{
     const {code, name} = req.body
@@ -165,7 +166,14 @@ exports.detachEmployeeFromDepartement = async (req, res)=>{
                 if(employee){
                     if(employee.departement.equals(departement._id)){
                             const updatedEmployee = await User.findByIdAndUpdate(idEmployee, {departement:null, role:Roles.EMPLOYEE}, {new : true})
-                        
+                            await Team.updateMany(
+                                {
+                                  departement: idDepartement
+                                },
+                                {
+                                  $pull: { teamMembers: updatedEmployee._id }
+                                }
+                              );
                             Departement.findByIdAndUpdate(idDepartement, 
                                                           { $pull: { employees: updatedEmployee._id }  }, 
                                                           { new: true })
@@ -313,7 +321,8 @@ exports.update= async (req,res)=>{
 exports.deleteDepartement = async (req, res) => {
   try {
     const { id } = req.params;
-    await User.find({departement: id}, {departement: null}, {new: true})
+    await User.updateMany({ departement: id }, { $set: { departement: null } });
+    await Team.deleteMany({departement:id});
     const departement = await Departement.findByIdAndDelete(id);
 
     if (!departement) {

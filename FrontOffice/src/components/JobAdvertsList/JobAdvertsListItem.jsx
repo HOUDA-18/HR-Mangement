@@ -4,7 +4,7 @@ import JobSeekerService from "../../services/jobSeekerService";
 import { Link } from "react-router-dom";
 
 export default function JobAdvertListItem({ jobAdvert }) {
-  console.log(
+/*   console.log(
     "🚀 ~ file: JobAdvertsListItem.jsx ~ line 7 ~ JobAdvertListItem ~ jobAdvert",
     jobAdvert
   );
@@ -25,7 +25,7 @@ export default function JobAdvertListItem({ jobAdvert }) {
       const result = await jobSeekerService.undoFavoriteJobAdvert(jobSeekersFavoriteJobAdvert.id);
       if (result.data.success) setJobSeekersFavoriteJobAdvert(null);
     };
-
+ */
   useEffect(() => getByJobSeekerIdAndJobAdvertId(), [getByJobSeekerIdAndJobAdvertId]);
 
   return (

@@ -19,7 +19,8 @@ const user = new mongoose.Schema({
             enum: Object.values(Roles)},
     createdAt: String,
     updatedAt: String,
-    departement: { type: mongoose.Schema.Types.ObjectId, ref: 'departement' }
+    departement: { type: mongoose.Schema.Types.ObjectId, ref: 'departement', default: null },
+    skills: {type: [String], required: false, default: null}
 
 })
 

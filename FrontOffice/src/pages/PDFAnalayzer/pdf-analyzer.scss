@@ -1,0 +1,297 @@
+// Variables
+$primary-color: #4a5568;
+$primary-color-dark: #2d3748;
+$accent-color: #5a67d8;
+$accent-color-hover: #4c51bf;
+$error-color: #e53e3e;
+$success-color: #38a169;
+$border-color: #e2e8f0;
+$background-color: #f7fafc;
+$text-color: #1a202c;
+$text-muted: #718096;
+$white: #ffffff;
+$card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+$border-radius: 0.375rem;
+
+// Mixins
+@mixin card {
+  background-color: $white;
+  border-radius: $border-radius;
+  box-shadow: $card-shadow;
+  overflow: hidden;
+}
+
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin input-style {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid $border-color;
+  border-radius: $border-radius;
+  font-size: 0.875rem;
+  color: $text-color;
+  background-color: $white;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  
+  &:focus {
+    outline: none;
+    border-color: $accent-color;
+    box-shadow: 0 0 0 2px rgba($accent-color, 0.2);
+  }
+  
+  &::placeholder {
+    color: $text-muted;
+  }
+}
+
+// General Styles
+.pdf-analyzer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+// Card Styles
+.card {
+  @include card;
+  margin-bottom: 1.5rem;
+}
+
+.card-header {
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid $border-color;
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: $text-color;
+  
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}
+
+.card-content {
+  padding: 1.5rem;
+}
+
+// Form Styles
+.form-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: $text-color;
+}
+
+.form-input {
+  @include input-style;
+}
+
+.form-help {
+  font-size: 0.75rem;
+  color: $text-muted;
+  margin-top: 0.25rem;
+}
+
+.file-input {
+  @include input-style;
+  padding: 0.375rem;
+}
+
+.file-name {
+  font-size: 0.75rem;
+  color: $text-muted;
+  margin-top: 0.25rem;
+}
+
+.input-with-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+// Button Styles
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: $white;
+  background-color: $accent-color;
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  gap: 0.5rem;
+  width: 100%;
+  
+  &:hover:not(:disabled) {
+    background-color: $accent-color-hover;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  .button-icon {
+    width: 1rem;
+    height: 1rem;
+  }
+}
+
+// Loading Spinner
+.loading-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: $white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Progress Bar
+.progress-container {
+  margin-top: 1rem;
+}
+
+.progress-bar {
+  height: 0.5rem;
+  background-color: $border-color;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.progress-fill {
+  height: 100%;
+  background-color: $accent-color;
+  border-radius: 999px;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 0.75rem;
+  color: $text-muted;
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+// Alert Styles
+.alert {
+  padding: 1rem;
+  border-radius: $border-radius;
+  margin-bottom: 1rem;
+  
+  &.alert-error {
+    background-color: rgba($error-color, 0.1);
+    border-left: 4px solid $error-color;
+  }
+  
+  &.alert-success {
+    background-color: rgba($success-color, 0.1);
+    border-left: 4px solid $success-color;
+  }
+}
+
+.alert-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  color: $text-color;
+}
+
+.alert-message {
+  font-size: 0.875rem;
+  color: $text-muted;
+}
+
+// Link styles
+.link {
+  color: $accent-color;
+  text-decoration: underline;
+  
+  &:hover {
+    color: $accent-color-hover;
+  }
+}
+
+// Analysis Results Styling
+.prose {
+  color: $text-color;
+  line-height: 1.6;
+  
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  .section-subtitle {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .bullet-item, .number-item {
+    margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .bullet-item {
+    list-style-type: disc;
+  }
+  
+  .number-item {
+    list-style-type: decimal;
+  }
+  
+  .text-paragraph {
+    margin-bottom: 0.75rem;
+  }
+}
+
+// Make sure our component works on mobile
+@media (max-width: 768px) {
+  .card-header,
+  .card-content {
+    padding: 1rem;
+  }
+  
+  .card-title {
+    font-size: 1.125rem;
+  }
+  
+  .button {
+    padding: 0.5rem 0.75rem;
+  }
+}

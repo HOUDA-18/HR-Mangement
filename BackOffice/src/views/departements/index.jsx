@@ -175,7 +175,7 @@ const Departements = () => {
                                   </div>
                       </OverlayTrigger>}
 
-                      {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ||(currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement === dept._id) ) &&
+                      {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ) &&
                       <OverlayTrigger
                                 placement="top"
                                 overlay={
@@ -208,7 +208,7 @@ const Departements = () => {
 
                       {showAlertDelete && (
                                     <ConfirmationAlert
-                                    message="Are you sure to delete this departement?"
+                                    message="Are you sure to delete this departement? All the users related will be with no departements"
                                     onConfirm={()=>handleDeleteDepartement(deleteId)}
                                     onCancel={handleCancel}
                                     />

@@ -1,4 +1,4 @@
-import { Add, ArrowCircleUp,  DeleteForever, EditNote, GroupAdd, GroupRemove, Info, PersonAddAlt } from '@mui/icons-material';
+import { Add, AdminPanelSettings, ArrowCircleUp,  DeleteForever, EditNote, GroupAdd, GroupRemove, Info, PersonAddAlt } from '@mui/icons-material';
 import axios from 'axios';
 import ConfirmationAlert from 'components/confirmationAlert/confirmationAlert';
 import React, { useEffect, useState } from 'react';
@@ -221,7 +221,7 @@ const EmployeesTable = ({departementID}) => {
                       </tr>
                     </thead>
                     <tbody>
-                      {filteredEmployees && filteredEmployees.map((user, index) => (
+                      {filteredEmployees!=[] && filteredEmployees.map((user, index) => (
                         <tr key={index}>
                           <td className="align-middle">{user.firstname}</td>
                           <td className="align-middle">{user.lastname}</td>
@@ -312,13 +312,13 @@ const EmployeesTable = ({departementID}) => {
                                 <Info />
                               </div>
                          </OverlayTrigger>
-                         {(user.role!="ADMIN_HR" || user.role!="HEAD_DEPARTEMENT" )&& (currentUser.role ==="SUPER_ADMIN" ||currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR"  ) && 
+                         {(user.role==="EMPLOYEE" || user.role==="MEMBRE_HR" )&& (currentUser.role ==="SUPER_ADMIN" ||currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR"  ) && 
                                 ( <div className="editButton" onClick={()=>makeHead(user)}>
                                     <AdminPanelSettings />
                                     </div>
                                     )
                           }
-                            {( currentUser.role ==="SUPER_ADMIN" || currentUser.role ==="HEAD_DEPARTEMENT"  ) && 
+                            {( currentUser.role ==="SUPER_ADMIN" || currentUser.role ==="HEAD_DEPARTEMENT"  ) && (currentUser._id !=user._id) && 
                                 <OverlayTrigger
                                 placement="top"
                                 overlay={
@@ -333,7 +333,7 @@ const EmployeesTable = ({departementID}) => {
                               </OverlayTrigger>
                               }
                               
-                            {( currentUser.role ==="SUPER_ADMIN" || currentUser.role ==="HEAD_DEPARTEMENT"  ) && 
+                            {( currentUser.role ==="SUPER_ADMIN" || currentUser.role ==="HEAD_DEPARTEMENT"  ) && (currentUser._id !=user._id) && 
                                 <OverlayTrigger
                                 placement="top"
                                 overlay={

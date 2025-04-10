@@ -21,7 +21,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-server',
           url: '/app/dashboard/departements',
-          roles: ['SUPER_ADMIN', 'HEAD_DEPARTEMENT']
+          roles: ['SUPER_ADMIN', 'ADMIN_HR']
         }
       ]
     },

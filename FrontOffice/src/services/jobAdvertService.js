@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default class JobAdvertService {
+export default  class JobAdvertService {
   controllerUrl = `${process.env.REACT_APP_API_URL}/jobadverts`;
 
   add({
@@ -35,8 +35,8 @@ export default class JobAdvertService {
     });
   }
 
-  getAll() {
-    return axios.get(`${this.controllerUrl}/getall`);
+  async getAll() {
+    return axios.get(`http://localhost:8070/api/users`);
   }
 
   getAllByIsActive(isActive, page, size, sortDirection, sortProperties) {

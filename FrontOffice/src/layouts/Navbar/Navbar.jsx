@@ -26,6 +26,7 @@ export default function Navbar() {
           <ul className='navbar-nav me-auto mb-2 mb-lg-0 w-100 justify-content-center'>
             <NavItem linkTo='' name='Home' iconClassName='bi bi-house' />
             <NavItem linkTo='/jobadvert' name='Find a Job' iconClassName='bi bi-search' />
+            <NavItem linkTo='/pdfAnalyze' name='pdfAnalyze' iconClassName='bi bi-search' />
             <NavItem linkTo='/about' name='About Us' iconClassName='bi bi-info-circle' />
 {/*             <NavItem linkTo='/jobadvert/add' name='Post a Job' iconClassName='bi bi-card-text' />
  */}          </ul>
