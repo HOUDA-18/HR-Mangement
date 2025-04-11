@@ -32,7 +32,7 @@ const TeamCard = ({ team ,  showAlertDeleteTeam, setShowAlertDeleteTeam, setTeam
 
   }, []);
   return (
-    <div className="team-card">
+    <div className={`team-card ${team.teamMembers?.length < 5 ? "low-members" : ""}`}>
       <div className="icon">
         <Cases size={24} />
       </div> 

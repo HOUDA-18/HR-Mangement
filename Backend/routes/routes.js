@@ -3,13 +3,33 @@ module.exports= app =>{
     const userController= require("../controllers/userController")
     const departementController = require("../controllers/departementController")
     const teamController = require("../controllers/teamController")
+    const offerController = require("../controllers/offreController")
+    const candidatureControllers = require('../controllers/CandidatureController');
+
+
     const { UserSchema, loginSchema} = require("../models/user");
     const {DepartementSchema}=require("../models/departement")
     const {TeamSchema}= require("../models/team")
+    const {offerSchema}= require("../models/offre")
     const validate = require('../middelwares/validate')
     var router = require("express").Router();
     const multer = require('multer');
     const upload = multer({ storage: multer.memoryStorage() });
+
+    const express = require('express');
+const { candidatureStatus } = require('../models/candidatureModel');
+// Dans votre backend (routes.js)
+// Routes CRUD de base
+router.post('/', candidatureControllers.createCandidature);
+router.get('/stats/status-distribution', candidatureControllers.getStatusDistribution);
+router.get('/:id', candidatureControllers.getCandidatureById);
+router.put('/:id', candidatureControllers.updateCandidature);
+router.delete('/:id', candidatureControllers.deleteCandidature);
+// Dans votre backend (routes.js)
+// Routes spécifiques
+
+router.get('/status/:status', candidatureControllers.getAllCandidatures);
+
     // face recognition routes
     router.post("/signupface", upload.single("imageData"), userController.signupface);
     router.post("/loginface", userController.loginface);
@@ -88,7 +108,32 @@ module.exports= app =>{
     router.put('/teams/detachEmployee/:idTeam/:idEmployee', teamController.detachEmployeeFromTeam)
 
     router.post('/teams/assignHeadTeam/:idTeam/:idEmployee', teamController.AssignHeadTeamToTeam)
-    
+
+
+    // offre routes
+    router.post('/offre/addoffre', validate(offerSchema),offerController.addOffer )
+    router.get('/offre/all',offerController.getAllOffers )
+    router.put('/offre/:id/positions', offerController.updateNumberOfPositions);
+    router.put('/offre/:id/status', offerController.updateOfferStatus);
+    router.get('/candidature/:id', candidatureControllers.getAllCandidatures );
+
+    //
+// Ajoutez cette ligne dans la section des routes candidature
+router.put('/candidature/update-status/:id', candidatureControllers.updateCandidatureStatus);
+    // Backend (Node.js/Express exemple)
+router.patch('/update-status/:id', async (req, res) => {
+  try {
+    const { status } = req.body;
+    const updatedCandidature = await Candidature.findByIdAndUpdate(
+      req.params.id,
+      { status : status},
+      { new: true }
+    );
+    res.json(updatedCandidature);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+});
 
 /* 
 

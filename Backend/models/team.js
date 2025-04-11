@@ -4,9 +4,11 @@ const yup = require('yup')
 const team = new mongoose.Schema({
     code: {type: String, required: true},
     name: {type: String, required: true},
+    skills: {type: [String], required: false, default: null},
     departement: { type: mongoose.Schema.Types.ObjectId, ref: 'departement' , default:null},
     headTeam: { type: mongoose.Schema.Types.ObjectId, ref: 'user' , default:null},
     teamMembers: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }]
+    
 
 })
 

@@ -88,19 +88,24 @@ const UserDistributionByStatus = () => {
   const [data, setData] = useState([
   ]);
 
-   useEffect(() => {
-      fetch("http://localhost:8070/api/user-status-distribution")
-          .then(res => res.json())
-          .then(datas=>{
-            setData(datas)
-            console.log("user distribution by status:",datas)
-          })
-          .catch((err)=>{
-            console.log("error:",err)
-
-          })
-
-  }, []); 
+  useEffect(() => {
+    fetch("http://localhost:8070/api/user-status-distribution")
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP error! Status: ${res.status}`);
+        }
+        return res.json();
+      })
+      .then((datas) => {
+        setData(datas);
+        console.log("User distribution by status:", datas);
+      })
+      .catch((err) => {
+        console.error("API Error:", err.message);
+        // Optionally set a fallback state
+        setData([]);
+      });
+  }, []);
 
   const COLORS = [ "#FFEB3B","#4CAF50", "#FF5722"]; // Green, Yellow, Red
 

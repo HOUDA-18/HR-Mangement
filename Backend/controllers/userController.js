@@ -1,6 +1,6 @@
 const {User, UserSchema} = require("../models/user");
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 const {Status, Roles, employmentType} = require('../models/Enums')
 const faceapi = require("face-api.js");
 const canvas = require("canvas");
@@ -218,7 +218,7 @@ exports.register= async (req,res)=>{
         email: email,
         phone: phone || "",
         image: "",
-        faceDescriptor: faceDescriptorArray,
+        faceDescriptor: "",
         password: (await bcrypt.hash(password, 10)).toString(),
         status: Status.Inactive,
         role: Roles.EMPLOYEE,
