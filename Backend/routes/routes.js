@@ -3,9 +3,14 @@ module.exports= app =>{
     const userController= require("../controllers/userController")
     const departementController = require("../controllers/departementController")
     const teamController = require("../controllers/teamController")
+    const offerController = require("../controllers/offreController")
+    const candidatureController= require("../controllers/candidatureController")
+
     const { UserSchema, loginSchema} = require("../models/user");
     const {DepartementSchema}=require("../models/departement")
     const {TeamSchema}= require("../models/team")
+    const {offerSchema}= require("../models/offre")
+    const {candidatureSchema} = require('../models/candidature')
     const validate = require('../middelwares/validate')
     var router = require("express").Router();
     const multer = require('multer');
@@ -88,12 +93,19 @@ module.exports= app =>{
     router.put('/teams/detachEmployee/:idTeam/:idEmployee', teamController.detachEmployeeFromTeam)
 
     router.post('/teams/assignHeadTeam/:idTeam/:idEmployee', teamController.AssignHeadTeamToTeam)
-    
-
-/* 
 
 
+    // offre routes
+    router.post('/offre/addoffre', validate(offerSchema),offerController.addOffer )
+    router.get('/offre/all',offerController.getAllOffers )
+    router.get('/offre/offers',offerController.getOffers )
+    router.put('/offre/:id/positions', offerController.updateNumberOfPositions);
+    router.put('/offre/:id/status', offerController.updateOfferStatus);
 
+
+    router.post('/candidatures',validate(candidatureSchema), candidatureController.addCandidature)
+
+/*
     router.post('/users/update/:id',verifyToken, userController.update)
 
     router.post('/users/delete/:id',verifyToken, userController.delete)

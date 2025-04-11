@@ -1,93 +1,82 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import ApplyFormModal from "../applyModal/applyModal";
+import './JobAdvertsListItem.scss'
+export default function JobAdvertListItem({  offer , setShow, setSingleOffer}) {
 
-import JobSeekerService from "../../services/jobSeekerService";
-import { Link } from "react-router-dom";
+  const handleShow = () => {setShow(true); setSingleOffer(offer)};
+  if (offer.status !== "ACCEPTED") {
+    return null;
+  }
 
-export default function JobAdvertListItem({ jobAdvert }) {
-/*   console.log(
-    "🚀 ~ file: JobAdvertsListItem.jsx ~ line 7 ~ JobAdvertListItem ~ jobAdvert",
-    jobAdvert
-  );
-  const [jobSeekersFavoriteJobAdvert, setJobSeekersFavoriteJobAdvert] = useState(null);
-
-  const jobSeekerService = useMemo(() => new JobSeekerService(), []),
-    getByJobSeekerIdAndJobAdvertId = useCallback(async () => {
-      const user = { id: 1 }, //TODO Login Redux
-        result = await jobSeekerService.getByJobSeekerIdAndJobAdvertId(user.id, jobAdvert.id);
-      if (result.data.success) setJobSeekersFavoriteJobAdvert(result.data.data);
-    }, [jobSeekerService, jobAdvert.id]),
-    favorite = async () => {
-      const user = { id: 1 }, //TODO Login Redux
-        result = await jobSeekerService.favoriteJobAdvert({ jobSeeker: user, jobAdvert });
-      if (result.data.success) getByJobSeekerIdAndJobAdvertId();
-    },
-    undoFavorite = async () => {
-      const result = await jobSeekerService.undoFavoriteJobAdvert(jobSeekersFavoriteJobAdvert.id);
-      if (result.data.success) setJobSeekersFavoriteJobAdvert(null);
-    };
- */
-  useEffect(() => getByJobSeekerIdAndJobAdvertId(), [getByJobSeekerIdAndJobAdvertId]);
 
   return (
-    <div className='col-md-5 px-4 m-3'>
-      <div className='job-item p-4 border rounded-2  shadow'>
-        <div className='d-flex justify-content-between'>
-          <div className='d-flex align-items-center'>
-            {jobAdvert && jobAdvert.companyImageUrl ? (
-              <img
-                src={jobAdvert.companyImageUrl}
-                alt={`${jobAdvert.companyName} logo`}
-                className='me-3'
-                width='60'
-                height='60'
-              />
-            ) : (
-              <i className='bi bi-briefcase fs-1 me-3 text-muted' />
-            )}
-            <div>
-              <div className='fw-bold fs-5'>{jobAdvert.title}</div>
-              <div className='text-primary fw-bold me-1'>
-                Open Positions
-                <span className='badge bg-secondary mx-1'>{jobAdvert.numberOfOpenPositions}</span>
-                <span className='badge bg-secondary'>{jobAdvert.workingTimeName}</span>
-              </div>
-              <div className='fw-light'>
-                {jobAdvert.companyName} - {jobAdvert.cityName}
-              </div>
-            </div>
-          </div>
-          <div className='text-end align-text-bottom'>
-            <div className='text-primary fw-bold'>Salary</div>
-            <div className='text-secondary'>
-              {jobAdvert.minSalary} - {jobAdvert.maxSalary}₺
-            </div>
+    <><div className="col-lg-4 col-md-6 mb-4" >
+      <div className="job-card h-100">
+        <div className="card-header">
+          <div className="d-flex justify-content-between align-items-center">
+            <h3 className="h5 mb-0">{offer.title}</h3>
+            <span className="job-type">
+              {offer.typeContrat}
+            </span>
           </div>
         </div>
-        <div className='d-flex justify-content-between align-items-center mt-3'>
-          <div>
-            <div className='text-muted m-0'>
-              Posted at {new Date(...jobAdvert.createdAt).toDateString()}
+        
+        <div className="card-body">
+          <div className="job-details">
+            <div className="detail-item">
+              <i className="bi bi-people"></i>
+              <span className="detail-label">Open positions:</span>
+              <span className="detail-value">
+                {offer.numberofplace}
+              </span>
             </div>
-            <div className='text-muted'>
-              Deadline at {new Date(...jobAdvert.applicationDeadline).toDateString()}
+            
+            <div className="detail-item">
+              <i className="bi bi-mortarboard"></i>
+              <span className="detail-label">Education:</span>
+              <strong className="detail-value">{offer.niveaudetude}</strong>
+            </div>
+
+            <div className="detail-item">
+              <i className="bi bi-clock-history"></i>
+              <span className="detail-label">Experience:</span>
+              <strong className="detail-value">
+                {offer.anneeexperience} year(s)
+              </strong>
             </div>
           </div>
-          <div>
-            {jobSeekersFavoriteJobAdvert ? (
-              <button type='button' className='btn shadow-none' onClick={() => undoFavorite()}>
-                <i className='bi bi-star-fill'></i>
-              </button>
-            ) : (
-              <button type='button' className='btn shadow-none' onClick={() => favorite()}>
-                <i className='bi bi-star text-secondary'></i>
-              </button>
-            )}
-            <Link className='btn btn-primary rounded' to='/'>
-              Apply Now
-            </Link>
+
+          <div className="job-description">
+            <p>{offer.description}</p>
+          </div>
+
+          <div className="skill-tags">
+            {offer.skills?.map((skills, index) => (
+              <span key={index} className="skill-tag">
+                {skills}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="card-footer">
+          <div className="d-flex justify-content-between align-items-center">
+            <span className="post-date">
+              <i className="bi bi-calendar"></i>
+              {new Date(offer.dateOffre).toLocaleDateString()}
+            </span>
+            <button onClick={()=>handleShow()} className="apply-button">
+              Apply Now <i className="bi bi-arrow-right"></i>
+            </button>
           </div>
         </div>
       </div>
+
+
+      {/* CSS intégré amélioré */}
+
     </div>
+          </>
   );
 }

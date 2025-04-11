@@ -161,7 +161,7 @@ const Departements = () => {
                               </div>
                   </OverlayTrigger>
 
-                    {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ||(currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement === dept._id) ) && 
+                    {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ) && 
                         <OverlayTrigger
                                   placement="top"
                                   overlay={

@@ -1,34 +1,50 @@
 import { createContext, useEffect, useReducer } from "react";
 
-export const AuthContext = createContext()
+export const AuthContext = createContext();
 
-export const authReducer= (state, action)=>{
-   switch(action.type){
+export const authReducer = (state, action) => {
+  switch(action.type) {
     case "login": 
-        return {user: action.payload.role, id:action.payload.id}
-    case  "logout":
-        return {user: null}
+      return { 
+        user: action.payload.id, 
+        role: action.payload.role 
+      };
+    case "logout":
+      return { user: null, role: null };
     default:
-        return state
-   }
-}
+      return state;
+  }
+};
 
-export const AuthContextProvider = ({children})=>{
-    const [state, dispatch] = useReducer(authReducer, {
-        user: null
-    })
-    useEffect(()=>{
-        const user = localStorage.getItem("user")
-        const userRole= localStorage.getItem("userRole")
-        if(user){
-          dispatch({type: "login", payload: {"role":userRole, "id":user.id}})  
-        }
-    },[])
+export const AuthContextProvider = ({ children }) => {
+  const [state, dispatch] = useReducer(authReducer, {
+    user: null,
+    role: null
+  });
 
+  useEffect(() => {
+    const userString = localStorage.getItem("user");
+    const userRole = localStorage.getItem("userRole");
+    
+    if (userString) {
+      try {
+        const user = JSON.parse(userString);
+        dispatch({ 
+          type: "login", 
+          payload: { 
+            role: userRole || user.role, // Priorité à userRole, sinon user.role
+            id: user._id || user.id 
+          } 
+        });
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+  }, []);
 
-    return (
-        <AuthContext.Provider value={{...state, dispatch}}>
-            { children }
-        </AuthContext.Provider>
-    )
-}
+  return (
+    <AuthContext.Provider value={{ ...state, dispatch }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};

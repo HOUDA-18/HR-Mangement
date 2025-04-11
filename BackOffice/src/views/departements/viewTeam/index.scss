@@ -6,6 +6,7 @@
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
     text-align: center;
+    
   
     h1 {
       color: #007bff;
@@ -23,7 +24,37 @@
       border-radius: 6px;
     }
   
-
+    .offer-skills {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center; 
+    
+      .skills-list {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr); // 6 columns
+        gap: 10px;
+        justify-items: center; // Center items horizontally
+    
+        .skill-item {
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          background-color: #fff;
+          border: 1px solid #ddd;
+          padding: 6px 10px;
+          border-radius: 4px;
+          font-size: 12px;
+          text-align: center;
+    
+          img {
+            width: 20px;
+            height: 20px;
+          }
+        }
+      }
+    }
+    
   }
 
   .team-members {
@@ -121,4 +152,167 @@
     grid-template-columns: repeat(2, 1fr); // 2 columns per row for mobile
   }
 
+
+  
+
 }
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.6); // Fond assombri
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.popup-content {
+  background: white;
+  padding: 30px 25px;
+  border-radius: 12px;
+  width: 450px;
+  max-width: 90%;
+  max-height: 80vh; /* Limiter la hauteur à 80% de la hauteur de la fenêtre */
+  overflow-y: auto; /* Permet le défilement vertical */
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  animation: fadeIn 0.3s ease-in-out;
+
+  h2 {
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+
+    label {
+      font-weight: 500;
+      color: #444;
+      margin-bottom: 5px;  /* Adds space below the label */
+
+      
+    }
+    select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    input,
+    textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      font-size: 14px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    span{
+      color: red;
+    }
+
+    .form-actions {
+      display: flex;
+      justify-content: space-between;
+
+      button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 8px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background 0.3s ease;
+        margin: 0 5px;
+      }
+
+      .submit-btn {
+        background-color: #007bff;
+        color: white;
+
+        &:hover {
+          background-color: #0056b3;
+        }
+      }
+
+      .cancel-btn {
+        background-color: #6c757d;
+        color: white;
+
+        &:hover {
+          background-color: #495057;
+        }
+      }
+    }
+  }
+}
+
+// Animation de fade-in
+@keyframes fadeIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.add-offer-btn {
+  width: fit-content;
+  background-color: #28a745;
+  color: white;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 20px;
+
+  &:hover {
+    background-color: #218838;
+  }
+
+  .link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    cursor: pointer;
+  
+    &:hover {
+      background-color: #218838;
+    }
+  
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  
+}
+
+
+

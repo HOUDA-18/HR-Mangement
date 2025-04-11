@@ -314,7 +314,7 @@ const EmployeesTable = ({departementID}) => {
                          </OverlayTrigger>
                          {(user.role==="EMPLOYEE" || user.role==="MEMBRE_HR" )&& (currentUser.role ==="SUPER_ADMIN" ||currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR"  ) && 
                                 ( <div className="editButton" onClick={()=>makeHead(user)}>
-                                    <AdminPanelSettings />
+                                    <AdminPanelSettings/>
                                     </div>
                                     )
                           }

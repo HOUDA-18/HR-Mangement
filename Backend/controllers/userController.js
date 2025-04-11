@@ -218,7 +218,7 @@ exports.register= async (req,res)=>{
         email: email,
         phone: phone || "",
         image: "",
-        faceDescriptor: faceDescriptorArray,
+        faceDescriptor: "",
         password: (await bcrypt.hash(password, 10)).toString(),
         status: Status.Inactive,
         role: Roles.EMPLOYEE,

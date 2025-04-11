@@ -34,7 +34,8 @@ const UserSchema = yup.object({
             matricule: yup.string().min(3).max(20).required("matricule is required"),
             email: yup.string().email("Invalid email format").required("Email is required"),
             password: yup.string().required("password is required"),
-            employmentType: yup.string().required("employement type is required")
+            employmentType: yup.string().required("employement type is required"),
+            
         })
 })
 

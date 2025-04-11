@@ -12,14 +12,14 @@ export default function Home() {
       <div className='container'>
         <Overlay />
         <Steps />
-        <JobAdvertsList size={6} pagination={false} />
+        <JobAdvertsList size={2} pagination={false} />
         <div className='text-center mb-5'>
           <Link to='/jobadvert' className='btn btn-primary rounded shadow'>
             Browse All
           </Link>
         </div>
-        <CandidatesList />
-      </div>
+{/*         <CandidatesList />
+ */}      </div>
     </div>
   );
 }

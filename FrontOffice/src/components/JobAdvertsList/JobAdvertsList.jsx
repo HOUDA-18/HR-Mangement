@@ -1,224 +1,176 @@
 import "./JobAdvertsList.scss";
 
-import * as Yup from "yup";
+import React, { useEffect, useState } from "react";
 
-import { Form, Formik } from "formik";
-import React, { useCallback, useEffect, useMemo, useState } from "react";
-
-import CityService from "../../services/cityService";
-import FormSelect from "../FormSelect/FormSelect";
 import JobAdvertService from "../../services/jobAdvertService";
 import JobAdvertsListItem from "./JobAdvertsListItem";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
-import WorkingTimeService from "../../services/workingTimeService";
-import lodash from "lodash";
+import ApplyFormModal from "../applyModal/applyModal";
 
-export default function JobAdvertsList({ size = 10, pagination = true }) {
-  const [jobAdverts, setJobAdverts] = useState(null)
-/*     [filter, setFilter] = useState(null),
-    jobAdvertService = useMemo(() => new JobAdvertService(), []),
-    getAllByIsActiveForList = useCallback(
-      async (pageNumber = 0, pageSize = 10) => {
-        const result = await jobAdvertService.getAllByIsActiveForList(true, pageNumber, pageSize);
-        if (result.data.success) setJobAdverts(result.data.data);
-      },
-      [jobAdvertService]
-    ),
-    getAllByIsActiveAndCityAndWorkingTimeForList = async (
-      cityId,
-      workingTimeId,
-      pageNumber = 0,
-      pageSize = 10
-    ) => {
-      const result = await jobAdvertService.getAllByIsActiveAndCityAndWorkingTimeForList(
-        true,
-        cityId,
-        workingTimeId,
-        pageNumber,
-        pageSize
-      );
-      if (result.data.success) setJobAdverts(result.data.data);
-    },
-    applyFilter = (values) => {
-      getAllByIsActiveAndCityAndWorkingTimeForList(
-        values.city.id,
-        values.workingTime.id,
-        0,
-        jobAdverts.size
-      );
-      setFilter(values);
-    },
-    clearFilter = () => {
-      getAllByIsActiveForList(0, jobAdverts.size);
-      setFilter(null);
-    };
+export default function JobAdvertsList({ size=10, pagination = true }) {
+  const [jobAdverts, setJobAdverts] = useState(null);
+  const [filteredAdverts, setFilteredAdverts] = useState([]);
+  const [show, setShow] = useState(false);
+  const [singleOffre, setSingleOffer] = useState({});
+  
+  const [searchTitle, setSearchTitle] = useState("");
+  const [typeContract, setTypeContract] = useState("");
+  const [niveauEtude, setNiveauEtude] = useState("");
 
-  const changePagination = (pageNumber, pageSize) => {
-    if (filter)
-      return getAllByIsActiveAndCityAndWorkingTimeForList(
-        filter.city.id,
-        filter.workingTime.id,
-        pageNumber,
-        pageSize
-      );
-
-    getAllByIsActiveForList(pageNumber, pageSize);
-  };
-
-  const [cities, setCities] = useState([]);
-  const cityService = useMemo(() => new CityService(), []),
-    getAllCities = useCallback(async () => {
-      const result = await cityService.getAll();
-      if (result.data.data) setCities(result.data.data);
-    }, [cityService]);
-
-  const [workingTimes, setWorkingTimes] = useState([]);
-  const workingTimeService = useMemo(() => new WorkingTimeService(), []),
-    getAllWorkingTimes = useCallback(async () => {
-      const result = await workingTimeService.getAll();
-      if (result.data.data) setWorkingTimes(result.data.data);
-    }, [workingTimeService]);
-
-  const initialValues = {
-      city: undefined,
-      workingTime: undefined,
-    },
-    validationSchema = Yup.object().shape({
-      city: Yup.object(),
-      workingTime: Yup.object(),
-    }); */
+  // Pagination
+  const itemsPerPage = 3;
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
-    const jobsService = new JobAdvertService()
-    jobsService.getAll().then((res)=>{
-      console.log(res.data)
-    }).catch((err)=>{
-        console.log("error: ", err)
-    })
-    //setJobAdverts(response.data)
-/*     getAllByIsActiveForList(0, size);
-    getAllCities();
-    getAllWorkingTimes(); */
-  }, [/* getAllByIsActiveForList *//* , getAllCities, getAllWorkingTimes, size */]);
+    const jobsService = new JobAdvertService();
+    jobsService.getAll()
+      .then((res) => {
+        setJobAdverts(res.data);
+        setFilteredAdverts(res.data);
+      })
+      .catch((err) => {
+        console.log("error: ", err);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (jobAdverts) {
+      const filtered = jobAdverts.filter((job) => {
+        return (
+          (typeContract === "" || job.typeContrat === typeContract) &&
+          (niveauEtude === "" || job.niveaudetude === niveauEtude) &&
+          job.title.toLowerCase().includes(searchTitle.toLowerCase())
+        );
+      });
+      setFilteredAdverts(filtered);
+      setCurrentPage(1); // Reset to first page on filter change
+    }
+  }, [searchTitle, typeContract, niveauEtude, jobAdverts]);
+
+  // Paginated data
+  const indexOfLast = currentPage * itemsPerPage;
+  const indexOfFirst = indexOfLast - itemsPerPage;
+  const currentItems = filteredAdverts.slice(indexOfFirst, indexOfLast);
+
+  const totalPages = Math.ceil(filteredAdverts.length / itemsPerPage);
+
+  const handlePageChange = (pageNum) => {
+    if (pageNum >= 1 && pageNum <= totalPages) {
+      setCurrentPage(pageNum);
+    }
+  };
 
   return (
-    <div className='p-4'>
-      <div className='text-center mb-3'>
-        <h1 className='text-secondary fw-bold'>
-          Featured Jobs<span className='text-primary'>.</span>
-        </h1>
-        <p>Find your dream job.</p>
-        <div>
-          <button
-            className='btn btn-secondary'
-            data-bs-toggle='offcanvas'
-            data-bs-target='#jobAdvertsListFilter'
-            aria-controls='jobAdvertsListFilter'
-          >
-            <i className='bi bi-filter'></i> Filter
-          </button>
-        </div>
-      </div>
-      {jobAdverts === null ? (
-        <LoadingSpinner />
-      ) : (
-        <div className='row justify-content-center'>
-          {jobAdverts.map((jobAdvert) => (
-            <JobAdvertsListItem key={jobAdvert.id} jobAdvert={jobAdvert} />
-          ))}
-    </div>)}
-          {/* Pagination 
-          {pagination && (
-            <nav>
-              <ul className='pagination justify-content-center'>
-                <li className={`page-item ${jobAdverts.first ? "disabled" : ""}`}>
-                  <button
-                    className='page-link'
-                    onClick={() => changePagination(jobAdverts.number - 1, jobAdverts.size)}
-                  >
-                    Previous
-                  </button>
-                </li>
-                {lodash.times(jobAdverts.totalPages, (i) => (
-                  <li className={`page-item ${jobAdverts.number === i ? "active" : ""}`}>
-                    <button
-                      className='page-link'
-                      onClick={() => changePagination(i, jobAdverts.size)}
-                    >
-                      {i + 1}
-                    </button>
-                  </li>
-                ))}
-                <li className={`page-item ${jobAdverts.last ? "disabled" : ""}`}>
-                  <button
-                    className='page-link'
-                    onClick={() => changePagination(jobAdverts.number + 1, jobAdverts.size)}
-                  >
-                    Next
-                  </button>
-                </li>
-              </ul>
-              <div className='text-center'>
-                <select
-                  id='pageSizeSelect'
-                  className='bg-body border-light'
-                  onChange={(e) => getAllByIsActiveForList(0, e.currentTarget.value)}
-                >
-                  {[10, 20, 50, 100].map((size) => (
-                    <option value={size}>{size}</option>
-                  ))}
-                </select>
+    <>
+      <div className="parent">
+        <div className="p-4">
+          <div className="text-center mb-3">
+            <h1 className="text-secondary fw-bold">
+              Featured Jobs<span className="text-primary">.</span>
+            </h1>
+            <p>Find your dream job.</p>
+
+            {/* Filters */}
+            <div className="filters d-flex flex-wrap justify-content-center gap-3 mt-4">
+              <input
+                type="text"
+                placeholder="Search by title"
+                value={searchTitle}
+                onChange={(e) => setSearchTitle(e.target.value)}
+                className="form-control w-auto"
+              />
+
+              <select
+                value={typeContract}
+                onChange={(e) => setTypeContract(e.target.value)}
+                className="form-select w-auto"
+              >
+                <option value="">All Contracts</option>
+                <option value="CDI">CDI</option>
+                <option value="CDD">CDD</option>
+                <option value="Stage">Stage</option>
+                <option value="Freelance">Freelance</option>
+              </select>
+
+              <select
+                value={niveauEtude}
+                onChange={(e) => setNiveauEtude(e.target.value)}
+                className="form-select w-auto"
+              >
+                <option value="">All Education Levels</option>
+                <option value="primary">primary</option>
+                <option value="secondary">secondary</option>
+                <option value="licence">licence</option>
+                <option value="Engineering">Engineering</option>
+                <option value="master">master</option>
+                <option value="doctorat">doctorat</option>
+                <option value="formation">formation</option>
+              </select>
+            </div>
+          </div>
+
+          {jobAdverts === null ? (
+            <LoadingSpinner />
+          ) : (
+            <div>
+              <div className="row justify-content-center">
+                {currentItems.length > 0 ? (
+                  currentItems.map((jobAdvert, index) => (
+                    <JobAdvertsListItem
+                      key={index}
+                      offer={jobAdvert}
+                      setShow={setShow}
+                      setSingleOffer={setSingleOffer}
+                    />
+                  ))
+                ) : (
+                  <p className="text-center mt-4">No results found.</p>
+                )}
               </div>
-            </nav>
+
+              {/* Pagination */}
+              {pagination && totalPages > 1 && (
+                <div className="d-flex justify-content-center mt-4 gap-2">
+                  <button
+                    className="btn btn-outline-secondary"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                  >
+                    &laquo; Prev
+                  </button>
+                  {[...Array(totalPages)].map((_, idx) => (
+                    <button
+                      key={idx}
+                      className={`btn ${
+                        currentPage === idx + 1
+                          ? "btn-primary"
+                          : "btn-outline-primary"
+                      }`}
+                      onClick={() => handlePageChange(idx + 1)}
+                    >
+                      {idx + 1}
+                    </button>
+                  ))}
+                  <button
+                    className="btn btn-outline-secondary"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                  >
+                    Next &raquo;
+                  </button>
+                </div>
+              )}
+            </div>
           )}
         </div>
-      ) : (
-        <div className='d-flex justify-content-center align-items-center'>
-          <i className='bi bi-file-earmark-x text-danger me-2 fs-2' />
-          No job adverts were found suitable.
-        </div>
-      )} */}
-     {/*  <div
-        className='offcanvas offcanvas-start'
-        tabIndex='-1'
-        id='jobAdvertsListFilter'
-        aria-labelledby='jobAdvertsListFilter'
-      >
-        <div className='offcanvas-header'>
-          <h1 className='offcanvas-title' id='jobAdvertsListFilter'>
-            Filter
-          </h1>
-          <button
-            type='button'
-            className='btn-close text-reset'
-            data-bs-dismiss='offcanvas'
-            aria-label='Close'
-          ></button>
-        </div>
-        <div className='offcanvas-body'>
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={(values) => applyFilter(values)}
-          >
-            <Form>
-              <FormSelect name='city' options={cities.map((c) => ({ value: c, label: c.name }))} />
-              <FormSelect
-                name='workingTime'
-                options={workingTimes.map((wt) => ({ value: wt, label: wt.name }))}
-              />
-              <button type='submit' className='btn btn-primary w-100'>
-                Filter
-              </button>
-            </Form>
-          </Formik>
-          <div className='text-center'>
-            <button className='btn btn-light mt-2' onClick={() => clearFilter()}>
-              Clear filters
-            </button>
-          </div>
-        </div>
-      </div> */}
-    </div>
-  )
+      </div>
+
+      {show && (
+        <ApplyFormModal
+          offre={singleOffre}
+          setShow={setShow}
+        />
+      )}
+    </>
+  );
 }
