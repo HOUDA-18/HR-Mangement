@@ -220,6 +220,10 @@
       min-height: 80px;
     }
 
+    span{
+      color: red;
+    }
+
     .form-actions {
       display: flex;
       justify-content: space-between;
@@ -269,6 +273,7 @@
 }
 
 .add-offer-btn {
+  width: fit-content;
   background-color: #28a745;
   color: white;
   padding: 10px 20px;
@@ -282,5 +287,32 @@
   &:hover {
     background-color: #218838;
   }
+
+  .link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    cursor: pointer;
+  
+    &:hover {
+      background-color: #218838;
+    }
+  
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+  }
+
+  
 }
+
+
 

@@ -1,7 +1,7 @@
-import { Close, VerifiedUser } from '@mui/icons-material';
+import { Add, Close, VerifiedUser } from '@mui/icons-material';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {  useLocation, useNavigate } from 'react-router-dom';
 import ConfirmationAlert from 'components/confirmationAlert/confirmationAlert';
 import './index.scss'; // Import SCSS file
 import { skillsOptions } from 'skillOptions';
@@ -30,11 +30,26 @@ const TeamDetails = () => {
   const [memberId, setMemberId] = useState(0);
   const teamId = location.state?.values;
   const currentUser = JSON.parse(localStorage.getItem('user'));
+  const [errors, setErrors] = useState({});
+
+  const validate = () => {
+    const newErrors = {};
+    if (!offerData.title.trim()) newErrors.title = "Offer title is required.";
+    if (!offerData.description.trim()) newErrors.description = "Description is required.";
+    if (!offerData.numberofplace || offerData.numberofplace <= 0) newErrors.numberofplace = "Enter a valid number of positions.";
+    if (!offerData.typeContrat) newErrors.typeContrat = "Contract type is required.";
+    if (!offerData.niveaudetude) newErrors.niveaudetude = "Education level is required.";
+    if (offerData.anneeexperience === '' || offerData.anneeexperience < 0) newErrors.anneeexperience = "Years of experience must be zero or more.";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
 
   const handleCancel = () => {
     setShowAlertDetach(false);
     setShowAlertMakeHead(false);
-    setShowOfferForm(false); // Ferme le formulaire
+    setShowOfferForm(false);
+    setErrors({}) // Ferme le formulaire
   };
 
   const handleConfirmDetach = (id) => {
@@ -99,41 +114,47 @@ const TeamDetails = () => {
   // Handle form submission for adding an offer
   const handleSubmit = (e) => {
     e.preventDefault();
-    const offer = {
-      title: offerData.title,
-    description: offerData.description,
-    numberofplace: offerData.numberofplace,
-    typeContrat: offerData.typeContrat,
-    niveaudetude: offerData.niveaudetude,
-    anneeexperience: offerData.anneeexperience,
-    departement: team.departement,
-    team: team._id, 
-    skills: team.skills
+    if(validate()){
+      const offer = {
+        title: offerData.title,
+        description: offerData.description,
+        numberofplace: offerData.numberofplace,
+        typeContrat: offerData.typeContrat,
+        niveaudetude: offerData.niveaudetude,
+        anneeexperience: offerData.anneeexperience,
+        departement: team.departement,
+        team: team._id, 
+        skills: team.skills
+        }
+
+        console.log("offerData: ",offer)
+        // Send the offer data to the backend
+         axios
+          .post('http://localhost:8070/api/offre/addoffre', offer)
+          .then((response) => {
+            console.log('Offer added successfully:', response.data);
+            setShowOfferForm(false); // Close the form after submission
+            setErrors({})
+            setOfferData({
+              title: '',
+              description: '',
+              numberofplace: '',
+              typeContrat: '',
+              niveaudetude: '',
+              anneeexperience: '',
+              departement: '',
+              team: '', 
+              skills: []
+            })
+            // You can refresh the page or show a success message
+          })
+          .catch((error) => {
+            console.error('Error adding offer:', error);
+            setErrors({})
+            // Handle the error (e.g., display an error message to the user)
+          });
     }
-    setOfferData({
-      title: '',
-      description: '',
-      numberofplace: '',
-      typeContrat: '',
-      niveaudetude: '',
-      anneeexperience: '',
-      departement: '',
-      team: '', 
-      skills: []
-    })
-    console.log("offerData: ",offer)
-    // Send the offer data to the backend
-     axios
-      .post('http://localhost:8070/api/offre/addoffre', offer)
-      .then((response) => {
-        console.log('Offer added successfully:', response.data);
-        setShowOfferForm(false); // Close the form after submission
-        // You can refresh the page or show a success message
-      })
-      .catch((error) => {
-        console.error('Error adding offer:', error);
-        // Handle the error (e.g., display an error message to the user)
-      }); 
+ 
   };
 
   useEffect(() => {
@@ -194,6 +215,13 @@ const TeamDetails = () => {
                       )}
       </div>
 
+      { (currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement == team.departement) && 
+                               <div className="add-offer-btn" onClick={handleAddOffer}>
+                                        <Add/>
+                                            Add Offer
+                                </div> 
+                              }
+     
       <div className="team-members">
         <h3>Team Members:</h3>
         <div className="member-grid">
@@ -235,107 +263,127 @@ const TeamDetails = () => {
           ))}
         </div>
       </div>
-
-      {/* Button for adding offer */}
-      {(teamMembers.length >= 5 ||teamMembers.length <5   )&& (
-        <button className="add-offer-btn" onClick={handleAddOffer}>
-          Add Offer
-        </button>
-      )}
+      {showAlertDetach && (
+                                     <ConfirmationAlert
+                                     message="Are you sure to detach this member frome this team?"
+                                     onConfirm={()=>handleDetachFromTeam(memberId)}
+                                     onCancel={handleCancel}
+                                     />
+                                 )}
+            {showAlertMakeHead && (
+                                     <ConfirmationAlert
+                                     message="Are you sure to make this member head team?"
+                                     onConfirm={()=>handleMakeHeadTeam(memberId)}
+                                     onCancel={handleCancel}
+                                     />
+                                 )}
 
       {/* Offer Form Popup */}
-      {showOfferForm && (
-        <div className="popup-overlay">
-          <div className="popup-content">
-            <h2>Add an Offer</h2>
-            <form onSubmit={handleSubmit}>
-              <div>
-                <label>Offer Title :</label>
-                <input
-                  type="text"
-                  name="title"
-                  value={offerData.title}
-                  onChange={(e) => setOfferData({ ...offerData, title: e.target.value })}
-                  required
-                />
-              </div>
-              <div>
-                <label>Description :</label>
-                <textarea
-                  name="description"
-                  value={offerData.description}
-                  onChange={(e) => setOfferData({ ...offerData, description: e.target.value })}
-                  required
-                ></textarea>
-              </div>
-              <div>
-                <label>Number of Positions :</label>
-                <input
-                  type="number"
-                  name="numberofplace"
-                  value={offerData.numberofplace}
-                  onChange={(e) => setOfferData({ ...offerData, numberofplace: e.target.value })}
-                  min="1"
-                  required
-                />
-              </div>
-              <div>
-                <label>Contract Type :</label>
-                <select
-                  name="typeContrat"
-                  value={offerData.typeContrat}
-                  onChange={(e) => setOfferData({ ...offerData, typeContrat: e.target.value })}
-                  required
-                >
-                  <option value="">Select a type</option>
-                  <option value="CDI">Permanent Contract (CDI)</option>
-                  <option value="CDD">Fixed-Term Contract (CDD)</option>
-                  <option value="Stage">Internship</option>
-                  <option value="Freelance">Freelance</option>
-                </select>
-              </div>
-              <div>
-                <label>Education Level :</label>
-                <select
-                  name="niveaudetude"
-                  value={offerData.niveaudetude}
-                  onChange={(e) => setOfferData({ ...offerData, niveaudetude: e.target.value })}
-                  required
-                >
-                  <option value="">Select a Level</option>
-                  <option value="primary">Primary Education Level</option>
-                  <option value="secondary">Secondary Education Level</option>
-                  <option value="licence">Post-Secondary Education Level (Bac +1 to Bac +2)</option>
-                  <option value="licence">Bachelor's Degree (Bac +3)</option>
-                  <option value="master">Master's Degree (Bac +5)</option>
-                  <option value="Engineering">Engineering Degree (Bac +5)</option>
-                  <option value="doctorat">Doctorate (Bac +8)</option>
-                  <option value="formation">Specialized Technical Training</option>
-                </select>
-              </div>
-              <div>
-                <label>Years of Experience :</label>
-                <input
-                  type="number"
-                  name="anneeexperience"
-                  value={offerData.anneeexperience}
-                  onChange={(e) => setOfferData({ ...offerData, anneeexperience: e.target.value })}
-                  min="0"
-                  required
-                />
-              </div>
-              <div className="form-actions">
-                <button type="submit" className="submit-btn">
-                  Add
-                </button>
-                <button type="button" className="cancel-btn" onClick={handleCancel}>
-                  Cancel
-                </button>
-              </div>
-            </form>
-          </div>
+      { showOfferForm && (
+      <div className="popup-overlay">
+        <div className="popup-content">
+          <h2>Add an Offer</h2>
+          <form onSubmit={handleSubmit}>
+            <div>
+              <label>Offer Title:</label>
+              <input
+                type="text"
+                name="title"
+                className={errors.title ? 'invalid' : ''}
+                value={offerData.title}
+                onChange={(e) => setOfferData({ ...offerData, title: e.target.value })}
+              />
+              {errors.title && <span className="error-message">{errors.title}</span>}
+            </div>
+
+            <div>
+              <label>Description:</label>
+              <textarea
+                name="description"
+                className={errors.description ? 'invalid' : ''}
+                value={offerData.description}
+                onChange={(e) => setOfferData({ ...offerData, description: e.target.value })}
+              ></textarea>
+              {errors.description && <span className="error-message">{errors.description}</span>}
+            </div>
+
+            <div>
+              <label>Number of Positions:</label>
+              <input
+                type="number"
+                name="numberofplace"
+                className={errors.numberofplace ? 'invalid' : ''}
+                value={offerData.numberofplace}
+                onChange={(e) => setOfferData({ ...offerData, numberofplace: e.target.value })}
+                min="1"
+              />
+              {errors.numberofplace && <span className="error-message">{errors.numberofplace}</span>}
+            </div>
+
+            <div>
+              <label>Contract Type:</label>
+              <select
+                name="typeContrat"
+                className={errors.typeContrat ? 'invalid' : ''}
+                value={offerData.typeContrat}
+                onChange={(e) => setOfferData({ ...offerData, typeContrat: e.target.value })}
+              >
+                <option value="">Select a type</option>
+                <option value="CDI">Permanent Contract (CDI)</option>
+                <option value="CDD">Fixed-Term Contract (CDD)</option>
+                <option value="Stage">Internship</option>
+                <option value="Freelance">Freelance</option>
+              </select>
+              {errors.typeContrat && <span className="error-message">{errors.typeContrat}</span>}
+            </div>
+
+            <div>
+              <label>Education Level:</label>
+              <select
+                name="niveaudetude"
+                className={errors.niveaudetude ? 'invalid' : ''}
+                value={offerData.niveaudetude}
+                onChange={(e) => setOfferData({ ...offerData, niveaudetude: e.target.value })}
+              >
+                <option value="">Select a Level</option>
+                <option value="primary">Primary Education Level</option>
+                <option value="secondary">Secondary Education Level</option>
+                <option value="licence">Post-Secondary Education (Bac +1 to Bac +2)</option>
+                <option value="licence">Bachelor's Degree (Bac +3)</option>
+                <option value="master">Master's Degree (Bac +5)</option>
+                <option value="Engineering">Engineering Degree (Bac +5)</option>
+                <option value="doctorat">Doctorate (Bac +8)</option>
+                <option value="formation">Specialized Technical Training</option>
+              </select>
+              {errors.niveaudetude && <span className="error-message">{errors.niveaudetude}</span>}
+            </div>
+
+            <div>
+              <label>Years of Experience:</label>
+              <input
+                type="number"
+                name="anneeexperience"
+                className={errors.anneeexperience ? 'invalid' : ''}
+                value={offerData.anneeexperience}
+                onChange={(e) => setOfferData({ ...offerData, anneeexperience: e.target.value })}
+                min="0"
+              />
+              {errors.anneeexperience && <span className="error-message">{errors.anneeexperience}</span>}
+            </div>
+
+            <div className="form-actions">
+              <button type="submit" className="submit-btn">
+                Add
+              </button>
+              <button type="button" className="cancel-btn" onClick={handleCancel}>
+                Cancel
+              </button>
+            </div>
+          </form>
         </div>
-      )}
+      </div>
+    )
+  }
     </React.Fragment>
   );
 };

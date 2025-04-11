@@ -36,7 +36,7 @@ export default class JobAdvertService {
   }*/
 
   getAll() {
-    return axios.get(`http://localhost:8070/api/offre/all`);
+    return axios.get(`http://localhost:8070/api/offre/offers`);
   }
 
   /*getAllByIsActive(isActive, page, size, sortDirection, sortProperties) {

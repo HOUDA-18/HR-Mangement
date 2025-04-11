@@ -152,7 +152,7 @@ exports.detachEmployeeFromTeam = async (req, res)=>{
         if (team) {
                 const employee = await User.findById(idEmployee)
                 if(employee){
-                    if(team.headTeam.equals(employee._id)){
+                    if(team.headTeam!=null && team.headTeam.equals(employee._id)){
                        await Team.findByIdAndUpdate(idTeam, {headTeam: null}, {new: true})
                     }
                     if(team.teamMembers.includes(employee._id)){                        

@@ -23,4 +23,10 @@ const Roles = Object.freeze({
     ACCEPTED: "ACCEPTED",
     REJECTED: "REJECTED"
   });
-module.exports= {Status, Roles, employmentType, offreStatus}
+
+  const candidatureStatus = {
+    PENDING: 'PENDING',
+    ACCEPTED: 'ACCEPTED',
+    REJECTED: 'REJECTED',
+  };
+module.exports= {Status, Roles, employmentType, offreStatus, candidatureStatus}

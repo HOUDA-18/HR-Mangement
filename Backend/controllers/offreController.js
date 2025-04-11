@@ -61,76 +61,98 @@ const team = await Team.findById(newOffer.team)
     });
 
     const receiver = {
-      from: "webdesignwalah@gmail.com",
-      to: checkUser.email,
-      subject: "New offre is waiting for approval",
-      html: `
-      <html>
-      <head>
-          <meta charset="UTF-8">
-          <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Email Verification</title>
-          <style>
-              body {
-                  font-family: Arial, sans-serif;
-                  background-color: #f4f4f4;
-                  margin: 0;
-                  padding: 0;
-              }
-              .container {
-                  max-width: 600px;
-                  margin: 20px auto;
-                  background: #ffffff;
-                  padding: 20px;
-                  border-radius: 8px;
-                  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-                  text-align: center;
-              }
-              h2 {
-                  color: #333;
-              }
-              p {
-                  font-size: 16px;
-                  color: #555;
-              }
-              .code {
-                  font-size: 24px;
-                  font-weight: bold;
-                  background-color: #f8f8f8;
-                  padding: 10px;
-                  display: inline-block;
-                  border-radius: 5px;
-                  margin: 20px 0;
-              }
-              .btn {
-                  display: inline-block;
-                  background-color: #28a745;
-                  color: white;
-                  padding: 12px 20px;
-                  text-decoration: none;
-                  font-size: 16px;
-                  border-radius: 5px;
-                  margin-top: 20px;
-              }
-              .btn:hover {
-                  background-color: #218838;
-              }
-              .footer {
-                  margin-top: 20px;
-                  font-size: 12px;
-                  color: #888;
-              }
-          </style>
-      </head>
-      <body>
-          <div class="container">
-              <h2>New Offre was added</h2>
-              <p>A new ${newOffer.typeContrat} offre is newly added for departement ${departement.name} and Team ${team.name}</p>
+        from: "webdesignwalah@gmail.com",
+        to: checkUser.email,
+        subject: "📝 New Offer Awaiting Your Approval",
+        html: `
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>New HR Offer</title>
+            <style>
+                body {
+                    font-family: 'Segoe UI', 'Roboto', sans-serif;
+                    background-color: #f4f7fa;
+                    margin: 0;
+                    padding: 0;
+                    color: #2c3e50;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 40px auto;
+                    background: #ffffff;
+                    padding: 30px 40px;
+                    border-radius: 10px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                    border-top: 6px solid #2f80ed;
+                }
+                h2 {
+                    font-size: 24px;
+                    color: #2f80ed;
+                    margin-bottom: 16px;
+                }
+                p {
+                    font-size: 16px;
+                    line-height: 1.6;
+                    margin-bottom: 20px;
+                }
+                .info-box {
+                    background-color: #f0f4f8;
+                    border-left: 4px solid #2f80ed;
+                    padding: 15px;
+                    margin: 20px 0;
+                    border-radius: 6px;
+                }
+                .info-box strong {
+                    display: block;
+                    margin-bottom: 5px;
+                    color: #333;
+                }
+                .btn {
+                    display: inline-block;
+                    background-color: #2f80ed;
+                    color: white;
+                    padding: 12px 20px;
+                    font-size: 16px;
+                    text-decoration: none;
+                    border-radius: 6px;
+                    font-weight: 500;
+                    transition: background 0.3s ease;
+                }
+                .btn:hover {
+                    background-color: #1c60b3;
+                }
+                .footer {
+                    margin-top: 40px;
+                    font-size: 13px;
+                    color: #999;
+                    text-align: center;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h2>New Offer Requires Your Review</h2>
+                <p>Hello,</p>
+                <p>A new offer has been submitted and requires your approval as part of the HR management process.</p>
       
-              </div>
-</body>
-</html>`,
-    };
+                <div class="info-box">
+                    <strong>Offer Details:</strong>
+                    <p><strong>Contract Type:</strong> ${newOffer.typeContrat}<br>
+                    <strong>Department:</strong> ${departement.name}<br>
+                    <strong>Team:</strong> ${team.name}</p>
+                </div>
+      
+                <a href="#" class="btn">Review Offer</a>
+      
+                <div class="footer">
+                    &copy; 2025 WebDesignWalah – HR Management System
+                </div>
+            </div>
+        </body>
+        </html>`,
+      };
 
     await transporter.sendMail(receiver);
 
@@ -167,6 +189,26 @@ exports.getAllOffers = async (req, res) => {
   res.status(500).json({ message: 'Erreur interne du serveur' });
 }
 };
+
+exports.getOffers = async (req, res) => {
+    try {
+      const offers = await Offer.find({status: offreStatus.ACCEPTED}) // Vous pouvez peupler le champ "team" si nécessaire
+      .populate('departement', 'name') // Peupler seulement le nom du département
+      .lean();
+
+  // Transformer les données pour faciliter le filtrage
+  const transformedOffers = offers.map(offer => ({
+      ...offer,
+      departementName: offer.departement?.name || null
+  }));
+
+  res.status(200).json(transformedOffers);
+} catch (error) {
+  console.error('Erreur lors de la récupération des offres:', error);
+  res.status(500).json({ message: 'Erreur interne du serveur' });
+}
+};
+
 // Méthode pour mettre à jour le statut
 exports.updateOfferStatus = async (req, res) => {
     try {
