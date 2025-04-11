@@ -34,7 +34,7 @@ exports.addCandidature= async (req, res)=>{
               skills: skills,
               cv: cv,
               score: overallEvaluation?.overallScore,
-              anneeexperience: yearsOfExperience,
+              anneeexperience: yearsOfExperience || 0,
               idoffre: offre,
               lien_linkdin: linkedin,
               lien_git: github,

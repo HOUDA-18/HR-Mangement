@@ -82,7 +82,7 @@ const Offers = () => {
   };
 
   const filteredOffers = offers.filter((offer) => {
-    const statusMatch = statusFilter === 'all' || offer.status?.toLowerCase() === statusFilter;
+    const statusMatch = statusFilter === 'all' || offer.status === statusFilter;
     const departmentMatch = 
       departmentFilter === 'all' || 
       (offer.departement?.name?.toLowerCase() === departmentFilter.toLowerCase());
@@ -111,9 +111,9 @@ const Offers = () => {
             className="filter-select"
           >
             <option value="all">All Statuses</option>
-            <option value="pending">Pending</option>
-            <option value="accepted">ACCEPTED</option>
-            <option value="rejected">REJECTED</option>
+            <option value="PENDING">Pending</option>
+            <option value="ACCEPTED">ACCEPTED</option>
+            <option value="REJECTED">REJECTED</option>
           </select>
         </div>
 
