@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { skillsOptions } from 'skillOptions';
 import { AuthContext } from '../../contexts/authContext';
-import { FaEdit, FaPlus, FaMinus, FaTimes, FaCheck, FaBan, FaFileAlt } from 'react-icons/fa';
+import { FaEdit, FaPlus, FaMinus, FaTimes, FaCheck, FaBan, FaFileAlt, FaArrowRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 const Offers = () => {
   const [offers, setOffers] = useState([]);
@@ -265,12 +265,7 @@ const fetchCandidatures = async (offerId) => {
                         );
                       })}
                     </div>
-   <button 
-  onClick={() => viewDetails(offer._id)} // Navigation simple sans paramètre
-  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition duration-300 ease-in-out"
->
-  Candidatures
-</button>
+
                   </div>
                   
                 )}
@@ -313,6 +308,7 @@ const fetchCandidatures = async (offerId) => {
                     </div>
                   ) : (
                     <div className="pending-actions">
+                      {(offer.status === 'PENDING' ) && <>
                       <button 
                         onClick={() => updateOfferStatus(offer._id, 'ACCEPTED')}
                         className="action-btn accept"
@@ -325,10 +321,31 @@ const fetchCandidatures = async (offerId) => {
                       >
                         <FaBan /> Reject Offer
                       </button>
+                      </>}
+                      {(offer.status === 'ACCEPTED' ) && 
+                      <button 
+                        onClick={() => viewDetails(offer._id)}
+                        className="action-btn details"
+                      >
+                        <FaArrowRight /> Details
+                      </button>}
                     </div>
-                  )}
+                  )} 
+                  
                 </div>
               )}
+
+                {(offer.status === 'ACCEPTED' ) && 
+                  ( <div className="card-footer">
+                  <div className="pending-actions">                    
+                      <button 
+                        onClick={() => viewDetails(offer)}
+                        className="action-btn details"
+                      >
+                        <FaArrowRight /> Details
+                      </button>
+                    </div>
+                    </div>)}
             </div>
           ))
         ) : (
@@ -666,6 +683,16 @@ const fetchCandidatures = async (offerId) => {
         .action-btn.accept:hover {
           background-color: #27ae60;
         }
+
+        .action-btn.details {
+          background-color: rgb(75, 168, 205);
+          color: white;
+        }
+        
+        .action-btn.details:hover {
+          background-color: blue;
+        }
+        
         
         .action-btn.reject {
           background-color: #e74c3c;

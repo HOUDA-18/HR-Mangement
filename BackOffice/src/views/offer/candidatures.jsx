@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import React, { useEffect, useState, useCallback, useContext } from 'react';
-import { FaBan, FaCheck, FaFilePdf, FaLinkedin, FaGithub, FaFileUpload, FaUserTie, FaEnvelope, FaPhone, FaCode, FaChartLine, FaCalendarAlt, FaSort, FaSortUp, FaSortDown } from "react-icons/fa";
+import { FaBan, FaCheck, FaFilePdf, FaLinkedin, FaGithub, FaFileUpload, FaUserTie, FaEnvelope, FaPhone, FaCode, FaChartLine, FaCalendarAlt, FaSort, FaSortUp, FaSortDown, FaInfo, FaRegAddressBook, FaRegFolderOpen } from "react-icons/fa";
 import { FiExternalLink } from "react-icons/fi";
 import axios from "axios";
 import { AuthContext } from "contexts/authContext";
@@ -13,18 +13,18 @@ const Candidatures = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'score', direction: 'desc' });
-  const userId = location.state?.values;
+  const offre = location.state?.values;
   const { user, role } = useContext(AuthContext);
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 2;
+  const itemsPerPage = 8;
 
   const fetchCandidatures = useCallback(async () => {
     console.log("user:", user)  
     try {
       setLoading(true);
-      const response = await fetch(`http://localhost:8070/api/candidature/${userId}`);
+      const response = await fetch(`http://localhost:8070/api/candidature/${offre._id}`);
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
@@ -37,7 +37,7 @@ const Candidatures = () => {
     } finally {
       setLoading(false);
     }
-  }, [userId]);
+  }, [offre._id]);
 
   const handleDownload = (pdfUrl) => {
     const link = document.createElement('a');
@@ -45,6 +45,10 @@ const Candidatures = () => {
     link.download = 'document.pdf';
     link.click();
   };
+
+  const handleDetails = (cand)=>{
+    navigate('/app/dashboard/candidatures/details', {state:{values: cand}})
+  }
 
   const handleUpdateStatus = async (candidatureId, newStatus) => {
     try {
@@ -169,7 +173,7 @@ const Candidatures = () => {
   return ( 
     <div className="candidatures-container">
       <div className="candidatures-header">
-        <h2>Candidatures</h2>
+        <h2>Candidatures pour l'offre {offre.title}</h2>
         <div className="stats">
           <button 
             className="stat total"
@@ -219,9 +223,9 @@ const Candidatures = () => {
                   <th><FaUserTie /> Nom</th>
                   <th><FaUserTie /> Prénom</th>
                   <th><FaEnvelope /> Email</th>
-                  <th><FaPhone /> Téléphone</th>
+{/*                   <th><FaPhone /> Téléphone</th>
                   <th><FaCode /> Compétences</th>
-                  <th className="sortable-header" onClick={() => requestSort('score')}>
+  */}                 <th className="sortable-header" onClick={() => requestSort('score')}>
                     <div className="header-content">
                       <FaChartLine /> Score
                       <span className="sort-icon">
@@ -230,10 +234,10 @@ const Candidatures = () => {
                     </div>
                   </th>
                   <th>Expérience</th>
-                  <th>CV</th>
-                  <th>LinkedIn</th>
+{/*                   <th>CV</th>
+                   <th>LinkedIn</th>
                   <th>GitHub</th>
-                  <th><FaCalendarAlt /> Date</th>
+ */}                 <th><FaCalendarAlt /> Date Of application</th>
                   <th>Statut</th>
                   <th>Actions</th>
                 </tr>
@@ -248,18 +252,18 @@ const Candidatures = () => {
                         {candidature.email}
                       </a>
                     </td>
-                    <td>
+{/*                     <td>
                       <a href={`tel:${candidature.phone}`} className="phone-link">
                         {candidature.phone}
                       </a>
-                    </td>
-                    <td>
+                    </td> */}
+{/*                     <td>
                       <div className="skills-cell">
                         {candidature.skills.map(skill => (
                           <span key={skill} className="skill-tag">{skill}</span>
                         ))}
                       </div>
-                    </td>
+                    </td> */}
                     <td>
                       <div className="score-container">
                         <div 
@@ -271,7 +275,7 @@ const Candidatures = () => {
                       </div>
                     </td>
                     <td>{candidature?.anneeexperience || 0} ans</td>
-                    <td>
+{/*                     <td>
                       {candidature.cv && (
                         <button onClick={() => handleDownload(candidature.cv)}>
                           <FaFilePdf size={18} color="#e74c3c" />
@@ -306,7 +310,7 @@ const Candidatures = () => {
                           <FiExternalLink size={12} className="external-icon" />
                         </a>
                       )}
-                    </td>
+                    </td> */}
                     <td>{formatDate(candidature.dateApplication)}</td>
                     <td>
                       <span className={`status-badge ${candidature.status.toLowerCase()}`}>
@@ -315,7 +319,8 @@ const Candidatures = () => {
                       </span>
                     </td>
                     <td>
-                     {(role==="ADMIN_HR" && candidature.status==="PENDING" ) &&  <div className="action-buttons">
+                     {(role==="ADMIN_HR" && candidature.status==="PENDING" ) &&  
+                     <div className="action-buttons">
                         <button 
                           className="action-btn accept"
                           disabled={candidature.status === 'ACCEPTED'}
@@ -331,6 +336,13 @@ const Candidatures = () => {
                           title="Rejeter la candidature"
                         >
                           <FaBan />
+                        </button>
+                        <button 
+                          className="action-btn details"
+                          onClick={() => handleDetails(candidature._id)}
+                          title="Application details"
+                        >
+                          <FaInfo />
                         </button>
                       </div>}
                     </td>
@@ -390,7 +402,7 @@ const Candidatures = () => {
           </>
         ) : (
           <div className="no-candidatures">
-            <img src="/images/empty-folder.svg" alt="Aucune candidature" />
+            <FaRegFolderOpen/>
             <p>Aucune candidature pour cette offre</p>
             <button className="refresh-btn" onClick={fetchCandidatures}>
               Actualiser
@@ -659,6 +671,11 @@ const Candidatures = () => {
         .action-btn.reject {
           background-color: #fff5f5;
           color: #e53e3e;
+        }
+
+        .action-btn.details {
+          background-color: rgb(75, 168, 205);;
+          color: white;
         }
 
         .action-btn.reject:hover:not(:disabled) {

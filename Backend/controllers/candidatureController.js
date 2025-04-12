@@ -2,7 +2,7 @@ const {Candidature, candidatureSchema} = require("../models/candidature");
 const nodemailer = require("nodemailer");
 const Roles = require("../models/rolesEnum");
 const {candidatureStatus}= require('../models/Enums')
-
+const {Offer}=require('../models/offre')
 
 exports.addCandidature= async (req, res)=>{
     const {
@@ -96,9 +96,8 @@ exports.createCandidature = async (req, res) => {
 exports.getAllCandidatures = async (req, res) => {
   try {
     const {  id } = req.params;
-    let query = {};
   
-    const candidatures = await Candidature.find();
+    const candidatures = await Candidature.find({idoffre: id}, 'firstname lastname email dateApplication status score anneeexperience');
     res.status(200).json(candidatures);
   } catch (error) {
     res.status(500).json({ 
@@ -111,7 +110,7 @@ exports.getAllCandidatures = async (req, res) => {
 // Récupérer une candidature par ID
 exports.getCandidatureById = async (req, res) => {
   try {
-    const candidature = await Candidature.findById(req.params.id).populate('idoffre');
+    const candidature = await Candidature.findById(req.params.id);
     
     if (!candidature) {
       return res.status(404).json({ message: 'Candidature non trouvée' });

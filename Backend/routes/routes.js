@@ -106,6 +106,7 @@ module.exports= app =>{
     router.put('/offre/:id/positions', offerController.updateNumberOfPositions);
     router.put('/offre/:id/status', offerController.updateOfferStatus);
     router.get('/candidature/:id', candidatureController.getAllCandidatures );
+    router.get('/candidatures/:id',candidatureController.getCandidatureById)
 
     //
 // Ajoutez cette ligne dans la section des routes candidature
