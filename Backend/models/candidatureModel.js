@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+/* const mongoose = require('mongoose');
 const yup = require('yup');
 
 const candidatureStatus = {
@@ -85,4 +85,4 @@ module.exports = {
   Candidature,
   candidatureSchema,
   candidatureStatus
-};
+}; */
