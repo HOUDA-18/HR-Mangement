@@ -35,6 +35,8 @@ const renderRoutes = (routes = []) => (
 );
 
 export const routes = [
+
+
   {
     exact: 'true',
     path: '/auth/signup-1',
@@ -109,6 +111,11 @@ export const routes = [
         path: '/app/dashboard/offers',
         element: lazy(() => import('./views/offer')),
         guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
+      },
+      {
+        path: '/app/dashboard/candidatures',
+        element: lazy(() => import('../src/views/offer/candidatures')),
+        guard: (props) => <AuthGuard allowedRoles={['ADMIN_HR', 'HEAD_DEPARTEMENT']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',

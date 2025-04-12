@@ -2,8 +2,8 @@ import React, { useEffect, useState, useContext } from 'react';
 import axios from 'axios';
 import { skillsOptions } from 'skillOptions';
 import { AuthContext } from '../../contexts/authContext';
-import { FaEdit, FaPlus, FaMinus, FaTimes, FaCheck, FaBan } from 'react-icons/fa';
-
+import { FaEdit, FaPlus, FaMinus, FaTimes, FaCheck, FaBan, FaFileAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 const Offers = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -14,14 +14,34 @@ const Offers = () => {
   const [editingId, setEditingId] = useState(null);
   const [rejectionComment, setRejectionComment] = useState('');
   const [rejectingOfferId, setRejectingOfferId] = useState(null);
-  
+    const navigate = useNavigate()
+    const viewDetails = (id) => {
+      navigate(`/app/dashboard/candidatures`, { state: { values: id } });
+    };
+  //////
+  const [showCandidatures, setShowCandidatures] = useState(false);
+const [currentOfferCandidatures, setCurrentOfferCandidatures] = useState([]);
+const [selectedOfferId, setSelectedOfferId] = useState(null);
+  //////
   const { user, role } = useContext(AuthContext);
   const itemsPerPage = 3;
 
   const isAdminOrSuperAdmin = () => {
-    return role === 'ADMIN_HR' || role === 'SUPER_ADMIN';
+    return role === 'ADMIN_HR' || role === 'HEAD_DEPARTEMENT';
   };
-
+///////
+const fetchCandidatures = async (offerId) => {
+  try {
+    const response = await axios.get(`http://localhost:8070/api/candidatures/offer/${offerId}`);
+    setCurrentOfferCandidatures(response.data);
+    setSelectedOfferId(offerId);
+    setShowCandidatures(true);
+  } catch (err) {
+    console.error('Error fetching candidatures:', err);
+    alert('Failed to fetch candidatures');
+  }
+};
+///////
   const updateNumberOfPositions = async (offerId, delta) => {
     try {
       const response = await axios.put(
@@ -39,6 +59,15 @@ const Offers = () => {
       console.error('Error updating positions:', err);
       alert(err.response?.data?.message || 'Failed to update positions');
     }
+  };
+
+  const handleApply = (offerId) => {
+    // Redirection vers la page de candidature ou traitement API
+    window.location.href = `/apply/${offerId}`;
+    // Ou: 
+    // axios.post(`/api/offers/${offerId}/apply`, { userId: user._id })
+    //   .then(response => alert("Candidature envoyée!"))
+    //   .catch(error => console.error(error));
   };
  
   useEffect(() => {
@@ -236,7 +265,14 @@ const Offers = () => {
                         );
                       })}
                     </div>
+   <button 
+  onClick={() => viewDetails(offer._id)} // Navigation simple sans paramètre
+  className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-xl shadow-md transition duration-300 ease-in-out"
+>
+  Candidatures
+</button>
                   </div>
+                  
                 )}
 
                 {offer.commentaire && offer.status === 'REJECTED' && (
@@ -313,6 +349,23 @@ const Offers = () => {
               {idx + 1}
             </button>
           ))}
+          {showCandidatures && (
+  <div className="candidatures-modal">
+    <div className="modal-content">
+      <div className="modal-header">
+        <h3>Candidatures pour l'offre</h3>
+        <button 
+          onClick={() => setShowCandidatures(false)}
+          className="close-btn"
+        >
+          &times;
+        </button>
+      </div>
+      
+      
+    </div>
+  </div>
+)}
         </div>
       )}
 
@@ -650,6 +703,26 @@ const Offers = () => {
         .rejection-actions {
           display: flex;
           gap: 10px;
+        }
+        
+        .apply-btn {
+          width: 100%;
+          padding: 10px;
+          background-color: #3498db;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          font-size: 0.9rem;
+          cursor: pointer;
+          transition: background-color 0.3s;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 8px;
+        }
+        
+        .apply-btn:hover {
+          background-color: #2980b9;
         }
         
         .pagination {

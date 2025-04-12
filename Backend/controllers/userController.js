@@ -1,6 +1,6 @@
 const {User, UserSchema} = require("../models/user");
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcrypt')
 const {Status, Roles, employmentType} = require('../models/Enums')
 const faceapi = require("face-api.js");
 const canvas = require("canvas");
