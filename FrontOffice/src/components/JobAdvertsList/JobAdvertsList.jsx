@@ -6,12 +6,18 @@ import JobAdvertService from "../../services/jobAdvertService";
 import JobAdvertsListItem from "./JobAdvertsListItem";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 import ApplyFormModal from "../applyModal/applyModal";
+import Toast from "../toast/Toast";
+import CustomToast from "../toast/Toast";
 
 export default function JobAdvertsList({ size=10, pagination = true }) {
   const [jobAdverts, setJobAdverts] = useState(null);
   const [filteredAdverts, setFilteredAdverts] = useState([]);
   const [show, setShow] = useState(false);
   const [singleOffre, setSingleOffer] = useState({});
+  const [erreur, setErreur]= useState("")
+  const [type, setType]=useState("success")
+
+  const [showToast, setShowToast]=useState(false)
   
   const [searchTitle, setSearchTitle] = useState("");
   const [typeContract, setTypeContract] = useState("");
@@ -169,8 +175,14 @@ export default function JobAdvertsList({ size=10, pagination = true }) {
         <ApplyFormModal
           offre={singleOffre}
           setShow={setShow}
+          setErreur={setErreur}
+          setShowToast= {setShowToast}
+          setType={setType}
         />
       )}
+
+      {showToast && <CustomToast message={erreur} type={type} setShowToast={setShowToast}></CustomToast>}
+
     </>
   );
 }

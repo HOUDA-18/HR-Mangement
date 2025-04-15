@@ -4,6 +4,7 @@ import { skillsOptions } from 'skillOptions';
 import { AuthContext } from '../../contexts/authContext';
 import { FaEdit, FaPlus, FaMinus, FaTimes, FaCheck, FaBan, FaFileAlt, FaArrowRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import './offer.scss'
 const Offers = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -128,44 +129,45 @@ const fetchCandidatures = async (offerId) => {
 
   return (
     <div className="offers-container">
-      <h1 className="page-title">Offers Management</h1>
+        <h1 className="page-title">Offers Management</h1>
 
-      <div className="filters-container">
-        <div className="filter-group">
-          <label htmlFor="status-filter">Status:</label>
-          <select 
-            id="status-filter"
-            value={statusFilter} 
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="filter-select"
-          >
-            <option value="all">All Statuses</option>
-            <option value="PENDING">Pending</option>
-            <option value="ACCEPTED">ACCEPTED</option>
-            <option value="REJECTED">REJECTED</option>
-          </select>
+        <div className="filters-card">
+          <div className="filters-grid">
+            {/* Status Filter */}
+            <div className="filter-item">
+              <label htmlFor="status-filter">Filter by Status</label>
+              <select
+                id="status-filter"
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+              >
+                <option value="all">All Statuses</option>
+                <option value="PENDING">Pending</option>
+                <option value="ACCEPTED">Accepted</option>
+                <option value="REJECTED">Rejected</option>
+              </select>
+            </div>
+
+            {/* Department Filter */}
+            <div className="filter-item">
+              <label htmlFor="department-filter">Filter by Department</label>
+              <select
+                id="department-filter"
+                value={departmentFilter}
+                onChange={(e) => setDepartmentFilter(e.target.value)}
+              >
+                <option value="all">All Departments</option>
+                {[...new Set(
+                  offers.map((o) => o.departement?.name).filter(Boolean)
+                )].map((dept, i) => (
+                  <option key={i} value={dept}>{dept}</option>
+                ))}
+              </select>
+            </div>
+          </div>
         </div>
 
-        <div className="filter-group">
-          <label htmlFor="department-filter">Department:</label>
-          <select 
-            id="department-filter"
-            value={departmentFilter} 
-            onChange={(e) => setDepartmentFilter(e.target.value)}
-            className="filter-select"
-          >
-            <option value="all">All Departments</option>
-            {[...new Set(offers
-              .map((o) => o.departement?.name)
-              .filter(name => name !== undefined)
-            )].map((dept, i) => (
-              <option key={i} value={dept}>
-                {dept}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
+
 
       <div className="offers-list">
         {currentOffers.length > 0 ? (
@@ -210,7 +212,7 @@ const fetchCandidatures = async (offerId) => {
                     ) : (
                       <div className="number-display">
                         <span className="number-value">{offer.numberofplace}</span>
-                        {isAdminOrSuperAdmin() && (
+                        {(isAdminOrSuperAdmin() && offer.status!="ACCEPTED")&& (
                           <button 
                             onClick={() => setEditingId(offer._id)}
                             className="edit-btn"

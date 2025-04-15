@@ -29,4 +29,19 @@ const Roles = Object.freeze({
     ACCEPTED: 'ACCEPTED',
     REJECTED: 'REJECTED',
   };
-module.exports= {Status, Roles, employmentType, offreStatus, candidatureStatus}
+
+  const HRskills= [
+    "Recruitment",
+    "Interviewing",
+    "Onboarding",
+    "Employee Relations",
+    "Payroll",
+    "Training",
+    "Performance Management",
+    "HR Policies",
+    "Conflict Resolution",
+    "Compliance",
+    "Benefits Administration",
+    "HR Software"
+  ];
+module.exports= {Status, Roles, employmentType, offreStatus, candidatureStatus, HRskills}

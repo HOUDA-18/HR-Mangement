@@ -15,16 +15,16 @@ export const useLogin = ()=>{
         axios.post("http://localhost:8070/api/users/login",  values) 
         .then((res)=>{
             // Check if user is active before proceeding
-            if (!res.data.user.active === "suspended") {
-                setUserError("Your account has been deactivated. For further information, please send an email to: employeeservice@gmail.com");
+            if (res.data.message) {
+                setUserError("Your account has been SUSPENDED");
                 // Clear any existing authentication data
                 localStorage.removeItem("userRole")
                 localStorage.removeItem("token")
                 localStorage.removeItem("user")
                 return; // Exit the function early
+
             }
-            console.log("res ", res)
-            if(!res.data.token){
+            else if(!res.data.token && res.data.user.status != "Suspended"){
                 setUserError("verify credentials")
             }else{
                 console.log("res ", res)

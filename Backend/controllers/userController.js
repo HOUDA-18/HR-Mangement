@@ -184,23 +184,25 @@ exports.login= async (req,res)=>{
             message: "Your account is suspended"
           }
           )
+        }else{
+          bcrypt.compare(password, user.password, async (err, ress)=>{
+            const token= jwt.sign({id}, process.env.JWT_SECRET)
+             if(ress ) {
+                if(user.status==Status.Inactive){
+                        await User.findOneAndUpdate({matricule: matricule}, {status: Status.Active})
+                }
+                
+              
+                res.status(200).json({user: user,
+                      token: token
+                    })
+                }
+                else{
+                    res.status(405).json({message: "Verify credentials"}) 
+                }
+            }) 
         }
-        bcrypt.compare(password, user.password, async (err, ress)=>{
-        const token= jwt.sign({id}, process.env.JWT_SECRET)
-         if(ress ) {
-            if(user.status==Status.Inactive){
-                    await User.findOneAndUpdate({matricule: matricule}, {status: Status.Active})
-            }
-            
-          
-            res.status(200).json({user: user,
-                  token: token
-                })
-            }
-            else{
-                res.status(405).json({message: "Verify credentials"}) 
-            }
-        }) 
+
             
        
     } catch (err){

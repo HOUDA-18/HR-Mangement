@@ -37,7 +37,7 @@ const Signin1 = () => {
             <h4 className="mb-4">Sign In</h4>
               
               <AuthLogin onLoginSuccess={handleLoginSuccess} />
-              {error && <Alert variant="danger">{error}</Alert>}
+              {error && <Alert variant="success"> { error } </Alert>}
               <p className="mb-2 text-muted">
                 Forgot password?{' '}
                 <NavLink to={'/auth/reset-password-1'} className="f-w-400">

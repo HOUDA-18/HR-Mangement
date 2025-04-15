@@ -2,6 +2,7 @@ const {Departement, DepartementSchema} = require("../models/departement");
 const {User}= require("../models/user")
 const nodemailer = require("nodemailer");
 const Roles = require("../models/rolesEnum");
+const {HRskills}= require('../models/Enums')
 const { Team } = require("../models/team");
 
 exports.addDepartement= async (req,res)=>{
@@ -13,18 +14,37 @@ exports.addDepartement= async (req,res)=>{
         return res.status(405).json("Departement with same name already exists")
     }
     else{
-        const newDepartement = new Departement({
-            code: code,
-            name: name
-        })
-        Departement.create(newDepartement).then((departement)=>{
-            return res.status(201).json(departement)
-    
-        }).catch((err)=>{
-            return res.status(400).json({message: 'Cannot create departement',
-                                         error: err
-                                        })
-        })
+        if(name==="HR"){
+            const newDepartement = new Departement({
+                code: code,
+                name: name,
+                skills: HRskills
+
+            })
+            Departement.create(newDepartement).then((departement)=>{
+                return res.status(201).json(departement)
+        
+            }).catch((err)=>{
+                return res.status(400).json({message: 'Cannot create departement',
+                                             error: err
+                                            })
+            })
+        }
+        else{
+            const newDepartement = new Departement({
+                code: code,
+                name: name
+            })
+            Departement.create(newDepartement).then((departement)=>{
+                return res.status(201).json(departement)
+        
+            }).catch((err)=>{
+                return res.status(400).json({message: 'Cannot create departement',
+                                             error: err
+                                            })
+            })
+        }
+
     }
 }
 

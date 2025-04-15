@@ -92,7 +92,7 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/departements',
         element: lazy(() => import('./views/departements')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN','MEMBRE_HR','HEAD_DEPARTEMENT','ADMIN_HR']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',

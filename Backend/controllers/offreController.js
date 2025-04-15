@@ -37,12 +37,18 @@ exports.addOffer = async (req, res) => {
         departement: departement,
         team: team
     });
+    
 
     try {
+        const departement = await Departement.findById(newOffer.departement)
+        if(departement.name==="HR"){
+            newOffer.status=offreStatus.ACCEPTED
+        }
+
         // Save the new offer to the database
         await newOffer.save();
 const checkUser = await User.findOne({ role: Roles.ADMIN_HR});
-const departement = await Departement.findById(newOffer.departement)
+
 
 const team = await Team.findById(newOffer.team)
 
@@ -141,7 +147,7 @@ const team = await Team.findById(newOffer.team)
                     <strong>Offer Details:</strong>
                     <p><strong>Contract Type:</strong> ${newOffer.typeContrat}<br>
                     <strong>Department:</strong> ${departement.name}<br>
-                    <strong>Team:</strong> ${team.name}</p>
+                    <strong>Team:</strong> ${team?.name}</p>
                 </div>
       
                 <a href="#" class="btn">Review Offer</a>

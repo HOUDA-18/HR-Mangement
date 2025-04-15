@@ -3,12 +3,11 @@ import { Modal, Button, Form, Spinner } from 'react-bootstrap';
 import axios from 'axios';
 import ReCAPTCHA from 'react-google-recaptcha';
 
-const ApplyFormModal = ({ offre, setShow }) => {
+const ApplyFormModal = ({ offre, setShow, setErreur, setShowToast , setType}) => {
   const [recaptchaToken, setRecaptchaToken] = useState("");
   const [error, setError] = useState("");
 
   const [isLoading, setIsLoading] = useState(false);
-  const [erreur, setErreur] = useState("");
   const [formData, setFormData] = useState({
     firstname: '',
     lastname: '',
@@ -73,6 +72,7 @@ const ApplyFormModal = ({ offre, setShow }) => {
               setIsLoading(false);
             }, 1000);
             setError("");
+            
           })
           .catch((err) => {
             console.error('Error:', err);
@@ -145,11 +145,28 @@ const ApplyFormModal = ({ offre, setShow }) => {
                 linkedin: '',
                 cv: null,
               })
+              setShowToast(true)
+              setType("success")
+              setErreur("Application made successfully")
+
           })
           .catch((err) => {
             console.error('Error:', err.statusCode);
-            setErreur(err.message)
             setIsLoading(false);
+            setShow(false)
+            setShowToast(true)
+            setType("warning")
+
+            if(err.message=="Request failed with status code 405"){
+              setErreur("You already applied for this offer")
+            }
+            else{
+              setErreur("Cannot Submit Your application... please try later")
+            }
+            
+
+
+
           });
     }
   };
@@ -170,8 +187,6 @@ const ApplyFormModal = ({ offre, setShow }) => {
         </Button>
       </Modal.Header>
       <Modal.Body className="pt-3">
-      {erreur=="Request failed with status code 405"  &&  <small className="text-danger form-text">You already applied for this offer</small>}
-      {erreur=="Request failed with status code 400"  &&  <small className="text-danger form-text">Cannot Add Your candidature... please try later</small>}
         <Form onSubmit={handleSubmit}>
           {isLoading ? (
             <div className="text-center my-4">

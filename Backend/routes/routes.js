@@ -4,7 +4,7 @@ module.exports= app =>{
     const departementController = require("../controllers/departementController")
     const teamController = require("../controllers/teamController")
     const offerController = require("../controllers/offreController")
-    const candidatureController= require("../controllers/candidatureController")
+    const candidatureController= require("../controllers/CandidatureController")
 
     const { UserSchema, loginSchema} = require("../models/user");
     const {DepartementSchema}=require("../models/departement")
@@ -107,6 +107,7 @@ module.exports= app =>{
     router.put('/offre/:id/status', offerController.updateOfferStatus);
     router.get('/candidature/:id', candidatureController.getAllCandidatures );
     router.get('/candidatures/:id',candidatureController.getCandidatureById)
+    router.post('/candidatures',validate(candidatureSchema), candidatureController.addCandidature)
 
     //
 // Ajoutez cette ligne dans la section des routes candidature

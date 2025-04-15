@@ -88,16 +88,21 @@ const handleInput = (event)=>{
   return (
     <div className="confirmation-overlay">
       <div className="confirmation-alert">
-        <h4>Please choose a departement</h4>
-        <div className="field">
-            <select value={selectedOption} onChange={(e) => handleInput(e)}>
-
-                {departements.map((option, index) => (
-                    <option key={index} value={option._id}  >
-                            {option.name}
-                    </option>
-                ))}
-        </select>
+        <h4>Please choose an option</h4>
+        <div className="form-field">
+          <label htmlFor="department-select">Select Department</label>
+          <select
+            id="department-select"
+            value={selectedOption}
+            onChange={handleInput}
+          >
+            <option value="" disabled>Select a department</option>
+            {departements.map((option, index) => (
+              <option key={index} value={option._id}>
+                {option.name}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="confirmation-buttons">

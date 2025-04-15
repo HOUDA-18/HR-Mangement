@@ -36,6 +36,7 @@ const Employees = () => {
   const limit = 5;
   const [deleteId, setDeleteId]= useState('')
   const [sortOrder, setSortOrder] = useState('asc');
+  const [showAlertAddToDepartement, setShowAlertAddToDepartement]=useState(false)
 
   const currentUser = JSON.parse(localStorage.getItem("user"))
 
@@ -62,8 +63,21 @@ const Employees = () => {
     setShowAlert(false)
     setShowAlertDelete(false)
     setShowAlertAffectation(false)
+    setShowAlertAddToDepartement(false)
 
 
+  }
+
+  const confirmAddToDepartement=(emp)=>{
+    axios.put(`http://localhost:8070/api/departements/assignEmployee/${currentUser.departement}/${emp._id}`)
+    .then((res)=>{
+      console.log('team deleted:', res.data);
+      // Refresh the list of users after deletion
+      window.location.reload()
+    }).catch ((error)=> {
+    console.error('Error deleting departement:', error);
+    setErreur(error.response.data.message);
+  })
   }
 
   const handleConfirm = async() => {
@@ -137,8 +151,14 @@ const Employees = () => {
     };
 
     const handleAddToDepartement = (emp)=>{
-        setEmployeeToAffect(emp)
+      setEmployeeToAffect(emp)
+      if(currentUser.role==="HEAD_DEPARTEMENT"){
+          setShowAlertAddToDepartement(true)
+      }
+      else{
         setShowAlertAffectation(true)
+
+      }
     }
 
    // Sorting handler
@@ -316,75 +336,79 @@ useEffect(() => {
                           <td className="align-middle">{user.email}</td>
                           <td className="align-middle text-capitalize">{user.role}</td>
                           <td className="align-middle">
-                          <div 
-                          
-                            className= {`status-indicator ${
-                              user.status==="Active" ? 'active' : 'inactive'
-                            }`}
+<div
+  className={`status-indicator ${
+    user.status === "Active"
+      ? "active"
+      : user.status === "Suspended"
+      ? "suspended"
+      : "inactive"
+  }`}
+  style={{
+    display: "inline-block",
+    width: "90px",
+    padding: "8px 12px",
+    borderRadius: "20px",
+    fontSize: "0.85rem",
+    fontWeight: 600, // Augmentation du poids de la police
+    transition: "all 0.3s ease",
+    backgroundColor:
+      user.status === "Active"
+        ? "rgba(40, 167, 69, 0.15)"
+        : user.status === "Suspended"
+        ? "rgba(169, 169, 169, 0.3)" // Light grey for Suspended
+        : "rgba(220, 53, 69, 0.1)", // Rouge plus visible pour inactive
+    color:
+      user.status === "Active"
+        ? "#28a745"
+        : user.status === "Suspended"
+        ? "#808080" // Grey color for suspended
+        : "#dc3545", // Couleur rouge pour inactive
+    border: `2px solid ${
+      user.status === "Active"
+        ? "#28a745"
+        : user.status === "Suspended"
+        ? "#808080" // Border grey for suspended
+        : "rgba(220, 53, 69, 0.3)"
+    }`,
+    boxShadow:
+      user.status === "Active"
+        ? "0 2px 12px rgba(40, 167, 69, 0.25)"
+        : user.status === "Suspended"
+        ? "0 2px 8px rgba(169, 169, 169, 0.25)" // Soft grey shadow for suspended
+        : "0 2px 8px rgba(220, 53, 69, 0.15)",
+    position: "relative",
+    overflow: "hidden",
+  }}
+>
+  <span
+    className="status-glow"
+    style={{
+      position: "absolute",
+      top: "-50%",
+      left: "-50%",
+      width: "200%",
+      height: "200%",
+      background:
+        user.status === "Active"
+          ? "radial-gradient(circle, rgba(40,167,69,0.15) 0%, transparent 60%)"
+          : user.status === "Suspended"
+          ? "radial-gradient(circle, rgba(169,169,169,0.2) 0%, transparent 60%)" // Light grey glow for suspended
+          : "radial-gradient(circle, rgba(220,53,69,0.1) 0%, transparent 60%)",
+      pointerEvents: "none",
+    }}
+  />
+  <div style={{ display: "flex", alignItems: "center" }}>
 
-                            style={{
-                              display: 'inline-block',
-                            
-                              width: '90px',
-                              padding: '8px 12px',
-                              borderRadius: '20px',
-                              fontSize: '0.85rem',
-                              fontWeight: 600, // Augmentation du poids de la police
-                              transition: 'all 0.3s ease',
-                              backgroundColor: user.status==="Active"
-                                ? 'rgba(40, 167, 69, 0.15)' 
-                                : 'rgba(220, 53, 69, 0.1)', // Rouge plus visible pour inactive
-                              color: user.status==="Active"
-                                ? '#28a745' 
-                                : '#dc3545', // Couleur rouge pour inactive
-                              border: `2px solid ${
-                                user.status==="Active"  ? '#28a745' : 'rgba(220, 53, 69, 0.3)'
-                              }`,
-                              boxShadow: user.status==="Active"
-                                ? '0 2px 12px rgba(40, 167, 69, 0.25)' 
-                                : '0 2px 8px rgba(220, 53, 69, 0.15)',
-                              position: 'relative',
-                              overflow: 'hidden'
-                            }}
-                          >
-                            <span 
-                              className="status-glow"
-                              style={{
-                                position: 'absolute',
-                                top: '-50%',
-                                left: '-50%',
-                                width: '200%',
-                                height: '200%',
-                                background: user.status==="Active" 
-                                  ? 'radial-gradient(circle, rgba(40,167,69,0.15) 0%, transparent 60%)' 
-                                  : 'radial-gradient(circle, rgba(220,53,69,0.1) 0%, transparent 60%)',
-                                pointerEvents: 'none'
-                              }}
-                            />
-                            <div style={{ display: 'flex', alignItems: 'center' }}>
-                              <span 
-                                className="status-dot"
-                                style={{
-                                  display: 'inline-block',
-                                  width: '10px',
-                                  height: '10px',
-                                  borderRadius: '50%',
-                                  marginRight: '8px',
-                                  backgroundColor: user.status==="Active" 
-                                    ? '#28a745' 
-                                    : '#dc3545', // Rouge vif pour inactive
-                                  boxShadow: user.status==="Active" 
-                                    ? '0 0 8px rgba(40, 167, 69, 0.4)' 
-                                    : '0 0 6px rgba(220, 53, 69, 0.3)',
-                                  transform: 'translateZ(0)',
-                                  position: 'relative'
-                                }}
-                              />
-                              <span>
-                                {user.status==="Active" ? 'Active' : 'Inactive'}
-                              </span>
-                            </div>
-                          </div>
+    <span>
+      {user.status === "Active"
+        ? "Active"
+        : user.status === "Suspended"
+        ? "Suspend"
+        : "Inactive"}
+    </span>
+  </div>
+</div>
                         </td>
                         <td>
                           <div className="cellAction">
@@ -401,7 +425,7 @@ useEffect(() => {
                               </div>
                          </OverlayTrigger>
 
-                            {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ) && 
+                            {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ) && (user.status!="Suspended") && 
                                 <OverlayTrigger
                                 placement="top"
                                 overlay={
@@ -415,7 +439,7 @@ useEffect(() => {
                                 </div>
                               </OverlayTrigger>
                               }
-                              {user.departement==null && (
+                              {(user.departement==null) && (user.status!="Suspended")  && (
                                 <OverlayTrigger
                                 placement="top"
                                 overlay={
@@ -429,7 +453,7 @@ useEffect(() => {
                                 </div>
                               </OverlayTrigger>
                               )}
-                            {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ) && <div className="deleteButton" onClick={()=>handleDelete(emp._id)}>
+                            {(currentUser.role ==="ADMIN_HR" || currentUser.role ==="MEMBRE_HR" || currentUser.role ==="SUPER_ADMIN" ) &&(user.status!="Suspended") &&  <div className="deleteButton" onClick={()=>handleDelete(user._id)}>
                               <DeleteForever/>
                             </div>}
                           </div>
@@ -480,6 +504,14 @@ useEffect(() => {
                                     data={employeeToAffect}
                                     type="departement"
                                     onConfirm={()=>AddToDepartement()}
+                                    onCancel={handleCancel}
+                                    />
+                                )}
+
+                      {showAlertAddToDepartement && (
+                                    <ConfirmationAlert
+                                    message="Are you sure to add this employee to your departement?"
+                                    onConfirm={()=>confirmAddToDepartement(employeeToAffect)}
                                     onCancel={handleCancel}
                                     />
                                 )}

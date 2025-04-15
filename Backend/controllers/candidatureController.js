@@ -2,7 +2,9 @@ const {Candidature, candidatureSchema} = require("../models/candidature");
 const nodemailer = require("nodemailer");
 const Roles = require("../models/rolesEnum");
 const {candidatureStatus}= require('../models/Enums')
-const {Offer}=require('../models/offre')
+const {Offer}=require('../models/offre');
+const { User } = require("../models/user");
+const {sendemailHr}= require('../services/sendMailHr')
 
 exports.addCandidature= async (req, res)=>{
     const {
@@ -45,8 +47,13 @@ exports.addCandidature= async (req, res)=>{
               technicalAssessment: technicalAssessment,
               overallEvaluation: overallEvaluation,
         })
-        Candidature.create(newCandidature).then((candidature)=>{
-            return res.status(201).json(candidature)
+        Candidature.create(newCandidature).then( (candidature)=>{
+            sendemailHr(candidature.idoffre).then((ress)=>{
+              return res.status(201).json(candidature)
+
+            }).catch((err)=>{
+                console.log("err: ", err)
+            })
     
         }).catch((err)=>{
             return res.status(400).json({message: 'Cannot create candidature',
@@ -80,6 +87,7 @@ exports.createCandidature = async (req, res) => {
     });
 
     const savedCandidature = await newCandidature.save();
+    
     res.status(201).json(savedCandidature);
   } catch (error) {
     if (error.name === 'ValidationError') {
@@ -184,6 +192,7 @@ exports.updateCandidatureStatus = async (req, res) => {
     ).populate('idoffre');
 
     const offer = await Offer.findById(updatedCandidature.idoffre);
+    const hrMail = await User.findOne({role: Roles.ADMIN_HR})
     
     if (!updatedCandidature) {
       return res.status(404).json({ message: 'Candidature non trouvée' });
@@ -264,9 +273,9 @@ exports.updateCandidatureStatus = async (req, res) => {
               ${
                 isAccepted
                   ? `<p>We are thrilled to inform you that you have been selected for the next steps of our recruitment process. Our team will reach out to you shortly.</p>
-                     <a href="mailto:hr@company.com" class="btn">Contact HR</a>`
+                     <a href="mailto:${hrMail.email}" class="btn">Contact HR</a>`
                   : `<p>We regret to inform you that you have not been selected at this time. However, we truly appreciate your interest and encourage you to apply again in the future.</p>
-                     <a href="https://company-careers.com" class="btn">View Other Opportunities</a>`
+                     <a href=${process.env.JOBS_URL} class="btn">View Other Opportunities</a>`
               }
               <div class="footer">
                 &copy; ${new Date().getFullYear()} HR Management System. All rights reserved.

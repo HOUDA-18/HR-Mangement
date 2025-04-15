@@ -4,6 +4,7 @@ const yup = require('yup')
 const departement = new mongoose.Schema({
     code: {type: String, required: true},
     name: {type: String, required: true},
+    skills:{type : [String], required: false, default:[]},
     chefDepartement: { type: mongoose.Schema.Types.ObjectId, ref: 'user' , default:null},
     teams: [{ type: mongoose.Schema.Types.ObjectId, ref: 'team' }],
     employees: [{ type: mongoose.Schema.Types.ObjectId, ref: 'user' }]

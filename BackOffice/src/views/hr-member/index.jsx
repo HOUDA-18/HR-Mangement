@@ -203,8 +203,8 @@ const HRMembers = () => {
           </div>
         )}
       </div>
-      <PdfUpload></PdfUpload>
-    </div>
+{/*       <PdfUpload></PdfUpload>
+ */}    </div>
   );
 };
 
