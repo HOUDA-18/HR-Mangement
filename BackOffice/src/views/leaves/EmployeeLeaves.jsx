@@ -19,10 +19,13 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import axios from 'axios';
+import CalendarPicker from './CalendarPicker';
+
 
 const currentUser = JSON.parse(localStorage.getItem("user"));
 
 const LeavesForm = () => {
+  const [remainingDays, setRemainingDays] = useState(20);
   const [formData, setFormData] = useState({
     type: 'voyage',
     startDate: new Date(),
@@ -33,6 +36,19 @@ const LeavesForm = () => {
     status: 'pending'
   });
   
+  const calculateUsedDays = (leaves) => {
+    return leaves.reduce((total, leave) => {
+      if (leave.status === 'accepted' || leave.status === 'pending') {
+        const start = new Date(leave.startDate);
+        const end = new Date(leave.endDate);
+        const diffTime = Math.abs(end - start);
+        return total + Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1; // +1 to include both start and end dates
+      }
+      return total;
+    }, 0);
+  };
+  
+
   const [leaves, setLeaves] = useState([]);
   const [error, setError] = useState('');
   const [editOpen, setEditOpen] = useState(false);
@@ -46,17 +62,27 @@ const LeavesForm = () => {
   const fetchLeaves = async () => {
     try {
       const response = await axios.get(`http://localhost:8070/api/conges?id_employee=${currentUser._id}`);
-      setLeaves(response.data);
+      const leavesData = response.data;
+      setLeaves(leavesData);
+      
+      // Calculate remaining days
+      const usedDays = calculateUsedDays(leavesData);
+      setRemainingDays(20 - usedDays);
     } catch (err) {
       setError('Failed to fetch leave requests');
     }
   };
 
 
-  const validateDuration = (startDate, endDate) => {
+  const validateDuration = (startDate, endDate, currentLeaveId = null) => {
+    // Calculate duration of new request
     const diffTime = Math.abs(endDate - startDate);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
-    return diffDays <= 20;
+    const newDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+    
+    // Calculate currently used days excluding the leave being edited
+    const usedDays = calculateUsedDays(leaves.filter(leave => leave._id !== currentLeaveId));
+    
+    return (usedDays + newDays) <= 20;
   };
 
   const handleSubmit = async (e) => {
@@ -68,7 +94,7 @@ const LeavesForm = () => {
     }
 
     if (!validateDuration(formData.startDate, formData.endDate)) {
-      setError('Leave duration cannot exceed 20 days');
+      setError(`Maximum 20 days per year. You have ${remainingDays} days remaining`);
       return;
     }
 
@@ -103,11 +129,16 @@ const LeavesForm = () => {
     }
 
 
-    if (!validateDuration(formData.startDate, formData.endDate)) {
-      setError('Leave duration cannot exceed 20 days');
+    if (!validateDuration(
+      new Date(selectedLeave.startDate), 
+      new Date(selectedLeave.endDate),
+      selectedLeave._id // Pass the ID of the leave being edited
+    )) {
+      const usedDays = calculateUsedDays(leaves.filter(leave => leave._id !== selectedLeave._id));
+      setError(`Maximum 20 days per year. You have ${20 - usedDays} days remaining`);
       return;
     }
-
+    
     try {
       await axios.put(`http://localhost:8070/api/conges/${selectedLeave._id}`, {
         ...selectedLeave,
@@ -123,9 +154,32 @@ const LeavesForm = () => {
     }
   };
 
+  const handleDateChange = (ranges) => {
+    const { startDate, endDate } = ranges.selection;
+    setFormData(prev => ({
+      ...prev,
+      startDate,
+      endDate
+    }));
+  };
+
+  const handleEditDateChange = (ranges) => {
+    const { startDate, endDate } = ranges.selection;
+    setSelectedLeave(prev => ({
+      ...prev,
+      startDate,
+      endDate
+    }));
+  };
+
   return (
     <Box sx={{ maxWidth: 800, mx: 'auto', p: 3 }}>
       {/* Form Section */}
+      <Box sx={{ mb: 2 }}>
+        <Typography variant="subtitle1" color={remainingDays <= 0 ? 'error' : 'inherit'}>
+          Remaining leave days: {remainingDays}/20
+        </Typography>
+      </Box>
       <Box component="form" onSubmit={handleSubmit} sx={{ mb: 4 }}>
       <Typography variant="h4" gutterBottom>New Leave Request</Typography>
       <TextField
@@ -141,25 +195,20 @@ const LeavesForm = () => {
         <MenuItem value="voyage">Voyage</MenuItem>
       </TextField>
 
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="subtitle1" gutterBottom>Start Date</Typography>
-        <DatePicker
-          selected={formData.startDate}
-          onChange={(date) => setFormData({ ...formData, startDate: date })}
-          dateFormat="dd/MM/yyyy"
-          minDate={new Date()}
-        />
-      </Box>
-
-      <Box sx={{ mb: 2 }}>
-        <Typography variant="subtitle1" gutterBottom>End Date</Typography>
-        <DatePicker
-          selected={formData.endDate}
-          onChange={(date) => setFormData({ ...formData, endDate: date })}
-          dateFormat="dd/MM/yyyy"
-          minDate={formData.startDate}
-        />
-      </Box>
+      <Typography variant="subtitle1" gutterBottom>Select Dates</Typography>
+        <Box sx={{ 
+          border: 1, 
+          borderColor: 'divider', 
+          borderRadius: 1, 
+          p: 2,
+          mb: 2 
+         }}>
+          <CalendarPicker
+            startDate={formData.startDate}
+            endDate={formData.endDate}
+            onChange={handleDateChange}
+          />
+        </Box>
 
       <TextField
         fullWidth
@@ -230,7 +279,7 @@ const LeavesForm = () => {
       </List>
 
       {/* Edit Dialog */}
-      <Dialog open={editOpen} onClose={() => setEditOpen(false)}>
+      <Dialog open={editOpen} onClose={() => setEditOpen(false)} maxWidth="md">
         <DialogTitle>Edit Leave Request</DialogTitle>
         <DialogContent>
           {selectedLeave && (
@@ -241,30 +290,25 @@ const LeavesForm = () => {
                 label="Leave Type"
                 value={selectedLeave.type}
                 onChange={(e) => setSelectedLeave({...selectedLeave, type: e.target.value})}
-                sx={{ mt: 2 }}
+                sx={{ mt: 2, mb: 2 }}
               >
                 <MenuItem value="maternite">Maternité</MenuItem>
                 <MenuItem value="sans_solde">Sans Solde</MenuItem>
                 <MenuItem value="voyage">Voyage</MenuItem>
               </TextField>
 
-              <Box sx={{ my: 2 }}>
-                <Typography variant="subtitle1">Start Date</Typography>
-                <DatePicker
-                  selected={new Date(selectedLeave.startDate)}
-                  onChange={(date) => setSelectedLeave({...selectedLeave, startDate: date})}
-                  dateFormat="dd/MM/yyyy"
-                  minDate={new Date()}
-                />
-              </Box>
-
-              <Box sx={{ my: 2 }}>
-                <Typography variant="subtitle1">End Date</Typography>
-                <DatePicker
-                  selected={new Date(selectedLeave.endDate)}
-                  onChange={(date) => setSelectedLeave({...selectedLeave, endDate: date})}
-                  dateFormat="dd/MM/yyyy"
-                  minDate={new Date(selectedLeave.startDate)}
+              <Typography variant="subtitle1" gutterBottom>Select Dates</Typography>
+              <Box sx={{ 
+                border: 1, 
+                borderColor: 'divider', 
+                borderRadius: 1, 
+                p: 2,
+                mb: 2 
+              }}>
+                <CalendarPicker
+                  startDate={new Date(selectedLeave.startDate)}
+                  endDate={new Date(selectedLeave.endDate)}
+                  onChange={handleEditDateChange}
                 />
               </Box>
 

@@ -9,12 +9,42 @@ import {
   MenuItem,
   Chip
 } from '@mui/material';
+import Paper from '@mui/material/Paper';
 import axios from 'axios';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import timeGridPlugin from '@fullcalendar/timegrid';
 
 const HRLeaves = () => {
   const [leaves, setLeaves] = useState([]);
+  const [allLeaves, setAllLeaves] = useState([]);
   const [employees, setEmployees] = useState({});
   const [error, setError] = useState('');
+
+  const getLeaveColor = (type) => {
+    const colors = {
+      maternite: '#ff7675',
+      sans_solde: '#74b9ff',
+      voyage: '#55efc4',
+      pending: '#ffeaa7'
+    };
+    return colors[type] || '#d63031';
+  };
+
+  const getCalendarEvents = () => {
+    return allLeaves.map(leave => ({
+      title: `${employees[leave.id_employee] || 'Unknown'} - ${leave.type}`,
+      start: new Date(leave.startDate),
+      end: new Date(leave.endDate),
+      color: getLeaveColor(leave.status === 'pending' ? 'pending' : leave.type),
+      allDay: true,
+      extendedProps: {
+        status: leave.status,
+        reason: leave.reason
+      }
+    }));
+  };
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -30,7 +60,17 @@ const HRLeaves = () => {
       }
     };
 
+    const fetchAllLeaves = async () => {
+      try {
+        const response = await axios.get('http://localhost:8070/api/conges');
+        setAllLeaves(response.data);
+      } catch (err) {
+        setError('Failed to fetch all leaves');
+      }
+    };
+
     fetchEmployees();
+    fetchAllLeaves();
     fetchLeaves();
   }, []);
 
@@ -62,6 +102,28 @@ const HRLeaves = () => {
 
   return (
     <Box sx={{ maxWidth: 1200, mx: 'auto', p: 3 }}>
+
+      <Typography variant="h4" gutterBottom>Leave Management Dashboard</Typography>
+
+      {/* Calendar View */}
+      <Paper elevation={3} sx={{ mb: 4, p: 2 }}>
+        <Typography variant="h5" gutterBottom>Leave Calendar</Typography>
+        <FullCalendar
+          plugins={[dayGridPlugin, interactionPlugin, timeGridPlugin]}
+          initialView="dayGridMonth"
+          events={getCalendarEvents()}
+          headerToolbar={{
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay'
+          }}
+          height={650}
+          eventDidMount={(info) => {
+            info.el.style.cursor = 'pointer';
+            info.el.title = `Status: ${info.event.extendedProps.status}\nReason: ${info.event.extendedProps.reason}`;
+          }}
+        />
+      </Paper>
       <Typography variant="h4" gutterBottom>Pending Leave Requests</Typography>
 
       <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
