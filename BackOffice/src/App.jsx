@@ -1,9 +1,7 @@
 import React from 'react';
 import { BrowserRouter } from 'react-router-dom';
-
-// project-import
 import renderRoutes, { routes } from './routes';
-
+import 'react-datepicker/dist/react-datepicker.css';
 // ==============================|| APP ||============================== //
 
 const App = () => {

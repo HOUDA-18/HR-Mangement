@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const db = require('./config/db.json');
+const congesRouter = require('./routes/congesRoute');
 
 // Configuration initiale
 
@@ -20,7 +21,7 @@ mongoose.connect(db.mongo.uri)
   .then(() => console.log('✅ Connecté à MongoDB'))
   .catch(err => console.error('❌ Erreur MongoDB:', err));
 
-
+app.use('/api/conges', congesRouter); 
 require("./routes/routes")(app); 
 
 
