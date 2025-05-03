@@ -89,12 +89,12 @@ const menuItems = {
           roles: ['SUPER_ADMIN','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT']
         },
         {
-          id: 'Events',
-          title: 'Events',
+          id: 'Salaries',
+          title: 'Salaries',
           type: 'item',
           icon: 'feather icon-calendar',
-          url: '/app/dashboard/events',
-          roles: ['SUPER_ADMIN','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT']
+          url: '/app/dashboard/salaries',
+          roles: ['SUPER_ADMIN','ADMIN_HR', 'HEAD_DEPARTEMENT']
         }
         ,
         {
