@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import "./index.scss"
 import Chart from 'components/Chart/chart';
+import SkillRadarChart from 'components/SpiderChartEmployee/spiderChartEmployee';
+import axios from 'axios';
 
 
 // ==============================|| DASHBOARD ANALYTICS ||============================== //
@@ -9,7 +11,20 @@ import Chart from 'components/Chart/chart';
 const employeeDetails = () => {
     const navigate = useNavigate()
     const location = useLocation();
-    const [employee, setEmployee]= useState({})
+    const [employee, setEmployee]= useState({
+    _id: "",
+    firstname: "",
+    lastname: "",
+    matricule: "",
+    email: "",
+    phone: "",
+    image: "",
+    status: "",
+    role: "",
+    createdAt: "",
+    departement: "",
+    technical_skills_evaluation: []
+    })
     const userId = location.state?.values
     const currentUser = JSON.parse(localStorage.getItem("user"))
 
@@ -17,20 +32,16 @@ const employeeDetails = () => {
         navigate('/app/dashboard/updateProfile', {state:{ values: employee}})
     }
     useEffect(() => {
-  
-        fetch(`http://localhost:8070/api/users/getById/${userId}`)
-          .then((res) => {
-            console.log("Réponse du serveur :", res);
-            return res.json();
-          })
-          .then((data) => {
-            console.log("Données reçues :", data);
-            setEmployee(data)
-          })
-          .catch((error) => {
-            console.error("Erreur lors de la récupération des employés :", error);
-            setLoading(false);
-          });
+
+        axios.get(`http://localhost:8070/api/users/getById/${userId}`)
+                .then((res)=>{
+                    console.log("Données reçues :", res.data);
+                    setEmployee(res.data)
+
+                }).catch((err)=>{
+                    console.error("Erreur lors de la récupération des employés :", err);
+
+                })
       }, []);
 
 
@@ -78,9 +89,16 @@ const employeeDetails = () => {
                     
                 </div>
                 <div className="bottom">
-                    {/* <List rows={rows} title={titre} catags={[]} type="livrables"/> */}
-                    bottom
+                    <div className="column">
+                        <SkillRadarChart data={employee.technical_skills_evaluation} />
+                        {/* <List rows={rows} title={titre} catags={[]} type="livrables" /> */}
+                    </div>
+                    <div className="column">
+                                                {/* Left column content (optional): list, soft skills, etc. */}
+
+                    </div>
                 </div>
+
     </React.Fragment>
   );
 };

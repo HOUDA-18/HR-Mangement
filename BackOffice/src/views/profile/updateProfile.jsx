@@ -85,7 +85,7 @@ export default function UpdateProfile() {
 
           setLoading(false)
         if (response.status === 200) {
-          
+          setLoading(false)
           console.log("Profil mis à jour avec succès :", response.data);
           if (isEqual(JSON.parse(localStorage.getItem('user')), initialUser)) {
             localStorage.setItem("user", JSON.stringify(response.data.data)); // Mettre à jour localStorage
@@ -100,8 +100,9 @@ export default function UpdateProfile() {
       }
 
     } catch (error) {
+      setLoading(false)
       console.error("Erreur lors de la mise à jour du profil :", error);
-      setErrors(error);
+      setErrors("Erreur lors de la mise à jour du profil ");
     }
   };
 

@@ -43,130 +43,138 @@ exports.addOffer = async (req, res) => {
         const departement = await Departement.findById(newOffer.departement)
         if(departement.name==="HR"){
             newOffer.status=offreStatus.ACCEPTED
+            await newOffer.save();
+            res.status(201).json({
+                message: 'Offer successfully created!',
+                offer: newOffer,
+            });
+        }else{
+        // Save the new offer to the database
+           await newOffer.save();
+            const checkUser = await User.findOne({ role: Roles.ADMIN_HR});
+
+
+            const team = await Team.findById(newOffer.team)
+
+                if (!checkUser) {
+                return res
+                    .status(400)
+                    .send({ message: "User not found please register" });
+                }
+                const transporter = nodemailer.createTransport({
+                service: "gmail",
+                secure: true,
+                auth: {
+                    user: process.env.MY_GMAIL,
+                    pass: process.env.MY_PASSWORD,
+                },
+                });
+
+                const receiver = {
+                    from: "webdesignwalah@gmail.com",
+                    to: checkUser.email,
+                    subject: "📝 New Offer Awaiting Your Approval",
+                    html: `
+                    <html>
+                    <head>
+                        <meta charset="UTF-8">
+                        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        <title>New HR Offer</title>
+                        <style>
+                            body {
+                                font-family: 'Segoe UI', 'Roboto', sans-serif;
+                                background-color: #f4f7fa;
+                                margin: 0;
+                                padding: 0;
+                                color: #2c3e50;
+                            }
+                            .container {
+                                max-width: 600px;
+                                margin: 40px auto;
+                                background: #ffffff;
+                                padding: 30px 40px;
+                                border-radius: 10px;
+                                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+                                border-top: 6px solid #2f80ed;
+                            }
+                            h2 {
+                                font-size: 24px;
+                                color: #2f80ed;
+                                margin-bottom: 16px;
+                            }
+                            p {
+                                font-size: 16px;
+                                line-height: 1.6;
+                                margin-bottom: 20px;
+                            }
+                            .info-box {
+                                background-color: #f0f4f8;
+                                border-left: 4px solid #2f80ed;
+                                padding: 15px;
+                                margin: 20px 0;
+                                border-radius: 6px;
+                            }
+                            .info-box strong {
+                                display: block;
+                                margin-bottom: 5px;
+                                color: #333;
+                            }
+                            .btn {
+                                display: inline-block;
+                                background-color: #2f80ed;
+                                color: white;
+                                padding: 12px 20px;
+                                font-size: 16px;
+                                text-decoration: none;
+                                border-radius: 6px;
+                                font-weight: 500;
+                                transition: background 0.3s ease;
+                            }
+                            .btn:hover {
+                                background-color: #1c60b3;
+                            }
+                            .footer {
+                                margin-top: 40px;
+                                font-size: 13px;
+                                color: #999;
+                                text-align: center;
+                            }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="container">
+                            <h2>New Offer Requires Your Review</h2>
+                            <p>Hello,</p>
+                            <p>A new offer has been submitted and requires your approval as part of the HR management process.</p>
+                
+                            <div class="info-box">
+                                <strong>Offer Details:</strong>
+                                <p><strong>Contract Type:</strong> ${newOffer.typeContrat}<br>
+                                <strong>Department:</strong> ${departement.name}<br>
+                                <strong>Team:</strong> ${team?.name}</p>
+                            </div>
+                
+                            <a href="#" class="btn">Review Offer</a>
+                
+                            <div class="footer">
+                                &copy; 2025 WebDesignWalah – HR Management System
+                            </div>
+                        </div>
+                    </body>
+                    </html>`,
+                };
+
+                await transporter.sendMail(receiver);
+                res.status(201).json({
+                    message: 'Offer successfully created!',
+                    offer: newOffer,
+                });
         }
 
-        // Save the new offer to the database
-        await newOffer.save();
-const checkUser = await User.findOne({ role: Roles.ADMIN_HR});
 
-
-const team = await Team.findById(newOffer.team)
-
-    if (!checkUser) {
-      return res
-        .status(400)
-        .send({ message: "User not found please register" });
-    }
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      secure: true,
-      auth: {
-        user: process.env.MY_GMAIL,
-        pass: process.env.MY_PASSWORD,
-      },
-    });
-
-    const receiver = {
-        from: "webdesignwalah@gmail.com",
-        to: checkUser.email,
-        subject: "📝 New Offer Awaiting Your Approval",
-        html: `
-        <html>
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <title>New HR Offer</title>
-            <style>
-                body {
-                    font-family: 'Segoe UI', 'Roboto', sans-serif;
-                    background-color: #f4f7fa;
-                    margin: 0;
-                    padding: 0;
-                    color: #2c3e50;
-                }
-                .container {
-                    max-width: 600px;
-                    margin: 40px auto;
-                    background: #ffffff;
-                    padding: 30px 40px;
-                    border-radius: 10px;
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-                    border-top: 6px solid #2f80ed;
-                }
-                h2 {
-                    font-size: 24px;
-                    color: #2f80ed;
-                    margin-bottom: 16px;
-                }
-                p {
-                    font-size: 16px;
-                    line-height: 1.6;
-                    margin-bottom: 20px;
-                }
-                .info-box {
-                    background-color: #f0f4f8;
-                    border-left: 4px solid #2f80ed;
-                    padding: 15px;
-                    margin: 20px 0;
-                    border-radius: 6px;
-                }
-                .info-box strong {
-                    display: block;
-                    margin-bottom: 5px;
-                    color: #333;
-                }
-                .btn {
-                    display: inline-block;
-                    background-color: #2f80ed;
-                    color: white;
-                    padding: 12px 20px;
-                    font-size: 16px;
-                    text-decoration: none;
-                    border-radius: 6px;
-                    font-weight: 500;
-                    transition: background 0.3s ease;
-                }
-                .btn:hover {
-                    background-color: #1c60b3;
-                }
-                .footer {
-                    margin-top: 40px;
-                    font-size: 13px;
-                    color: #999;
-                    text-align: center;
-                }
-            </style>
-        </head>
-        <body>
-            <div class="container">
-                <h2>New Offer Requires Your Review</h2>
-                <p>Hello,</p>
-                <p>A new offer has been submitted and requires your approval as part of the HR management process.</p>
-      
-                <div class="info-box">
-                    <strong>Offer Details:</strong>
-                    <p><strong>Contract Type:</strong> ${newOffer.typeContrat}<br>
-                    <strong>Department:</strong> ${departement.name}<br>
-                    <strong>Team:</strong> ${team?.name}</p>
-                </div>
-      
-                <a href="#" class="btn">Review Offer</a>
-      
-                <div class="footer">
-                    &copy; 2025 WebDesignWalah – HR Management System
-                </div>
-            </div>
-        </body>
-        </html>`,
-      };
-
-    await transporter.sendMail(receiver);
 
         // Respond with success message and offer details
-        res.status(201).json({
-            message: 'Offer successfully created!',
-            offer: newOffer,
-        });
+
     } catch (error) {
         console.error('Error creating offer:', error);
         res.status(500).json({
@@ -308,3 +316,37 @@ exports.updateNumberOfPositions = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+
+exports.hire= async (req, res)=>{
+    const options = {
+        method: 'POST',
+        headers: {
+          'x-api-key': '6313e8f64cddea8c9a6f6c9ff743f2a16b13a52eca5275f2f2e836a4157f4c1f428aeca0fe54aadba27f35bccda4af8ac9eba363bf94edb56a6041fc7926bc28',
+          'Content-Type': 'application/json'
+        },
+        body: '{"interview_language":"en","can_change_interview_language":false,"only_coding_round":false,"is_coding_round_required":false,"selected_coding_language":"user_choice","is_proctoring_required":true,"skills":[{"name":"React"}],"interview_name":"Full Stack Engineer"}'
+      };
+      
+      fetch('https://public.api.micro1.ai/interview', options)
+        .then(response => res.send(response.json()))
+        .then(response => console.log(response))
+        .catch(err => res.send(err));
+      
+       
+}
+
+exports.closeOffre= async (req, res)=>{
+    const {id}= req.params
+
+    try {
+        const offer = await Offer.findById(id)
+        if (!offer){
+            res.status(404).json({"message": "offer doesn't exist"})
+        }else{
+            const newOffer = await Offer.findByIdAndUpdate(id, {status: offreStatus.CLOSED}, {new: true})
+            res.status(200).json(newOffer)
+        }
+    } catch (error) {
+        res.status(400).json(error)
+    }
+}

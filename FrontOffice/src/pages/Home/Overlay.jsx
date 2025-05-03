@@ -11,7 +11,7 @@ export default function Overlay() {
             <span className='text-secondary'>.</span>
           </h1>
           <h4>Your dream job is waiting for you.</h4>
-          <form className='p-3 my-5 d-flex justify-align-items-center align-items-centerrounded-2 shadow rounded-2'>
+{/*           <form className='p-3 my-5 d-flex justify-align-items-center align-items-centerrounded-2 shadow rounded-2'>
             <div className='input-group'>
               <span className='input-group-text border-0 bg-transparent shadow-none'>
                 <i className='bi bi-briefcase align-self-center text-muted' />
@@ -35,7 +35,7 @@ export default function Overlay() {
                 <i className='bi bi-search align-self-center me-1' /> Find
               </button>
             </div>
-          </form>
+          </form> */}
         </section>
       </div>
       <div className='col-md'>

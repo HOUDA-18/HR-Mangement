@@ -14,11 +14,11 @@ export default function Steps() {
       </div>
       <div className='col text-center'>
         <div className='row'>
-          <div className='col-6'>
+{/*           <div className='col-6'>
             <i className='bi bi-person fs-1 text-primary' />
             <div className='fw-bold'>Create Account</div>
             <div className='text-muted px-5'>First you have to create an account here.</div>
-          </div>
+          </div> */}
           <div className='col-6 mt-4'>
             <i className='bi bi-file-earmark-person fs-1 text-danger' />
             <div className='fw-bold'>CV</div>

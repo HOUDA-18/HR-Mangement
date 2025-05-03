@@ -50,12 +50,12 @@ const Signin1 = () => {
                   use facial recognition
                 </NavLink>
               </p>
-              <p className="mb-2 text-muted">
+{/*               <p className="mb-2 text-muted">
                 signup in another way?{' '}
                 <NavLink to={'/auth/face-signup'} className="f-w-400">
                   use facial recognition
                 </NavLink>
-              </p>
+              </p> */}
             </Card.Body>
           </Card>
         </div>

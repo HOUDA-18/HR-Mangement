@@ -4,7 +4,9 @@ import { FaBan, FaCheck, FaFilePdf, FaLinkedin, FaGithub, FaFileUpload, FaUserTi
 import { FiExternalLink } from "react-icons/fi";
 import axios from "axios";
 import { AuthContext } from "contexts/authContext";
-
+import { MdAssignmentAdd } from "react-icons/md";
+import { FaInfoCircle } from "react-icons/fa";
+import './candidatures.scss'
 const Candidatures = () => { 
   const navigate = useNavigate();
   const location = useLocation();
@@ -173,7 +175,7 @@ const Candidatures = () => {
   return ( 
     <div className="candidatures-container">
       <div className="candidatures-header">
-        <h2>Candidatures pour l'offre {offre.title}</h2>
+        <h2>Applications made for offer <span>{offre.title}</span></h2>
         <div className="stats">
           <button 
             className="stat total"
@@ -185,13 +187,22 @@ const Candidatures = () => {
             {candidatures.length} Total
           </button>
           <button 
+            className="stat shortlisted"
+            onClick={() => {
+              setSortedCandidatures(candidatures.filter(c => ['SHORTLISTED', 'AI_INTERVIEW_SCHEDULED', 'AI_INTERVIEW_PASSED', 'INTERVIEW_SCHEDULED', 'INTERVIEW_PASSED'].includes(c.status)));
+              setCurrentPage(1);
+            }}
+          >
+            {candidatures.filter(c =>['SHORTLISTED', 'AI_INTERVIEW_SCHEDULED', 'AI_INTERVIEW_PASSED', 'INTERVIEW_SCHEDULED', 'INTERVIEW_PASSED'].includes(c.status)).length} Shortlisted
+          </button>
+          <button 
             className="stat accepted"
             onClick={() => {
               setSortedCandidatures(candidatures.filter(c => c.status === 'ACCEPTED'));
               setCurrentPage(1);
             }}
           >
-            {candidatures.filter(c => c.status === 'ACCEPTED').length} Acceptées
+            {candidatures.filter(c => c.status === 'ACCEPTED').length} Accepted
           </button>
           <button 
             className="stat pending"
@@ -200,7 +211,7 @@ const Candidatures = () => {
               setCurrentPage(1);
             }}
           >
-            {candidatures.filter(c => c.status === 'PENDING').length} En Attente
+            {candidatures.filter(c => c.status === 'PENDING').length} Pending
           </button>
           <button 
             className="stat rejected"
@@ -209,7 +220,7 @@ const Candidatures = () => {
               setCurrentPage(1);
             }}
           >
-            {candidatures.filter(c => c.status === 'REJECTED').length} Rejetées
+            {candidatures.filter(c => c.status === 'REJECTED').length} Rejected
           </button>
         </div>
       </div>
@@ -220,8 +231,8 @@ const Candidatures = () => {
             <table className="candidatures-table">
               <thead>
                 <tr>
-                  <th><FaUserTie /> Nom</th>
-                  <th><FaUserTie /> Prénom</th>
+                  <th><FaUserTie /> Firstname</th>
+                  <th><FaUserTie /> Lastname</th>
                   <th><FaEnvelope /> Email</th>
 {/*                   <th><FaPhone /> Téléphone</th>
                   <th><FaCode /> Compétences</th>
@@ -238,7 +249,7 @@ const Candidatures = () => {
                    <th>LinkedIn</th>
                   <th>GitHub</th>
  */}                 <th><FaCalendarAlt /> Date Of application</th>
-                  <th>Statut</th>
+                  <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -314,37 +325,41 @@ const Candidatures = () => {
                     <td>{formatDate(candidature.dateApplication)}</td>
                     <td>
                       <span className={`status-badge ${candidature.status.toLowerCase()}`}>
-                        {candidature.status === 'ACCEPTED' ? 'Accepté' : 
-                         candidature.status === 'REJECTED' ? 'Rejeté' : 'En attente'}
+                        {candidature.status === 'ACCEPTED' ? 'Accepted' : 
+                        candidature.status === 'PENDING' ? 'Pending' : 
+                         candidature.status === 'REJECTED' ? 'Rejected' :'Shortlisted'}
                       </span>
                     </td>
                     <td>
+                    <div className="action-buttons">
+                    <button 
+                          className="action-btn details"
+                          onClick={() => handleDetails(candidature._id)}
+                          title="Application details"
+                        >
+                          <FaInfoCircle />
+                        </button>
                      {(role==="ADMIN_HR" && candidature.status==="PENDING" ) &&  
-                     <div className="action-buttons">
+                     <>
                         <button 
                           className="action-btn accept"
-                          disabled={candidature.status === 'ACCEPTED'}
-                          onClick={() => handleUpdateStatus(candidature._id, 'ACCEPTED')}
-                          title="Accepter la candidature"
+                          disabled={candidature.status === 'SHORTLISTED'}
+                          onClick={() => handleUpdateStatus(candidature._id, 'SHORTLISTED')}
+                          title="Shortlist Application"
                         >
-                          <FaCheck />
+                          <MdAssignmentAdd/>
                         </button>
                         <button 
                           className="action-btn reject"
                           disabled={candidature.status === 'REJECTED'}
                           onClick={() => handleUpdateStatus(candidature._id, 'REJECTED')}
-                          title="Rejeter la candidature"
+                          title="Reject Application"
                         >
                           <FaBan />
                         </button>
-                        <button 
-                          className="action-btn details"
-                          onClick={() => handleDetails(candidature._id)}
-                          title="Application details"
-                        >
-                          <FaInfo />
-                        </button>
-                      </div>}
+                        
+                        </>
+                      }</div>
                     </td>
                   </tr>
                 ))}
@@ -411,391 +426,6 @@ const Candidatures = () => {
         )}
       </div>
 
-      <style jsx>{`
-        .stats button {
-          border: none;
-          background: none;
-          cursor: pointer;
-          padding: 5px 10px;
-          margin: 0 5px;
-          border-radius: 4px;
-        }
-
-        .stats button:hover {
-          background-color: #f0f0f0;
-        }
-
-        .stat.total { color: #333; }
-        .stat.accepted { color: #28a745; }
-        .stat.pending { color: #ffc107; }
-        .stat.rejected { color: #dc3545; }
-
-        .candidatures-container {
-          padding: 25px;
-          max-width: 100%;
-          overflow-x: auto;
-          background-color: #f9fafb;
-          border-radius: 8px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .candidatures-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 20px;
-          flex-wrap: wrap;
-          gap: 15px;
-        }
-
-        .candidatures-header h2 {
-          color: #2d3748;
-          font-size: 1.5rem;
-          margin: 0;
-        }
-
-        .stats {
-          display: flex;
-          gap: 15px;
-          flex-wrap: wrap;
-        }
-
-        .stat {
-          padding: 6px 12px;
-          border-radius: 20px;
-          font-size: 0.85rem;
-          font-weight: 500;
-          display: flex;
-          align-items: center;
-        }
-
-        .stat.total {
-          background-color: #e2e8f0;
-          color: #4a5568;
-        }
-
-        .stat.accepted {
-          background-color: #e6fffa;
-          color: #38b2ac;
-        }
-
-        .stat.pending {
-          background-color: #feebc8;
-          color: #dd6b20;
-        }
-
-        .stat.rejected {
-          background-color: #fed7d7;
-          color: #e53e3e;
-        }
-
-        .candidatures-table {
-          width: 100%;
-          border-collapse: separate;
-          border-spacing: 0;
-          margin-top: 10px;
-          background-color: white;
-          border-radius: 8px;
-          overflow: hidden;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .candidatures-table th {
-          background-color: #edf2f7;
-          color: #4a5568;
-          font-weight: 600;
-          padding: 15px;
-          text-align: left;
-          position: sticky;
-          top: 0;
-          z-index: 10;
-        }
-
-        .candidatures-table th svg {
-          margin-right: 8px;
-          vertical-align: middle;
-        }
-
-        .candidatures-table td {
-          padding: 12px 15px;
-          border-bottom: 1px solid #e2e8f0;
-          vertical-align: middle;
-        }
-
-        .candidature-row:hover {
-          background-color: #f8fafc !important;
-        }
-
-        .candidature-row.accepted {
-          background-color: #f0fff4;
-        }
-
-        .candidature-row.rejected {
-          background-color: #fff5f5;
-          opacity: 0.8;
-        }
-
-        .email-link, .phone-link {
-          color: #3182ce;
-          text-decoration: none;
-          transition: color 0.2s;
-        }
-
-        .email-link:hover, .phone-link:hover {
-          color: #2c5282;
-          text-decoration: underline;
-        }
-
-        .skills-cell {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 5px;
-        }
-
-        .skill-tag {
-          background-color: #ebf8ff;
-          color: #3182ce;
-          padding: 3px 8px;
-          border-radius: 4px;
-          font-size: 0.8rem;
-          white-space: nowrap;
-        }
-
-        .score-container {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .score-bar {
-          height: 6px;
-          background-color: #4299e1;
-          border-radius: 3px;
-          transition: width 0.3s ease;
-        }
-
-        .score-value {
-          font-weight: 500;
-          color: #2d3748;
-        }
-
-        .cv-link, .social-link {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          padding: 6px;
-          border-radius: 4px;
-          transition: all 0.2s;
-          position: relative;
-          gap: 5px;
-        }
-
-        .cv-link {
-          background-color: #ebf8ff;
-          color: #3182ce;
-        }
-
-        .social-link.linkedin {
-          background-color: #e3f2fd;
-          color: #0A66C2;
-        }
-
-        .social-link.github {
-          background-color: #f0f0f0;
-          color: #181717;
-        }
-
-        .cv-link:hover, .social-link:hover {
-          transform: translateY(-2px);
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .external-icon {
-          opacity: 0.7;
-        }
-
-        .status-badge {
-          padding: 5px 12px;
-          border-radius: 15px;
-          font-size: 0.8rem;
-          font-weight: 500;
-          text-transform: capitalize;
-          display: inline-block;
-          min-width: 80px;
-          text-align: center;
-        }
-
-        .status-badge.accepted {
-          background-color: #e6fffa;
-          color: #38b2ac;
-        }
-
-        .status-badge.rejected {
-          background-color: #fff5f5;
-          color: #e53e3e;
-        }
-
-        .status-badge.pending {
-          background-color: #fffaf0;
-          color: #dd6b20;
-        }
-
-        .action-buttons {
-          display: flex;
-          gap: 8px;
-        }
-
-        .action-btn {
-          border: none;
-          border-radius: 4px;
-          padding: 8px;
-          cursor: pointer;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: all 0.2s;
-          width: 32px;
-          height: 32px;
-        }
-
-        .action-btn.accept {
-          background-color: #e6fffa;
-          color: #38b2ac;
-        }
-
-        .action-btn.accept:hover:not(:disabled) {
-          background-color: #38b2ac;
-          color: white;
-        }
-
-        .action-btn.reject {
-          background-color: #fff5f5;
-          color: #e53e3e;
-        }
-
-        .action-btn.details {
-          background-color: rgb(75, 168, 205);;
-          color: white;
-        }
-
-        .action-btn.reject:hover:not(:disabled) {
-          background-color: #e53e3e;
-          color: white;
-        }
-
-        .action-btn:disabled {
-          opacity: 0.5;
-          cursor: not-allowed;
-        }
-
-        .no-candidatures {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          padding: 40px 20px;
-          text-align: center;
-          background-color: white;
-          border-radius: 8px;
-          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .no-candidatures img {
-          width: 120px;
-          height: 120px;
-          margin-bottom: 20px;
-          opacity: 0.6;
-        }
-
-        .no-candidatures p {
-          color: #718096;
-          font-size: 1.1rem;
-          margin-bottom: 20px;
-        }
-
-        .refresh-btn {
-          background-color: #4299e1;
-          color: white;
-          border: none;
-          padding: 8px 16px;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: background-color 0.2s;
-        }
-
-        .refresh-btn:hover {
-          background-color: #3182ce;
-        }
-
-        /* Pagination styles */
-        .pagination-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          margin-top: 20px;
-          gap: 5px;
-        }
-
-        .pagination-button {
-          border: 1px solid #ddd;
-          background-color: white;
-          color: #3182ce;
-          padding: 8px 12px;
-          margin: 0 2px;
-          cursor: pointer;
-          border-radius: 4px;
-          transition: all 0.2s;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          min-width: 36px;
-        }
-
-        .pagination-button:hover:not(:disabled) {
-          background-color: #ebf8ff;
-          border-color: #3182ce;
-        }
-
-        .pagination-button:disabled {
-          color: #ccc;
-          cursor: not-allowed;
-          background-color: #f9f9f9;
-        }
-
-        .pagination-button.active {
-          background-color: #3182ce;
-          color: white;
-          border-color: #3182ce;
-        }
-
-        .pagination-button.first-last {
-          padding: 8px;
-        }
-
-        @media (max-width: 1200px) {
-          .candidatures-table {
-            display: block;
-            overflow-x: auto;
-            white-space: nowrap;
-          }
-        }
-
-        @media (max-width: 768px) {
-          .candidatures-header {
-            flex-direction: column;
-            align-items: flex-start;
-          }
-          
-          .stats {
-            width: 100%;
-            justify-content: space-between;
-          }
-
-          .pagination-container {
-            flex-wrap: wrap;
-          }
-        }
-      `}</style>
     </div>
   );
 };

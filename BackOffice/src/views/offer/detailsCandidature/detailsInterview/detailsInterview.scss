@@ -1,0 +1,196 @@
+.interview-report {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: 'Inter', sans-serif;
+    color: #333;
+  
+    h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #4a4a4a;
+      text-align: center;
+    }
+  
+    .candidate-info {
+        background-color: #f9fafb; /* subtle background */
+        padding: 1.5rem;
+        margin: 1.5rem 0;
+        border-radius: 10px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* light soft shadow */
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+        
+        p {
+          margin: 0;
+          font-size: 1rem;
+          color: #374151; /* dark grey */
+          
+          strong {
+            color: #1f2937; /* slightly darker for labels */
+            margin-right: 0.5rem;
+          }
+        }
+      }
+      
+  
+    .links {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      justify-content: center;
+  
+      a {
+        background-color: #4f46e5;
+        color: #fff;
+        padding: 0.7rem 1.2rem;
+        border-radius: 8px;
+        text-decoration: none;
+        transition: background-color 0.3s;
+  
+        &:hover {
+          background-color: #3730a3;
+        }
+      }
+    }
+
+    .proctoring-score {
+        margin: 1rem 0;
+        padding: 0.8rem 1.2rem;
+        background-color: #f0f9ff;
+        border: 1px solid #bae6fd;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 1rem;
+        font-weight: bold;
+        color: #0284c7; /* blue color for focus */
+        
+        .score {
+          font-size: 1.2rem;
+          color: #0ea5e9; /* slightly darker blue */
+        }
+      }
+      
+  
+    .section {
+        margin-bottom: 3rem;
+      
+        h3 {
+          font-size: 1.8rem;
+          margin-bottom: 1.5rem;
+          color: #333;
+          border-left: 5px solid #4f46e5;
+          padding-left: 0.75rem;
+        }
+      
+        .evaluation-card {
+          background: #f9fafe;
+          border: 1px solid #e0e7ff;
+          border-left: 5px solid #4f46e5;
+          border-radius: 10px;
+          padding: 1.2rem;
+          margin-bottom: 1.5rem;
+          transition: transform 0.3s, box-shadow 0.3s;
+      
+          &:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(79, 70, 229, 0.15);
+          }
+      
+          h4 {
+            font-size: 1.4rem;
+            color: #4f46e5;
+            margin-bottom: 0.5rem;
+          }
+      
+          p {
+            font-size: 1rem;
+            margin: 0.5rem 0;
+      
+            strong {
+              color: #1e40af;
+            }
+          }
+        }
+      
+        .transcript {
+            max-height: 400px; /* or 500px, depending on your design */
+            overflow-y: auto;
+            padding-right: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+          
+            /* Nice custom scroll style */
+            scrollbar-width: thin;
+            scrollbar-color: #4f46e5 #f1f5f9;
+          
+            &::-webkit-scrollbar {
+              width: 8px;
+            }
+          
+            &::-webkit-scrollbar-track {
+              background: #f1f5f9;
+            }
+          
+            &::-webkit-scrollbar-thumb {
+              background-color: #4f46e5;
+              border-radius: 10px;
+              border: 2px solid #f1f5f9;
+            }
+          
+            .transcript-entry {
+                background: #f1f5f9;
+                padding: 1rem;
+                border-radius: 10px;
+                transition: background 0.3s;
+                display: flex;
+                flex-direction: column; /* stack children vertically */
+                gap: 0.5rem; /* space between role, p, and timestamp */
+              
+                &.interviewer {
+                  background-color: #e0f2f1;
+                }
+              
+                &.user {
+                  background-color: #fce4ec;
+                }
+              
+              
+                .role {
+                  font-size: 0.8rem;
+                  font-weight: bold;
+                  color: #555;
+                  background: #c7d2fe;
+                  padding: 0.4rem 0.6rem;
+                  border-radius: 6px;
+                  text-transform: uppercase;
+                  align-self: flex-start; /* align badge left */
+                }
+              
+                p {
+                  margin: 0;
+                  font-size: 1rem;
+                  color: #374151;
+                  word-break: break-word;
+                }
+              
+                .timestamp {
+                  font-size: 0.8rem;
+                  color: #64748b;
+                  text-align: right;
+                }
+              }
+              
+          }
+          
+      }
+      
+  }
+  

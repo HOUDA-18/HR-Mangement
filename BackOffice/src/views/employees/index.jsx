@@ -139,7 +139,6 @@ const Employees = () => {
 
     const handleDeleteEmployee= async(id)=>{
         try {
-          setEmployees(employees.filter((emp)=>emp._id!=id))
           const response = await axios.delete(`http://localhost:8070/api/users/delete/${id}`);
           console.log('User deleted:', response.data);
           // Refresh the list of users after deletion

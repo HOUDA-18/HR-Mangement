@@ -1,10 +1,14 @@
 const {Candidature, candidatureSchema} = require("../models/candidature");
 const nodemailer = require("nodemailer");
+const bcrypt = require('bcryptjs')
 const Roles = require("../models/rolesEnum");
-const {candidatureStatus}= require('../models/Enums')
+const {candidatureStatus, Status}= require('../models/Enums')
 const {Offer}=require('../models/offre');
 const { User } = require("../models/user");
-const {sendemailHr}= require('../services/sendMailHr')
+const {sendemailHr}= require('../services/sendMailHr');
+const { AIinterview } = require("../models/aiInterview");
+const { default: axios } = require("axios");
+const { sendAcceptanceMail } = require("../services/sendMailAcceptance");
 
 exports.addCandidature= async (req, res)=>{
     const {
@@ -114,17 +118,64 @@ exports.getAllCandidatures = async (req, res) => {
     });
   }
 };
+const getInterviewReport = async (keyword)=>{
+  
+  const response = await axios.get(`https://public.api.micro1.ai/interview/reports?keyword=${keyword}`, {
+    headers: {
+      'x-api-key': '8c75df16681105af6216dc15a98f973f5f94bf53b16d0c15d855b8193785ac89798dc6f8abd738d4447ed234ca606a96c1856a3f4f205e9466523b80dc826ede'
+    }
+  })
+  if(response.status==200){
+    console.log("data", response.data.data)
+    return response.data.data[0]
+  }if(response.status==400){
+    console.log('response', response)
+    return null
+  }
 
+}
 // Récupérer une candidature par ID
 exports.getCandidatureById = async (req, res) => {
   try {
-    const candidature = await Candidature.findById(req.params.id);
+    const candidature = await Candidature.findById(req.params.id).populate('idoffre');
     
     if (!candidature) {
       return res.status(404).json({ message: 'Candidature non trouvée' });
     }
+    else if(candidature.status===candidatureStatus.AI_INTERVIEW_SCHEDULED){
+        const data = await getInterviewReport(candidature.email.toLocaleLowerCase())
+        if(data){
+          const newAiInterview = new AIinterview({
+            interview_id: data.interview_id,
+            interview_name: data.interview_name,
+            candidate_name: data.candidate_name,
+            candidate_email: data.candidate_email_id,
+            report_date: data.report_date,
+            report_url: data.report_url,
+            interview_recording_url: data.interview_recording_url,
+            interview_transcript: data.interview_transcript,
+            technical_skills_evaluation: data.technical_skills_evaluation,
+            soft_skills_evaluation: data.soft_skills_evaluation,
+            date_created: data.date_created,
+            proctoring_score: data.proctoring_score,
+            candidatureId: candidature._id
+
+          })
+
+          await newAiInterview.save();
+          const newCandidature= await Candidature.findByIdAndUpdate(candidature._id, {status: candidatureStatus.AI_INTERVIEW_PASSED}, {new: true})
+          res.status(200).json(newCandidature)
+        }else{
+          res.status(200).json(candidature);
+
+        }
+
+
+    }else{
+      res.status(200).json(candidature);
+
+    }
     
-    res.status(200).json(candidature);
   } catch (error) {
     res.status(500).json({ 
       message: 'Erreur lors de la récupération de la candidature', 
@@ -208,7 +259,7 @@ exports.updateCandidatureStatus = async (req, res) => {
     
         const status = updatedCandidature.status; // "Accepted" ou "Rejected"
 
-        const isAccepted = status.toLowerCase() === "accepted";
+        const isAccepted = status.toLowerCase() === "shortlisted";
         const receiver = {
           from: "webdesignwalah@gmail.com",
           to: updatedCandidature.email,
@@ -295,6 +346,17 @@ exports.updateCandidatureStatus = async (req, res) => {
     });
   }
 };
+
+exports.getAIinterviewByIdCandidature= async (req, res)=>{
+  const {id}= req.params
+  try {
+    const aiInterview = await AIinterview.findOne({candidatureId: id})
+  res.status(200).json(aiInterview)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+  
+}
 
 // Statistiques des candidatures
 exports.getCandidatureStats = async (req, res) => {
@@ -420,3 +482,188 @@ exports.updateCandidatureScore = async (req, res) => {
     }
   };
 };
+
+exports.generateAiInterview = async (req, res)=>{
+  try {
+    const {id}= req.params
+    const {interviewLink}=req.body
+    const candidature = await Candidature.findById(id);
+    
+    if (!candidature) {
+      return res.status(404).json({ message: 'Candidature non trouvée' });
+    }
+    else{
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        secure: true,
+        auth: {
+          user: process.env.MY_GMAIL,
+          pass: process.env.MY_PASSWORD,
+        },
+      });
+  
+      const status = candidature.status; // "Accepted" ou "Rejected"
+
+      const isAccepted = status.toLowerCase() === "shortlisted";
+      const receiver = {
+        from: "webdesignwalah@gmail.com",
+        to: candidature.email,
+        subject: "Update on Your Job Application",
+        html: `
+        <html>
+        <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>AI Interview invitation</title>
+          <style>
+            body {
+              font-family: Arial, sans-serif;
+              background-color: #f2f2f2;
+              margin: 0;
+              padding: 0;
+            }
+            .container {
+              max-width: 600px;
+              margin: 30px auto;
+              background-color: #ffffff;
+              padding: 30px;
+              border-radius: 10px;
+              box-shadow: 0 0 10px rgba(0,0,0,0.1);
+              text-align: center;
+            }
+            h1 {
+              color: ${isAccepted ? "#28a745" : "#dc3545"};
+            }
+            p {
+              color: #555555;
+              font-size: 16px;
+              line-height: 1.6;
+            }
+            .btn {
+      margin-top: 20px;
+      padding: 12px 24px;
+      background-color: ${isAccepted ? "#28a745" : "#dc3545"};
+      color: white !important;
+      text-decoration: none;
+      font-weight: bold;
+      border-radius: 5px;
+      display: inline-block;
+    }
+            .footer {
+              margin-top: 30px;
+              font-size: 12px;
+              color: #999999;
+            }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <h1>${isAccepted ? "🎉 Congratulations!" : "Thank You for Applying"}</h1>
+            <p>
+              Dear ${candidature.name || "Candidate"},
+            </p>
+
+            ${
+              isAccepted
+                ? `<p>We are thrilled to inform you that you have been selected for the next steps of our recruitment process. Our team will reach out to you shortly.</p>
+                   <a href="${interviewLink}" class="btn" target="_blank">Pass AI Interview</a>`
+                : `<p>We regret to inform you that you have not been selected at this time. However, we truly appreciate your interest and encourage you to apply again in the future.</p>
+                   <a href=${process.env.JOBS_URL} class="btn">View Other Opportunities</a>`
+            }
+            <div class="footer">
+              &copy; ${new Date().getFullYear()} HR Management System. All rights reserved.
+            </div>
+          </div>
+        </body>
+        </html>`,
+      };
+      
+  
+      await transporter.sendMail(receiver); 
+     var candidat= await Candidature.findByIdAndUpdate(id, {status: candidatureStatus.AI_INTERVIEW_SCHEDULED}, {new: true})
+     res.status(200).json("email sent successfuly");
+
+    }
+    
+  } catch (error) {
+    res.status(500).json({ 
+      message: 'Erreur lors de la récupération de la candidature', 
+      error: error.message 
+    });
+  }
+}
+
+const  generateMatricule= ()=> {
+  const prefix = "MAT";
+  const randomNumber = Math.floor(1000 + Math.random() * 9000); 
+  return `${prefix}${randomNumber}`;
+}
+
+function generatePassword() {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+[]{}';
+  let password = '';
+  for (let i = 0; i < 6; i++) {
+    password += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return password;
+}
+exports.acceptCandidature = async (req, res)=>{
+  const {id}= req.params
+  const {employmentType, salary}=req.body
+  try {
+    const candidature = await Candidature.findByIdAndUpdate(id, {status: candidatureStatus.ACCEPTED}).populate('idoffre')
+    const hrEmail = await User.findOne({role: Roles.ADMIN_HR})
+    if(!candidature){
+      res.status(404).json({"message": "application doesn't exist"})
+    }else{
+      const aiInterview = await AIinterview.findOne({candidatureId: id})
+      if(!aiInterview){
+        res.status(404).json({"message": "this application doesn't have an AI interview"})
+      }
+      else{
+        const password = generatePassword()
+        const newEmployee = new User({
+          firstname: candidature.firstname,
+          lastname: candidature.lastname,
+          email: candidature.email,
+          matricule: generateMatricule(),
+          phone : candidature.phone,
+          image : null,
+          faceDescriptor: null,// Descripteur facial
+          password: (await bcrypt.hash(password, 10)).toString(),
+          employmentType: employmentType,
+          status: Status.Inactive,
+          role: Roles.EMPLOYEE,
+          createdAt: (new Date()).toDateString(),
+          updatedAt :(new Date()).toDateString(),
+          departement: null,
+          skills: candidature.skills,
+          soft_skills_evaluation: aiInterview.soft_skills_evaluation,
+          technical_skills_evaluation: aiInterview.technical_skills_evaluation,
+          salary: salary,
+          yearsOfExperience: candidature.anneeexperience
+        })
+        console.log("added user :", newEmployee)
+        if(await User.findOne({matricule: newEmployee.matricule})){
+          return res.status(405).json({"message":"user with this matricule already exists"})
+          }
+          if(await User.findOne({email: newEmployee.email})){
+              return res.status(405).json({"message":" user with this email already exists"})
+          }
+          else{
+              User.create(newEmployee).then(async (user)=>{
+                 await sendAcceptanceMail(user.firstname, user.lastname, user.email, user.matricule, password, user.employmentType,hrEmail.email, candidature.idoffre.title)
+                  return res.status(201).json(user)
+          
+              }).catch((err)=>{
+                  return res.status(400).json({"message":"Cannot create user"})
+              })
+          }
+
+      }
+    }
+  } catch (error) {
+    return res.status(400).json({'message':error})
+  }
+
+}

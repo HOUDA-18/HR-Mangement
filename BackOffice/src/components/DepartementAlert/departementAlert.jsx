@@ -33,7 +33,6 @@ const DepartementAlert = ({data, onCancel, onConfirm, type}) => {
      
          if(formValidation(values)[1]==false){
             if(type==="add"){
-              data.skills=skills
                 axios.post('http://localhost:8070/api/departements',  values) 
                 .then((res)=>{
                        onConfirm()

@@ -5,6 +5,8 @@ import { AuthContext } from '../../contexts/authContext';
 import { FaEdit, FaPlus, FaMinus, FaTimes, FaCheck, FaBan, FaFileAlt, FaArrowRight } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import './offer.scss'
+import { PiLockKeyFill } from "react-icons/pi";
+
 const Offers = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -28,7 +30,7 @@ const [selectedOfferId, setSelectedOfferId] = useState(null);
   const itemsPerPage = 3;
 
   const isAdminOrSuperAdmin = () => {
-    return role === 'ADMIN_HR' || role === 'HEAD_DEPARTEMENT';
+    return role === 'ADMIN_HR' || role === 'SUPER_ADMIN';
   };
 ///////
 const fetchCandidatures = async (offerId) => {
@@ -61,6 +63,23 @@ const fetchCandidatures = async (offerId) => {
       alert(err.response?.data?.message || 'Failed to update positions');
     }
   };
+
+  const closeOffer = async (offre)=>{
+      await axios.put(`http://localhost:8070/api/offer/${offre._id}`)
+                      .then((res)=>{
+                          console.log("res:",res)
+                          setOffers(prev =>
+                            prev.map(offer =>
+                              offer._id === offre._id ? { 
+                                ...offer, 
+                                status: "CLOSED"
+                              } : offer
+                            )
+                          );
+                      }).catch((err)=>{
+                        console.log("err:",err)
+                      })
+  }
 
   const handleApply = (offerId) => {
     // Redirection vers la page de candidature ou traitement API
@@ -115,7 +134,7 @@ const fetchCandidatures = async (offerId) => {
     const statusMatch = statusFilter === 'all' || offer.status === statusFilter;
     const departmentMatch = 
       departmentFilter === 'all' || 
-      (offer.departement?.name?.toLowerCase() === departmentFilter.toLowerCase());
+      (offer.departementName?.toLowerCase() === departmentFilter.toLowerCase());
     return statusMatch && departmentMatch;
   });
 
@@ -145,6 +164,7 @@ const fetchCandidatures = async (offerId) => {
                 <option value="PENDING">Pending</option>
                 <option value="ACCEPTED">Accepted</option>
                 <option value="REJECTED">Rejected</option>
+                <option value="CLOSED">Closed</option>
               </select>
             </div>
 
@@ -212,7 +232,7 @@ const fetchCandidatures = async (offerId) => {
                     ) : (
                       <div className="number-display">
                         <span className="number-value">{offer.numberofplace}</span>
-                        {(isAdminOrSuperAdmin() && offer.status!="ACCEPTED")&& (
+                        {(isAdminOrSuperAdmin() && offer.status=="PENDING" )&& (
                           <button 
                             onClick={() => setEditingId(offer._id)}
                             className="edit-btn"
@@ -313,13 +333,13 @@ const fetchCandidatures = async (offerId) => {
                       {(offer.status === 'PENDING' ) && <>
                       <button 
                         onClick={() => updateOfferStatus(offer._id, 'ACCEPTED')}
-                        className="action-btn accept"
+                        className="action-btnn accept"
                       >
                         <FaCheck /> Accept Offer
                       </button>
                       <button 
                         onClick={() => setRejectingOfferId(offer._id)}
-                        className="action-btn reject"
+                        className="action-btnn reject"
                       >
                         <FaBan /> Reject Offer
                       </button>
@@ -327,7 +347,7 @@ const fetchCandidatures = async (offerId) => {
                       {(offer.status === 'ACCEPTED' ) && 
                       <button 
                         onClick={() => viewDetails(offer._id)}
-                        className="action-btn details"
+                        className="action-btnn details"
                       >
                         <FaArrowRight /> Details
                       </button>}
@@ -337,14 +357,23 @@ const fetchCandidatures = async (offerId) => {
                 </div>
               )}
 
-                {(offer.status === 'ACCEPTED' ) && 
+                {((offer.status === 'ACCEPTED'|| offer.status === 'CLOSED') && isAdminOrSuperAdmin())  && 
                   ( <div className="card-footer">
                   <div className="pending-actions">                    
                       <button 
                         onClick={() => viewDetails(offer)}
-                        className="action-btn details"
+                        className="action-btnn details"
                       >
                         <FaArrowRight /> Details
+                      </button>
+                      
+
+                      <button 
+                        onClick={() => closeOffer(offer)}
+                        className="action-btnn close-offer"
+                        disabled={['CLOSED'].includes(offer.status)}
+                      >
+                        <PiLockKeyFill /> Close Offer
                       </button>
                     </div>
                     </div>)}
@@ -368,449 +397,9 @@ const fetchCandidatures = async (offerId) => {
               {idx + 1}
             </button>
           ))}
-          {showCandidatures && (
-  <div className="candidatures-modal">
-    <div className="modal-content">
-      <div className="modal-header">
-        <h3>Candidatures pour l'offre</h3>
-        <button 
-          onClick={() => setShowCandidatures(false)}
-          className="close-btn"
-        >
-          &times;
-        </button>
-      </div>
-      
-      
-    </div>
-  </div>
-)}
         </div>
       )}
 
-      <style jsx>{`
-        .offers-container {
-          max-width: 1200px;
-          margin: 0 auto;
-          padding: 20px;
-          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        .page-title {
-          color: #2c3e50;
-          text-align: center;
-          margin-bottom: 30px;
-          font-weight: 600;
-        }
-        
-        .filters-container {
-          display: flex;
-          gap: 20px;
-          margin-bottom: 30px;
-          flex-wrap: wrap;
-        }
-        
-        .filter-group {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        
-        .filter-select {
-          padding: 8px 12px;
-          border-radius: 6px;
-          border: 1px solid #ddd;
-          background-color: white;
-          font-size: 14px;
-          min-width: 200px;
-        }
-        
-        .offers-list {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-          gap: 25px;
-          margin-bottom: 40px;
-        }
-        
-        .offer-card {
-          background: white;
-          border-radius: 10px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-          overflow: hidden;
-          transition: transform 0.3s ease, box-shadow 0.3s ease;
-          display: flex;
-          flex-direction: column;
-        }
-        
-        .offer-card:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-        }
-        
-        .card-header {
-          padding: 15px 20px;
-          background: #f8f9fa;
-          border-bottom: 1px solid #eee;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-        
-        .offer-title {
-          margin: 0;
-          color: #2c3e50;
-          font-size: 1.2rem;
-          font-weight: 600;
-        }
-        
-        .status-badge {
-          padding: 4px 10px;
-          border-radius: 20px;
-          font-size: 0.75rem;
-          font-weight: 600;
-          text-transform: uppercase;
-        }
-        
-        .status-badge.pending {
-          background-color: #fff3cd;
-          color: #856404;
-        }
-        
-        .status-badge.accepted {
-          background-color: #d4edda;
-          color: #155724;
-        }
-        
-        .status-badge.rejected {
-          background-color: #f8d7da;
-          color: #721c24;
-        }
-        
-        .card-body {
-          padding: 20px;
-          flex-grow: 1;
-        }
-        
-        .offer-description {
-          color: #555;
-          margin-bottom: 20px;
-          line-height: 1.5;
-        }
-        
-        .offer-details {
-          margin-bottom: 20px;
-        }
-        
-        .detail-row {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 12px;
-          padding-bottom: 12px;
-          border-bottom: 1px solid #f0f0f0;
-        }
-        
-        .detail-label {
-          color: #666;
-          font-weight: 500;
-          font-size: 0.9rem;
-        }
-        
-        .detail-value {
-          color: #333;
-          font-weight: 600;
-        }
-        
-        .number-display {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-        }
-        
-        .number-value {
-          font-weight: 600;
-          color: #2c3e50;
-          min-width: 30px;
-          text-align: center;
-        }
-        
-        .edit-btn {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          padding: 5px 10px;
-          background-color: #3498db;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          font-size: 0.8rem;
-          cursor: pointer;
-          transition: background-color 0.2s;
-        }
-        
-        .edit-btn:hover {
-          background-color: #2980b9;
-        }
-        
-        .number-control {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-        
-        .control-btn {
-          width: 28px;
-          height: 28px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          border: none;
-          border-radius: 50%;
-          cursor: pointer;
-          font-size: 0.8rem;
-          transition: all 0.2s;
-        }
-        
-        .control-btn.plus {
-          background-color: #2ecc71;
-          color: white;
-        }
-        
-        .control-btn.plus:hover {
-          background-color: #27ae60;
-        }
-        
-        .control-btn.minus {
-          background-color: #e74c3c;
-          color: white;
-        }
-        
-        .control-btn.minus:hover {
-          background-color: #c0392b;
-        }
-        
-        .control-btn.minus:disabled {
-          background-color: #95a5a6;
-          cursor: not-allowed;
-        }
-        
-        .control-btn.cancel {
-          background-color: #95a5a6;
-          color: white;
-          margin-left: 10px;
-        }
-        
-        .control-btn.cancel:hover {
-          background-color: #7f8c8d;
-        }
-        
-        .skills-section {
-          margin-top: 20px;
-        }
-        
-        .skills-title {
-          color: #2c3e50;
-          font-size: 1rem;
-          margin-bottom: 10px;
-        }
-        
-        .skills-list {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 8px;
-        }
-        
-        .skill-item {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          padding: 5px 10px;
-          background-color: #f0f0f0;
-          border-radius: 15px;
-          font-size: 0.8rem;
-        }
-        
-        .skill-item img {
-          width: 16px;
-          height: 16px;
-          object-fit: contain;
-        }
-        
-        .rejection-comment {
-          margin-top: 20px;
-          padding: 10px;
-          background-color: #f8f9fa;
-          border-left: 3px solid #e74c3c;
-          border-radius: 0 4px 4px 0;
-        }
-        
-        .rejection-comment strong {
-          color: #e74c3c;
-        }
-        
-        .rejection-comment p {
-          margin: 5px 0 0;
-          color: #555;
-        }
-        
-        .card-footer {
-          padding: 15px 20px;
-          background-color: #f8f9fa;
-          border-top: 1px solid #eee;
-        }
-        
-        .pending-actions {
-          display: flex;
-          gap: 10px;
-        }
-        
-        .action-btn {
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          padding: 8px 15px;
-          border: none;
-          border-radius: 4px;
-          font-size: 0.85rem;
-          font-weight: 500;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        
-        .action-btn.accept {
-          background-color: #2ecc71;
-          color: white;
-        }
-        
-        .action-btn.accept:hover {
-          background-color: #27ae60;
-        }
-
-        .action-btn.details {
-          background-color: rgb(75, 168, 205);
-          color: white;
-        }
-        
-        .action-btn.details:hover {
-          background-color: blue;
-        }
-        
-        
-        .action-btn.reject {
-          background-color: #e74c3c;
-          color: white;
-        }
-        
-        .action-btn.reject:hover {
-          background-color: #c0392b;
-        }
-        
-        .action-btn.confirm-reject {
-          background-color: #e74c3c;
-          color: white;
-        }
-        
-        .action-btn.cancel {
-          background-color: #95a5a6;
-          color: white;
-        }
-        
-        .rejection-form {
-          display: flex;
-          flex-direction: column;
-          gap: 10px;
-        }
-        
-        .rejection-textarea {
-          padding: 10px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          min-height: 80px;
-          resize: vertical;
-        }
-        
-        .rejection-actions {
-          display: flex;
-          gap: 10px;
-        }
-        
-        .apply-btn {
-          width: 100%;
-          padding: 10px;
-          background-color: #3498db;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          font-size: 0.9rem;
-          cursor: pointer;
-          transition: background-color 0.3s;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-        }
-        
-        .apply-btn:hover {
-          background-color: #2980b9;
-        }
-        
-        .pagination {
-          display: flex;
-          justify-content: center;
-          gap: 5px;
-          margin-top: 30px;
-        }
-        
-        .page-btn {
-          padding: 8px 15px;
-          border: 1px solid #ddd;
-          background-color: white;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        
-        .page-btn:hover {
-          background-color: #f0f0f0;
-        }
-        
-        .page-btn.active {
-          background-color: #3498db;
-          color: white;
-          border-color: #3498db;
-        }
-        
-        .no-offers {
-          grid-column: 1 / -1;
-          text-align: center;
-          padding: 40px;
-          color: #666;
-        }
-        
-        .loading, .error {
-          text-align: center;
-          padding: 40px;
-          font-size: 1.2rem;
-        }
-        
-        .error {
-          color: #e74c3c;
-        }
-        
-        @media (max-width: 768px) {
-          .offers-list {
-            grid-template-columns: 1fr;
-          }
-          
-          .filters-container {
-            flex-direction: column;
-          }
-          
-          .pending-actions, .rejection-actions {
-            flex-direction: column;
-          }
-        }
-      `}</style>
     </div>
   );
 };

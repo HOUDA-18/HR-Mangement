@@ -258,12 +258,12 @@ const handleAddToTeam = (emp)=>{
                                         </div>
                                 </div>
                                 
-                                { (currentUser.role ==="SUPER_ADMIN" ||(currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement == departement._id) ) && <div className="link" onClick={handleAdd}>
+                                { (currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement == departement._id)  && <div className="link" onClick={handleAdd}>
                                         <Add/>
                                             Add Team
                                 </div> }
 
-                                { (currentUser.role ==="SUPER_ADMIN" ||(currentUser.role ==="ADMIN_HR" && departement.name === "HR") ) && <div className="link" onClick={handleAddOffer}>
+                                { (currentUser.role ==="ADMIN_HR" && departement.name === "HR")  && <div className="link" onClick={handleAddOffer}>
                                         <Add/>
                                             Add offre
                                 </div> }

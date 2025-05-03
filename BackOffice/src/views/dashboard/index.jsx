@@ -71,6 +71,7 @@ const DashAnalytics = () => {
   }
 
   const  handleViewAttendance= ()=>{
+
     if(currentUser.role==="SUPER_ADMIN"){
       navigate(`/app/dashboard/attendance`)
 

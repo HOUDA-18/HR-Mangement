@@ -1,0 +1,424 @@
+
+h2 {
+    font-size: 1.5rem;
+    color: #2d3748;
+    margin-bottom: 1rem;
+  
+    span {
+      color: #3182ce; // bleu doux
+      font-weight: 600;
+      margin-left: 5px;
+    }
+  }
+.stats {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+  
+    button {
+      border: none;
+      background: none;
+      cursor: pointer;
+      padding: 5px 10px;
+      margin: 0 5px;
+      border-radius: 4px;
+  
+      &:hover {
+        filter: brightness(1.1); // Slightly brighter
+        transform: translateY(-0.5px);
+      }
+    }
+  }
+  
+  .stat {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+  
+    &.total {
+      background-color: #e2e8f0;
+      color: #4a5568;
+    }
+  
+    &.accepted {
+      background-color: #e6fffa;
+      color: #38b2ac;
+    }
+  
+    &.pending {
+      background-color: #feebc8;
+      color: #dd6b20;
+    }
+  
+    &.rejected {
+      background-color: #fed7d7;
+      color: #e53e3e;
+    }
+    &.shortlisted{
+        background-color: #5d6d7e; // lighter slate blue-gray
+        color: #f7f9fa;
+    }
+  }
+  
+  .candidatures-container {
+    padding: 25px;
+    max-width: 100%;
+    overflow-x: auto;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+  
+  .candidatures-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 15px;
+  
+    h2 {
+      color: #2d3748;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+  }
+  
+  .candidatures-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 10px;
+    background-color: white;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+    th {
+      background-color: #edf2f7;
+      color: #4a5568;
+      font-weight: 600;
+      padding: 15px;
+      text-align: left;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+  
+      svg {
+        margin-right: 8px;
+        vertical-align: middle;
+      }
+    }
+  
+    td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #e2e8f0;
+      vertical-align: middle;
+    }
+  }
+  
+  .candidature-row {
+    &:hover {
+      background-color: #f8fafc !important;
+    }
+  
+    &.accepted {
+      background-color: #f0fff4;
+    }
+  
+    &.rejected {
+      background-color: #fff5f5;
+      opacity: 0.8;
+    }
+  }
+  
+  .email-link,
+  .phone-link {
+    color: #3182ce;
+    text-decoration: none;
+    transition: color 0.2s;
+  
+    &:hover {
+      color: #2c5282;
+      text-decoration: underline;
+    }
+  }
+  
+  .skills-cell {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+  }
+  
+  .skill-tag {
+    background-color: #ebf8ff;
+    color: #3182ce;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+  }
+  
+  .score-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .score-bar {
+    height: 6px;
+    background-color: #4299e1;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+  
+  .score-value {
+    font-weight: 500;
+    color: #2d3748;
+  }
+  
+  .cv-link,
+  .social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    position: relative;
+    gap: 5px;
+  
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+  }
+  
+  .cv-link {
+    background-color: #ebf8ff;
+    color: #3182ce;
+  }
+  
+  .social-link {
+    &.linkedin {
+      background-color: #e3f2fd;
+      color: #0a66c2;
+    }
+  
+    &.github {
+      background-color: #f0f0f0;
+      color: #181717;
+    }
+  }
+  
+  .external-icon {
+    opacity: 0.7;
+  }
+  
+  .status-badge {
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: 500;
+    text-transform: capitalize;
+    display: inline-block;
+    min-width: 80px;
+    text-align: center;
+  
+    &.accepted {
+      background-color: #e6fffa;
+      color: #38b2ac;
+    }
+  
+    &.rejected {
+      background-color: #fff5f5;
+      color: #e53e3e;
+    }
+  
+    &.pending {
+      background-color: #fffaf0;
+      color: #dd6b20;
+    }
+    &.shortlisted {
+        background-color: #34495e; // dark slate blue
+        color: #ecf0f1; // light grey text
+    }
+    
+    &.ai_interview_scheduled{
+        background-color: #34495e; // dark slate blue
+        color: #ecf0f1; // light grey text
+    } 
+    &.ai_interview_passed{
+        background-color: #34495e; // dark slate blue
+        color: #ecf0f1; // light grey text
+    }
+    &.interview_scheduled{
+        background-color: #34495e; // dark slate blue
+        color: #ecf0f1; // light grey text
+    }
+    &.interview_passed{
+        background-color: #34495e; // dark slate blue
+        color: #ecf0f1; // light grey text
+    }
+    
+  }
+  
+  .action-buttons {
+    display: flex;
+    gap: 8px;
+  }
+  
+  .action-btn {
+    border: none;
+    border-radius: 4px;
+    padding: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    width: 32px;
+    height: 32px;
+  
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  
+    &.accept {
+      background-color: #e6fffa;
+      color: #38b2ac;
+  
+      &:hover:not(:disabled) {
+        background-color: #38b2ac;
+        color: white;
+      }
+    }
+  
+    &.reject {
+      background-color: #fff5f5;
+      color: #e53e3e;
+  
+      &:hover:not(:disabled) {
+        background-color: #e53e3e;
+        color: white;
+      }
+    }
+  
+    &.details {
+      background-color: rgb(75, 168, 205);
+      color: white;
+    }
+  }
+  
+  .no-candidatures {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  
+    img {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      opacity: 0.6;
+    }
+  
+    p {
+      color: #718096;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+    }
+  }
+  
+  .refresh-btn {
+    background-color: #4299e1;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  
+    &:hover {
+      background-color: #3182ce;
+    }
+  }
+  
+  .pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    gap: 5px;
+  
+    .pagination-button {
+      border: 1px solid #ddd;
+      background-color: white;
+      color: #3182ce;
+      padding: 8px 12px;
+      margin: 0 2px;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 36px;
+  
+      &:hover:not(:disabled) {
+        background-color: #ebf8ff;
+        border-color: #3182ce;
+      }
+  
+      &:disabled {
+        color: #ccc;
+        cursor: not-allowed;
+        background-color: #f9f9f9;
+      }
+  
+      &.active {
+        background-color: #3182ce;
+        color: white;
+        border-color: #3182ce;
+      }
+  
+      &.first-last {
+        padding: 8px;
+      }
+    }
+  }
+  
+  // Responsive
+  @media (max-width: 1200px) {
+    .candidatures-table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .candidatures-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .stats {
+      width: 100%;
+      justify-content: space-between;
+    }
+  
+    .pagination-container {
+      flex-wrap: wrap;
+    }
+  }
+  

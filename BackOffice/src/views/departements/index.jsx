@@ -97,7 +97,7 @@ const Departements = () => {
     <React.Fragment>
       <div className="buttons">
         <h1>Departements</h1>
-          {(currentUser.role ==="ADMIN_HR" || currentUser.role==="MEMBRE_HR") && <div className="link" onClick={handleAdd}>
+          {(currentUser.role ==="ADMIN_HR" || currentUser.role==="SUPER_ADMIN") && <div className="link" onClick={handleAdd}>
                   <Add/>
                     Add Departement
           </div>}

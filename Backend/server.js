@@ -4,7 +4,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const db = require('./config/db.json');
+const { default: axios } = require('axios');
 
+require('dotenv').config()
 // Configuration initiale
 
 const app = express();
@@ -22,7 +24,27 @@ mongoose.connect(db.mongo.uri)
 
 
 require("./routes/routes")(app); 
+app.get('/',async (req,res)=>{
+  const code = req.query.code;
 
+  try{
+      const response = await axios.post('https://zoom.us/oauth/token',null, {
+          params:{
+              grant_type: 'authorization_code',
+              code:code,
+              redirect_uri: process.env.REDIRECT_URI
+          },
+          headers:{
+              'Authorization':`Basic ${Buffer.from(`${process.env.ZOOM_API_KEY}:${process.env.ZOOM_API_SECRET}`).toString('base64')}`
+          }
+      });
+      res.send(response.data.access_token);    
+  }catch(error){
+      console.error('Error',error);
+      res.send('Error');
+  }
+  
+});
 
 server.listen(8070,()=>{
   console.log('====================================');

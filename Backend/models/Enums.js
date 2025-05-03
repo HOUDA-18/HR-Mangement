@@ -21,13 +21,19 @@ const Roles = Object.freeze({
     const offreStatus = Object.freeze({
     PENDING: "PENDING",
     ACCEPTED: "ACCEPTED",
+    CLOSED: "CLOSED",
     REJECTED: "REJECTED"
   });
 
   const candidatureStatus = {
     PENDING: 'PENDING',
     ACCEPTED: 'ACCEPTED',
+    SHORTLISTED: 'SHORTLISTED',
     REJECTED: 'REJECTED',
+    AI_INTERVIEW_SCHEDULED: 'AI_INTERVIEW_SCHEDULED',
+    AI_INTERVIEW_PASSED: 'AI_INTERVIEW_PASSED',
+    INTERVIEW_SCHEDULED: 'INTERVIEW_SCHEDULED',
+    INTERVIEW_PASSED:'INTERVIEW_PASSED'
   };
 
   const HRskills= [

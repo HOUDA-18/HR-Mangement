@@ -2,6 +2,17 @@ const {Status, Roles, employmentType} = require('./Enums')
 const mongoose = require('mongoose')
 const yup = require('yup')
 
+const aiEvaluation = new mongoose.Schema({
+    feedback: {type: String, required: true},
+    rating: {type: String, required: true}
+})
+
+const skillEvaluation = new mongoose.Schema({
+    skill: {type: String, required: true},
+    ai_evaluation: {type: aiEvaluation, required: true},
+    timestamp: {type: Number, required: false}
+})
+
 const user = new mongoose.Schema({
     firstname: {type: String, required: true},
     lastname: {type: String, required: true},
@@ -20,8 +31,15 @@ const user = new mongoose.Schema({
     createdAt: String,
     updatedAt: String,
     departement: { type: mongoose.Schema.Types.ObjectId, ref: 'departement', default: null },
-    skills: {type: [String], required: false, default: null}
-
+    skills: {type: [String], required: false, default: null},
+    soft_skills_evaluation: {type: [skillEvaluation], required: false, default: null},
+    technical_skills_evaluation:{type: [skillEvaluation], required: false, default: null},
+    salary: {type: Number, required: false, default: null},
+    yearsOfExperience: {
+        type: Number,
+        min: 0,
+        default: 0
+      }
 })
 
 const User = mongoose.model('user', user)
