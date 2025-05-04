@@ -90,7 +90,7 @@ const employeeDetails = () => {
                 </div>
                 <div className="bottom">
                     <div className="column">
-                        <SkillRadarChart data={employee.technical_skills_evaluation} />
+                        {employee.technical_skills_evaluation>0 &&<SkillRadarChart data={employee.technical_skills_evaluation} />}
                         {/* <List rows={rows} title={titre} catags={[]} type="livrables" /> */}
                     </div>
                     <div className="column">

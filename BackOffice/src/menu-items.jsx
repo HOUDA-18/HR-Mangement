@@ -86,7 +86,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-briefcase',
           url: '/app/dashboard/workshops',
-          roles: ['SUPER_ADMIN','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT']
+          roles: ['SUPER_ADMIN','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT', 'MEMBRE_HR']
         },
         {
           id: 'Events',
@@ -119,7 +119,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-message-circle',
           url: '/app/dashboard/chat-rooms',
-          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT','EMPLOYEE']
+          roles: ['MEMBRE_HR','ADMIN_HR']
         },
         {
           id: 'Complaints',

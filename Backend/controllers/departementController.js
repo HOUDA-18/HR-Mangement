@@ -4,6 +4,7 @@ const nodemailer = require("nodemailer");
 const Roles = require("../models/rolesEnum");
 const {HRskills}= require('../models/Enums')
 const { Team } = require("../models/team");
+const { Conversation } = require("../models/conversation");
 
 exports.addDepartement= async (req,res)=>{
     const {code, name} = req.body
@@ -90,6 +91,19 @@ exports.AssignEmployeeToDepartement = async (req, res) => {
 
                     if(departement.name==="HR"){
                         await User.findByIdAndUpdate(idEmployee, {departement: departement._id, role:Roles.MEMBRE_HR}, {new : true})
+                        const hrAdmin = await  User.findOne({role: Roles.ADMIN_HR})
+                        if(await Conversation.findOneAndUpdate({$and:[ {name: "private chat"},{chatParticipants:{ $in: [idEmployee]} } ]}, {archived: false}, {new: true})){}
+                        else{  
+                            const newConversation = new Conversation({
+                                    name: "private chat",
+                                    lastMessage: null,
+                                    time:null,
+                                    unread: 0,
+                                    chatParticipants: [idEmployee, hrAdmin._id]
+                                })
+                                await Conversation.create(newConversation)
+                        }
+                        await Conversation.findOneAndUpdate({name: "HR Team"}, {$push: {chatParticipants: idEmployee}}, {new: true})
 
                     }else{
                         await User.findByIdAndUpdate(idEmployee, {departement: departement._id}, {new : true})
@@ -194,6 +208,8 @@ exports.detachEmployeeFromDepartement = async (req, res)=>{
                                   $pull: { teamMembers: updatedEmployee._id }
                                 }
                               );
+                              if(departement.name=="HR")
+                              await Conversation.findOneAndUpdate({$and:[ {name: "private chat"},{chatParticipants:{ $in: [updatedEmployee._id]} } ]}, {archived: true}, {new: true})
                             Departement.findByIdAndUpdate(idDepartement, 
                                                           { $pull: { employees: updatedEmployee._id }  }, 
                                                           { new: true })

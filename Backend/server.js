@@ -6,11 +6,13 @@ const mongoose = require('mongoose');
 const db = require('./config/db.json');
 const { default: axios } = require('axios');
 
+
 require('dotenv').config()
 // Configuration initiale
 
 const app = express();
 const server = http.createServer(app);
+const {Server}= require('socket.io')
 
 app.use(cors());
 app.use(bodyParser.json({ limit: '50mb' }));
@@ -22,8 +24,35 @@ mongoose.connect(db.mongo.uri)
   .then(() => console.log('✅ Connecté à MongoDB'))
   .catch(err => console.error('❌ Erreur MongoDB:', err));
 
+  const io = new Server(server, {
+    cors: {
+      origin: 'http://127.0.0.1:3000',
+      methods: ['GET', 'POST'],
+      credentials: true
+    }
+  });
+
+  app.use((req,res,next)=>{
+    req.io = io;
+    next();
+})
+
+// Socket.IO
+io.on('connection', (socket) => {
+  console.log('User connected:', socket.id);
+
+  socket.on('join_room', (roomId) => {
+    socket.join(roomId);
+  });
+
+
+  socket.on('disconnect', () => {
+    console.log('User disconnected:', socket.id);
+  });
+});
 
 require("./routes/routes")(app); 
+
 app.get('/',async (req,res)=>{
   const code = req.query.code;
 

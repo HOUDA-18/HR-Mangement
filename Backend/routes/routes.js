@@ -6,6 +6,7 @@ module.exports= app =>{
     const offerController = require("../controllers/offreController")
     const candidatureController= require("../controllers/CandidatureController")
     const meetingController = require("../controllers/meetingController")
+    const conversationController = require('../controllers/conversationController')
 
     const { UserSchema, loginSchema} = require("../models/user");
     const {DepartementSchema}=require("../models/departement")
@@ -118,13 +119,19 @@ module.exports= app =>{
 
     //
 // Ajoutez cette ligne dans la section des routes candidature
-router.put('/candidature/update-status/:id', candidatureController.updateCandidatureStatus);
+    router.put('/candidature/update-status/:id', candidatureController.updateCandidatureStatus);
 
-router.get('/aiInterview/:id', candidatureController.getAIinterviewByIdCandidature)
+    router.get('/aiInterview/:id', candidatureController.getAIinterviewByIdCandidature)
 
     router.post('/candidatures/addMeeting/:id', meetingController.createMeeting)
 
     // Backend (Node.js/Express exemple)
+
+    router.get('/conversations/:userId', conversationController.getConversations)
+    router.post('/conversations', conversationController.createGroupChat)
+    router.get('/conversation/:id', conversationController.getConversationById)
+    router.get('/messages/:chatId', conversationController.getMessagesByConversation)
+    router.post('/messages/:chatId', conversationController.saveMessage)
 
     app.use('/api', router);
   

@@ -1,0 +1,348 @@
+// Variables
+$primary-color: #5865f2; // Discord-like blue
+$secondary-color: #f8f9fa;
+$dark-bg: #36393f;
+$dark-secondary: #2f3136;
+$dark-text: #dcddde;
+$accent-color: #6c757d;
+$sent-message-color: #d4edda;
+$received-message-color: #f8f9fa;
+$unread-badge-color: #f04747;
+$active-chat-color: #e9ecef;
+$dark-active-chat: #40444b;
+$success-color: #43b581;
+$away-color: #faa61a;
+$offline-color: #747f8d;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin transition($property: all, $duration: 0.3s, $easing: ease-in-out) {
+  transition: $property $duration $easing;
+}
+
+.chat-header {
+    padding: 15px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: white;
+    z-index: 1;
+    
+    .chat-info {
+      display: flex;
+      align-items: center;
+      
+      .avatar {
+        width: 40px;
+        height: 40px;
+        background-color: lighten($primary-color, 30%);
+        border-radius: 50%;
+        @include flex-center;
+        font-size: 1.2rem;
+        margin-right: 10px;
+        position: relative;
+        overflow: hidden; // important to keep image inside the circle
+          
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 50%; // ensure image is circular
+        }
+        
+        &.online::after {
+          content: '';
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          width: 10px;
+          height: 10px;
+          background-color: $success-color;
+          border-radius: 50%;
+          border: 2px solid white;
+        }
+      }
+      
+      .chat-details {
+        h2 {
+          margin: 0;
+          font-size: 1rem;
+        }
+        
+        .status {
+          margin: 0;
+          font-size: 0.7rem;
+          color: $success-color;
+          
+          &.away {
+            color: $away-color;
+          }
+        }
+      }
+    }
+    
+    .chat-actions {
+      button {
+        background: none;
+        border: none;
+        font-size: 1rem;
+        margin-left: 15px;
+        cursor: pointer;
+        color: $accent-color;
+        padding: 5px;
+        border-radius: 50%;
+        @include transition;
+        
+        &:hover {
+          color: $primary-color;
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+      }
+    }
+  }
+  
+  .messages-container {
+    flex: 1;
+    padding: 15px;
+    overflow-y: auto;
+    background-color: #f5f5f5;
+    position: relative;
+    
+    .date-divider {
+      text-align: center;
+      margin: 15px 0;
+      position: relative;
+      
+      &::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background-color: rgba(0, 0, 0, 0.1);
+        z-index: 0;
+      }
+      
+      span {
+        position: relative;
+        z-index: 1;
+        background-color: #f5f5f5;
+        padding: 0 10px;
+        font-size: 0.8rem;
+        color: $accent-color;
+      }
+    }
+    
+    .message {
+      margin-bottom: 15px;
+      max-width: 75%;
+      @include transition;
+      
+      .sender-info {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        
+        .sender-avatar {
+            width: 24px;
+            height: 24px;
+            background-color: lighten($primary-color, 30%);
+            border-radius: 50%;
+            @include flex-center;
+            font-size: 0.8rem;
+            margin-right: 8px;
+            overflow: hidden; // important to keep image inside the circle
+          
+            img {
+              width: 100%;
+              height: 100%;
+              object-fit: cover;
+              border-radius: 50%; // ensure image is circular
+            }
+          }
+        
+        .sender-name {
+          font-size: 0.8rem;
+          font-weight: 600;
+          color: $accent-color;
+        }
+      }
+      
+      .message-content {
+        position: relative;
+        padding: 10px 15px;
+        border-radius: 15px;
+        @include transition;
+        
+        p {
+          margin: 0;
+          word-wrap: break-word;
+          line-height: 1.4;
+        }
+        
+        .message-footer {
+          display: flex;
+          justify-content: flex-end;
+          align-items: center;
+          margin-top: 5px;
+          
+          .message-time {
+            font-size: 0.7rem;
+            color: $accent-color;
+            margin-right: 5px;
+            &.me{
+                color: white;
+            }
+          }
+          
+          .message-status {
+            font-size: 0.7rem;
+            
+            &.read {
+              color: $success-color;
+            }
+            
+            &.sent {
+              color: $accent-color;
+            }
+          }
+        }
+      }
+      
+      &.sent {
+        margin-left: auto;
+        
+        .message-content {
+          background-color: $primary-color;
+          color: white;
+          border-bottom-right-radius: 5px;
+          
+          .message-footer {
+            color: rgba(white, 0.7);
+          }
+        }
+      }
+      
+      &.received {
+        .message-content {
+          background-color: $received-message-color;
+          border-bottom-left-radius: 5px;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+      }
+    }
+  }
+  
+  .message-input-area {
+    padding: 10px 15px;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    align-items: center;
+    background-color: white;
+    
+    .input-actions {
+      display: flex;
+      margin-right: 10px;
+      
+      button {
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: $accent-color;
+        padding: 5px;
+        border-radius: 50%;
+        @include transition;
+        
+        &:hover {
+          color: $primary-color;
+          background-color: rgba(0, 0, 0, 0.05);
+        }
+      }
+    }
+    
+    .message-input {
+      flex: 1;
+      
+      textarea {
+        width: 100%;
+        border: 1px solid #dee2e6;
+        border-radius: 20px;
+        padding: 10px 15px;
+        resize: none;
+        outline: none;
+        font-family: inherit;
+        @include transition;
+        max-height: 120px;
+        
+        &:focus {
+          border-color: $primary-color;
+        }
+      }
+    }
+    
+    .send-button {
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 8px 15px;
+      margin-left: 10px;
+      cursor: pointer;
+      @include transition;
+      
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+      
+      &:disabled {
+        background-color: #e9ecef;
+        color: $accent-color;
+        cursor: not-allowed;
+      }
+    }
+  }
+  
+  .no-chat-selected {
+    @include flex-center;
+    flex-direction: column;
+    height: 100%;
+    color: $accent-color;
+    text-align: center;
+    
+    .illustration {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+    
+    h2 {
+      margin-bottom: 10px;
+      font-size: 1.5rem;
+    }
+    
+    p {
+      margin-bottom: 20px;
+    }
+    
+    .new-chat-btn {
+      background-color: $primary-color;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 10px 20px;
+      cursor: pointer;
+      @include transition;
+      
+      &:hover {
+        background-color: darken($primary-color, 10%);
+      }
+    }
+  }

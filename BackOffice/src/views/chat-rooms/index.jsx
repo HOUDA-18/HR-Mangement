@@ -1,3 +1,4 @@
+import Chatroom from 'components/ChatRooms/chatRooms';
 import React from 'react';
 
 
@@ -6,7 +7,7 @@ import React from 'react';
 const ChatRooms = () => {
   return (
     <React.Fragment>
-        <h1>ChatRooms</h1>
+        <Chatroom/>
     </React.Fragment>
   );
 };

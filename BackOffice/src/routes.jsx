@@ -177,7 +177,7 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/chat-rooms',
         element: lazy(() => import('./views/chat-rooms')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','HEAD_DEPARTEMENT']}>{props.children}</AuthGuard>
+        guard: (props) => <AuthGuard allowedRoles={['MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
       },
       {
         exact: 'true',
