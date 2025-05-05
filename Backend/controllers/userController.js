@@ -95,6 +95,8 @@ exports.signupface = async (req, res) => {
       status: Status.Inactive,
       departement: null,
       employmentType : employmentType.CONTRACT,
+      salary: 0,
+      yearsOfExperience: 0,
         createdAt: (new Date()).toDateString(),
         updatedAt :(new Date()).toDateString()
     });
@@ -225,6 +227,8 @@ exports.register= async (req,res)=>{
         status: Status.Inactive,
         role: Roles.EMPLOYEE,
         employmentType : employmentType,
+        salary: 0,
+        yearsOfExperience: 0,
         createdAt: (new Date()).toDateString(),
         updatedAt :(new Date()).toDateString()
     })
@@ -851,4 +855,29 @@ exports.DepartementDistribution = async (req, res) => {
   } catch (err) {
     res.status(500).json({ message: 'Error fetching user department distribution', error: err });
   }
+}
+exports.simpleUpdate = async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: { salary: req.body.salary } },
+      { new: true }
+    );
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ message: 'Error updating salary' });
+  }
 };
+exports.getSimpleEmployees = async (req, res) => {
+  try {
+    // Get all users with role "EMPLOYEE"
+    const employees = await User.find({ role: 'EMPLOYEE' });
+    res.status(200).json(employees);
+    
+  } catch (err) {
+    res.status(500).json({ 
+      message: 'Error fetching employees',
+      error: err.message 
+    });
+  }
+}

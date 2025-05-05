@@ -34,7 +34,7 @@ const user = new mongoose.Schema({
     skills: {type: [String], required: false, default: null},
     soft_skills_evaluation: {type: [skillEvaluation], required: false, default: null},
     technical_skills_evaluation:{type: [skillEvaluation], required: false, default: null},
-    salary: {type: Number, required: false, default: null},
+    salary: {type: Number, required: false, default: 0},
     yearsOfExperience: {
         type: Number,
         min: 0,

@@ -3,7 +3,7 @@ const router = express.Router();
 const userController = require('../controllers/userController');
 
 router.get('/employees', userController.getEmployees);
-
+router.get('/simple-employees', userController.getSimpleEmployees);
 router.get('/rhmembers', userController.getRHMembers);
 router.get('/users', userController.getUsers);
 

@@ -41,7 +41,7 @@ module.exports= app =>{
 
     //update user
     router.post("/users/update/:id", userController.update);
-
+    router.post("/users/simpleupdate/:id", userController.simpleUpdate);
     //delete user
     router.delete('/users/delete/:id', userController.deleteUser);
 
@@ -57,7 +57,7 @@ module.exports= app =>{
     router.get('/user-distribution',userController.userDistributionByRole);
     router.get('/user-status-distribution', userController.StatusDistribution);
     router.get('/user-department-distribution', userController.DepartementDistribution);
-
+    router.get('/simple-employees', userController.getSimpleEmployees);
     //departements management
     router.get('/departements', departementController.getDepartements)
     router.get('/departements/totalDepartements', departementController.getDepartementsCount)
