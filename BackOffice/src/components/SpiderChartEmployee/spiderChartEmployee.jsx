@@ -47,10 +47,12 @@ const SkillRadarChart = ({ data }) => {
       };
     
       return (
+        <>
+        <h4>Technical Skills Overview</h4>
         <div className="skill-radar-container">
-          <h2>Technical Skills Overview</h2>
-    
-          <ResponsiveContainer width="100%" height={400}>
+          
+        <div className="chart-section">
+        <ResponsiveContainer width="100%" height={400}>
             <RadarChart cx="50%" cy="50%" outerRadius="80%" data={formattedData}>
               <PolarGrid stroke="#e5e7eb" />
               <PolarAngleAxis dataKey="skill" stroke="#374151" tick={{ fontSize: 12 }} />
@@ -58,10 +60,12 @@ const SkillRadarChart = ({ data }) => {
               <Radar name="Skill Level" dataKey="rating" stroke="#3b82f6" fill="#3b82f6" fillOpacity={0.4} />
               <Tooltip content={CustomTooltip}/>
             </RadarChart>
-          </ResponsiveContainer>
+          </ResponsiveContainer> 
+        </div>
+          
     
           <div className="rating-scale">
-            <h3>Rating Scale:</h3>
+            <h5>Rating Scale:</h5>
             <ul>
               <li><span>1:</span> Not Experienced</li>
               <li><span>2:</span> Junior</li>
@@ -70,7 +74,7 @@ const SkillRadarChart = ({ data }) => {
               <li><span>5:</span> Expert</li>
             </ul>
           </div>
-        </div>
+        </div></>
       );
 };
 

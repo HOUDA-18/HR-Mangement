@@ -1,0 +1,37 @@
+
+.button-container {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .start-btn {
+    background-color: #007bff; /* Couleur de fond bleue */
+    color: white; /* Texte en blanc */
+    font-size: 16px;
+    font-weight: 500;
+    padding: 10px 20px; /* Espacement autour du texte */
+    border-radius: 50px; /* Coins arrondis */
+    display: flex;
+    align-items: center;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease; /* Transition pour un effet au survol */
+  }
+  
+  .start-btn:hover {
+    background-color: #0056b3; /* Couleur plus foncée au survol */
+  }
+  
+  .start-btn:disabled {
+    background-color: #b0c4de; /* Couleur grise pour le bouton désactivé */
+    cursor: not-allowed; /* Curseur non autorisé */
+  }
+  
+  .start-btn .me-2 {
+    margin-right: 10px; /* Espacement entre l'icône et le texte */
+  }
+  
+
+  .clickable {
+    cursor: pointer;
+  }

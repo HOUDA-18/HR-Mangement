@@ -527,7 +527,7 @@ exports.getUserByID = async (req, res) => {
   const { id } = req.params;
   try {
   
-      const user = await User.findById(id,  'firstname lastname email role matricule status phone departement createdAt image technical_skills_evaluation');
+      const user = await User.findById(id,  'firstname lastname email role matricule status phone departement createdAt image technical_skills_evaluation skills soft_skills_evaluation');
       
       res.status(200).json(user);
   } catch (err) {

@@ -7,6 +7,7 @@ module.exports= app =>{
     const candidatureController= require("../controllers/CandidatureController")
     const meetingController = require("../controllers/meetingController")
     const conversationController = require('../controllers/conversationController')
+    const attendanceController=require("../controllers/attendanceController")
 
     const { UserSchema, loginSchema} = require("../models/user");
     const {DepartementSchema}=require("../models/departement")
@@ -126,6 +127,14 @@ module.exports= app =>{
     router.post('/candidatures/addMeeting/:id', meetingController.createMeeting)
 
     // Backend (Node.js/Express exemple)
+    // Ajoutez cette ligne dans la section des routes candidature
+
+    //attendance routes
+    router.post('/attendance/checkin',attendanceController.getLocation);
+    router.post('/attendance/checkout',attendanceController.checkOut)
+    router.get('/attendance/user/:id',attendanceController.getUserAttendance)
+    router.get('/attendance/today',attendanceController.getTodayAttendance)
+
 
     router.get('/conversations/:userId', conversationController.getConversations)
     router.post('/conversations', conversationController.createGroupChat)

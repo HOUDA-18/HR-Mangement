@@ -75,14 +75,25 @@
   }
 
   .bottom {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-top: 2rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem;
+    background-color: #f8f9fa; // soft background
+    border-radius: 12px;
+  }
   
-    .column {
-      flex: 1 1 48%;
-      min-width: 300px;
+  .column {
+    background-color: #fff;
+    padding: 1rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  }
+  
+
+  @media (max-width: 768px) {
+    .bottom {
+      grid-template-columns: 1fr;
     }
   }
   
