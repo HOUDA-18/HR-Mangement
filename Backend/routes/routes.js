@@ -5,6 +5,7 @@ module.exports= app =>{
     const teamController = require("../controllers/teamController")
     const offerController = require("../controllers/offreController")
     const candidatureController= require("../controllers/CandidatureController")
+    const attendanceController=require("../controllers/attendanceController")
 
     const { UserSchema, loginSchema} = require("../models/user");
     const {DepartementSchema}=require("../models/departement")
@@ -110,9 +111,15 @@ module.exports= app =>{
     router.post('/candidatures',validate(candidatureSchema), candidatureController.addCandidature)
 
     //
-// Ajoutez cette ligne dans la section des routes candidature
-router.put('/candidature/update-status/:id', candidatureController.updateCandidatureStatus);
-    // Backend (Node.js/Express exemple)
+    // Ajoutez cette ligne dans la section des routes candidature
+    router.put('/candidature/update-status/:id', candidatureController.updateCandidatureStatus);
+
+    //attendance routes
+    router.post('/attendance/checkin',attendanceController.getLocation);
+    router.post('/attendance/checkout',attendanceController.checkOut)
+    router.get('/attendance/user/:id',attendanceController.getUserAttendance)
+    router.get('/attendance/today',attendanceController.getTodayAttendance)
+
 
 /* 
 

@@ -1,0 +1,117 @@
+// AttendancePage.scss
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f0f2f5;
+    padding: 20px;
+  }
+  
+  .card {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    max-width: 500px;
+    width: 100%;
+  }
+  
+  .card-title {
+    margin-bottom: 20px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .webcam-container {
+    margin-bottom: 20px;
+  }
+  
+  .webcam {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+  
+  .button {
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: 500;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    margin-right: 10px;
+  
+    &.loading {
+      background: #888;
+      cursor: not-allowed;
+    }
+  
+    &.check-in {
+      background: #28a745;
+    }
+  
+    &.check-out {
+      background: #dc3545;
+    }
+  
+    &.disabled {
+      background: #888;
+      cursor: not-allowed;
+    }
+  }
+  
+  .message {
+    margin-top: 20px;
+    font-weight: 500;
+  
+    &.success {
+      color: green;
+    }
+  
+    &.error {
+      color: red;
+    }
+  }
+  
+  .calendar-container {
+    margin-top: 30px;
+  }
+  
+  .calendar-info {
+    margin-top: 15px;
+    text-align: left;
+  
+    strong {
+      display: block;
+    }
+  
+    p {
+      margin: 5px 0;
+    }
+  }
+  
+  // Calendar styles
+  .status-on-time {
+    background: #c8f7c5 !important;
+    border-radius: 50%;
+  }
+  
+  .status-late {
+    background: #fff3cd !important;
+    border-radius: 50%;
+  }
+  
+  .status-early {
+    background: #cfe2ff !important;
+    border-radius: 50%;
+  }
+  
+  .status-absent {
+    background: #f7c5c5 !important;
+    border-radius: 50%;
+  }
+  
