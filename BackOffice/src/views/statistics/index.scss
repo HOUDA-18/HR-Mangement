@@ -1,0 +1,30 @@
+.chart-container {
+  max-width: 600px;
+  background-color: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  padding: 1rem;
+  transition: background 0.3s;
+
+  // Optional for dark mode
+  @media (prefers-color-scheme: dark) {
+    background-color: #18181b;
+    color: #f3f3f3;
+  }
+}
+
+.chart-inner {
+  padding: 0.5rem;
+}
+
+.chart-title {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  color: #6366f1; // Accent color for title
+}
+
+.chart-box {
+  height: 19rem; // Same as h-72 in Tailwind
+}

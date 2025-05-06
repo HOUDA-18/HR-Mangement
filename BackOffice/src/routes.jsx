@@ -35,8 +35,6 @@ const renderRoutes = (routes = []) => (
 );
 
 export const routes = [
-
-
   {
     exact: 'true',
     path: '/auth/signup-1',
@@ -76,8 +74,7 @@ export const routes = [
     path: '/auth/2fa/',
     element: lazy(() => import('./views/auth/2fa/TwoFASetup'))
   },
-  
-  
+
   {
     path: '*',
     layout: AdminLayout,
@@ -86,31 +83,43 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/analytics',
         element: lazy(() => import('./views/dashboard')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'MEMBRE_HR', 'ADMIN_HR']}>{props.children}</AuthGuard>
+        )
       },
       {
         exact: 'true',
         path: '/app/dashboard/departements',
         element: lazy(() => import('./views/departements')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN','MEMBRE_HR','HEAD_DEPARTEMENT','ADMIN_HR']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'MEMBRE_HR', 'HEAD_DEPARTEMENT', 'ADMIN_HR']}>{props.children}</AuthGuard>
+        )
       },
       {
         exact: 'true',
         path: '/app/dashboard/departements/details',
         element: lazy(() => import('./views/departements/viewDepartement')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'MEMBRE_HR', 'ADMIN_HR']}>{props.children}</AuthGuard>
+        )
       },
       {
         exact: 'true',
         path: '/app/dashboard/departements/details/team/details',
         element: lazy(() => import('./views/departements/viewTeam/index')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'MEMBRE_HR', 'ADMIN_HR']}>{props.children}</AuthGuard>
+        )
       },
       {
         exact: 'true',
         path: '/app/dashboard/offers',
         element: lazy(() => import('./views/offer')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'HEAD_DEPARTEMENT', 'MEMBRE_HR', 'ADMIN_HR']}>
+            {props.children}
+          </AuthGuard>
+        )
       },
       {
         path: '/app/dashboard/candidatures',
@@ -126,19 +135,27 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/leaves',
         element: lazy(() => import('./views/leaves')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','MEMBRE_HR','ADMIN_HR']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'HEAD_DEPARTEMENT', 'MEMBRE_HR', 'ADMIN_HR']}>
+            {props.children}
+          </AuthGuard>
+        )
       },
       {
         exact: 'true',
         path: '/app/dashboard/workshops',
         element: lazy(() => import('./views/workshops')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'HEAD_DEPARTEMENT']}>{props.children}</AuthGuard>
+        )
       },
       {
         exact: 'true',
         path: '/app/dashboard/employees',
         element: lazy(() => import('./views/employees')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN','HEAD_DEPARTEMENT','ADMIN_HR','MEMBRE_HR']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'HEAD_DEPARTEMENT', 'ADMIN_HR', 'MEMBRE_HR']}>{props.children}</AuthGuard>
+        )
       },
       {
         exact: 'true',
@@ -154,25 +171,49 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/events',
         element: lazy(() => import('./views/events')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','ADMIN_HR']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'HEAD_DEPARTEMENT', 'ADMIN_HR']}>
+            {props.children}
+          </AuthGuard>
+        )
       },
       {
         exact: 'true',
         path: '/app/dashboard/attendance',
         element: lazy(() => import('./views/attendance')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'HEAD_DEPARTEMENT','HEAD_DEPARTEMENT','EMPLOYEE']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'HEAD_DEPARTEMENT', 'HEAD_DEPARTEMENT', 'EMPLOYEE']}>{props.children}</AuthGuard>
+        )
       },
       {
         exact: 'true',
         path: '/app/dashboard/complaints',
         element: lazy(() => import('./views/complaint')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','HEAD_DEPARTEMENT']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'ADMIN_HR', 'HEAD_DEPARTEMENT']}>
+            {props.children}
+          </AuthGuard>
+        )
+      },
+      {
+        exact: 'true',
+        path: '/app/dashboard/statistics',
+        element: lazy(() => import('./views/statistics')),
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'ADMIN_HR', 'HEAD_DEPARTEMENT']}>
+            {props.children}
+          </AuthGuard>
+        )
       },
       {
         exact: 'true',
         path: '/app/dashboard/chat-rooms',
         element: lazy(() => import('./views/chat-rooms')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','EMPLOYEE','HEAD_DEPARTEMENT']}>{props.children}</AuthGuard>
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'ADMIN_HR', 'EMPLOYEE', 'HEAD_DEPARTEMENT']}>
+            {props.children}
+          </AuthGuard>
+        )
       },
       {
         exact: 'true',
@@ -188,8 +229,10 @@ export const routes = [
         exact: 'true',
         path: '/app/dashboard/hr-member',
         element: lazy(() => import('./views/hr-member')),
-        guard: (props) => <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE','HEAD_DEPARTEMENT','ADMIN_HR','MEMBRE_HR']}>{props.children}</AuthGuard>
-      }/* ,
+        guard: (props) => (
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'ADMIN_HR', 'MEMBRE_HR']}>{props.children}</AuthGuard>
+        )
+      } /* ,
       {
         exact: 'true',
         path: '/basic/button',
@@ -226,22 +269,21 @@ export const routes = [
         path: '/sample-page',
         element: lazy(() => import('./views/extra/SamplePage'))
       } */,
-       
-  // Nouvelle route pour le login facial
-  {
-    exact: 'true',
-    path: '/auth/face-login',
-    element: lazy(() => import('./views/auth/face/Loginface')), // Adaptez le chemin
-    guard: (props) => <AuthGuard allowedRoles={['public']}>{props.children}</AuthGuard>
-  },
+      // Nouvelle route pour le login facial
+      {
+        exact: 'true',
+        path: '/auth/face-login',
+        element: lazy(() => import('./views/auth/face/Loginface')), // Adaptez le chemin
+        guard: (props) => <AuthGuard allowedRoles={['public']}>{props.children}</AuthGuard>
+      },
 
-  // Nouvelle route pour l'inscription faciale
-  {
-    exact: 'true',
-    path: '/auth/face-signup',
-    element: lazy(() => import('./views/auth/face/Signupface')), // Adaptez le chemin
-    guard: (props) => <AuthGuard allowedRoles={['public']}>{props.children}</AuthGuard>
-  },
+      // Nouvelle route pour l'inscription faciale
+      {
+        exact: 'true',
+        path: '/auth/face-signup',
+        element: lazy(() => import('./views/auth/face/Signupface')), // Adaptez le chemin
+        guard: (props) => <AuthGuard allowedRoles={['public']}>{props.children}</AuthGuard>
+      },
       {
         path: '*',
         exact: 'true',
