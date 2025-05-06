@@ -124,7 +124,7 @@ exports.loginface = async (req, res) => {
     console.log('🔍 Descripteur capturé:', capturedDescriptor.length, 'éléments');
 
     // 3. Récupération des utilisateurs avec vérification
-    const users = await User.find({ faceDescriptor: { $exists: true, $ne: null } });
+    const users = await User.find({ faceDescriptor: { $exists: true, $ne: null } }).populate('departement', "name");
     if (users.length === 0) throw new Error('Aucun utilisateur enregistré');
 
     // 4. Recherche de correspondance
@@ -175,7 +175,7 @@ exports.loginface = async (req, res) => {
 
 exports.login= async (req,res)=>{
     const {matricule, password} = req.body
-    const user = await User.findOne({matricule:matricule})
+    const user = await User.findOne({matricule:matricule}).populate('departement', "name");
     if (user == null) {
         return res.status(400).json('Cannot find user')
     }

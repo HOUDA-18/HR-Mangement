@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const db = require('./config/db.json');
 const { default: axios } = require('axios');
+const congesRouter = require('./routes/congesRoute');
 
 
 require('dotenv').config()
@@ -51,6 +52,7 @@ io.on('connection', (socket) => {
   });
 });
 
+app.use('/api/conges', congesRouter); 
 require("./routes/routes")(app); 
 
 app.get('/',async (req,res)=>{

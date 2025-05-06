@@ -252,14 +252,14 @@ export default function ProfilePage() {
                     
                     <MDBRow className="mb-3">
                       <MDBCol sm="3"><MDBCardText className="fw-bold">Department</MDBCardText></MDBCol>
-                      <MDBCol sm="9"><MDBCardText>{user.department}</MDBCardText></MDBCol>
+                      <MDBCol sm="9"><MDBCardText>{user?.departement?.name}</MDBCardText></MDBCol>
                     </MDBRow>
                     
                     <MDBRow className="mb-3">
                       <MDBCol sm="3"><MDBCardText className="fw-bold">Hire Date</MDBCardText></MDBCol>
                       <MDBCol sm="9">
                         <MDBCardText>
-                          {new Date(user.hireDate).toLocaleDateString('en-US', {
+                          {new Date(user.createdAt).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'long',
                             day: 'numeric'
@@ -347,7 +347,7 @@ export default function ProfilePage() {
                         tileContent={tileContent}
                         tileClassName={getTileClassName}
                         tileDisabled={({ date, view }) => 
-                          view === 'month' && (date > new Date() || date < new Date(user.createdAt))
+                          view === 'month' && (date > new Date() || date < new Date(user.createdAt) || date.getDay()==0)
                         }
                         className="border-0 w-100"
                       />
