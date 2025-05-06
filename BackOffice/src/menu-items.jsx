@@ -13,7 +13,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-home',
           url: '/app/dashboard/analytics',
-          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT']
+          roles: ['SUPER_ADMIN', 'MEMBRE_HR', 'ADMIN_HR', 'EMPLOYEE', 'HEAD_DEPARTEMENT']
         },
         {
           id: 'departements',
@@ -21,7 +21,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-server',
           url: '/app/dashboard/departements',
-          roles: ['SUPER_ADMIN','ADMIN_HR']
+          roles: ['SUPER_ADMIN', 'ADMIN_HR']
         }
       ]
     },
@@ -62,7 +62,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-bookmark',
           url: '/app/dashboard/leaves',
-          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT']
+          roles: ['SUPER_ADMIN', 'MEMBRE_HR', 'ADMIN_HR', 'EMPLOYEE', 'HEAD_DEPARTEMENT']
         },
         {
           id: 'Attendance',
@@ -70,7 +70,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-check-circle',
           url: '/app/dashboard/attendance',
-          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT']
+          roles: ['SUPER_ADMIN', 'MEMBRE_HR', 'ADMIN_HR', 'EMPLOYEE', 'HEAD_DEPARTEMENT']
         }
       ]
     },
@@ -103,7 +103,7 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-file-plus',
           url: '/app/dashboard/offers',
-          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT']
+          roles: ['SUPER_ADMIN', 'MEMBRE_HR', 'ADMIN_HR', 'EMPLOYEE', 'HEAD_DEPARTEMENT']
         }
       ]
     },
@@ -127,11 +127,19 @@ const menuItems = {
           type: 'item',
           icon: 'feather icon-message-square',
           url: '/app/dashboard/complaints',
-          roles: ['SUPER_ADMIN','MEMBRE_HR','ADMIN_HR','EMPLOYEE', 'HEAD_DEPARTEMENT','EMPLOYEE']
+          roles: ['SUPER_ADMIN', 'MEMBRE_HR', 'ADMIN_HR', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'EMPLOYEE']
+        },
+        {
+          id: 'Statistics',
+          title: 'Statistics',
+          type: 'item',
+          icon: 'feather icon-bar-chart',
+          url: '/app/dashboard/statistics',
+          roles: ['SUPER_ADMIN', 'MEMBRE_HR', 'ADMIN_HR', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'EMPLOYEE']
         }
       ]
-    },
-/*     {
+    }
+    /*     {
       id: 'utilities',
       title: 'Utilities',
       type: 'group',
@@ -183,7 +191,7 @@ const menuItems = {
         }
       ]
     }, */
-/*     {
+    /*     {
       id: 'auth',
       title: 'Authentication',
       type: 'group',
@@ -218,7 +226,7 @@ const menuItems = {
         }
       ]
     }, */
-  /*   {
+    /*   {
       id: 'support',
       title: 'Support',
       type: 'group',

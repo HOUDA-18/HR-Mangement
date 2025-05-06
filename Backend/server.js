@@ -6,8 +6,12 @@ const mongoose = require('mongoose');
 const db = require('./config/db.json');
 const { default: axios } = require('axios');
 const congesRouter = require('./routes/congesRoute');
+const cron = require("node-cron");
+const statisticsController = require("./controllers/statisticsController");
 
 
+const complaintRoutes = require("./routes/complaintRoutes");
+const statisticsRoutes = require("./routes/statisticsRoute");
 require('dotenv').config()
 // Configuration initiale
 
@@ -16,14 +20,15 @@ const server = http.createServer(app);
 const {Server}= require('socket.io')
 
 app.use(cors());
-app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
 
-app.use(express.json())
+app.use(express.json());
 // Connexion MongoDB
-mongoose.connect(db.mongo.uri)
-  .then(() => console.log('✅ Connecté à MongoDB'))
-  .catch(err => console.error('❌ Erreur MongoDB:', err));
+mongoose
+  .connect(db.mongo.uri)
+  .then(() => console.log("✅ Connecté à MongoDB"))
+  .catch((err) => console.error("❌ Erreur MongoDB:", err));
 
   const io = new Server(server, {
     cors: {
@@ -52,6 +57,8 @@ io.on('connection', (socket) => {
   });
 });
 
+app.use("/api/complaints", complaintRoutes);
+app.use("/api/statistics", statisticsRoutes);
 app.use('/api/conges', congesRouter); 
 require("./routes/routes")(app); 
 
@@ -77,8 +84,17 @@ app.get('/',async (req,res)=>{
   
 });
 
-server.listen(8070,()=>{
-  console.log('====================================');
+
+server.listen(8070, () => {
+  console.log("====================================");
   console.log("server is running");
-  console.log('====================================');
+  console.log("====================================");
+});
+cron.schedule("* * * * *", async () => {
+  try {
+    await statisticsController.genererStatistics();
+    console.log("Statistiques générées avec succès.");
+  } catch (error) {
+    console.error("Erreur lors de la génération des statistiques :", error);
+  }
 });
