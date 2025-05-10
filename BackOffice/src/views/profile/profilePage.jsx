@@ -171,7 +171,7 @@ export default function ProfilePage() {
                 <MDBRow>
                   <MDBCol md="4" className="text-center">
                     <MDBCardImage
-                      src={user.image}
+                      src={user.image || "https://images.pexels.com/photos/1680172/pexels-photo-1680172.jpeg?auto=compress&cs=tinysrgb&w=600"}
                       alt="avatar"
                       className="rounded-circle shadow-1-strong mb-4"
                       style={{ width: '150px', height: '150px', objectFit: 'cover' }}
@@ -179,7 +179,7 @@ export default function ProfilePage() {
                     />
                     
                     <MDBTypography tag="h5" className="mb-1">{user.firstname} {user.lastname}</MDBTypography>
-                    <MDBCardText className="text-muted mb-2">{user.position}</MDBCardText>
+                    <MDBCardText className="text-muted mb-2">{user.role}</MDBCardText>
                     
                     <div className="d-flex justify-content-center mb-2">
                       <MDBBtn 

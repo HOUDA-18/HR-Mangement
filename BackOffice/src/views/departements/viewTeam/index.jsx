@@ -215,7 +215,7 @@ const TeamDetails = () => {
                       )}
       </div>
 
-      { (currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement == team.departement) && 
+      { (currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement._id == team.departement) && 
                                <div className="add-offer-btn" onClick={handleAddOffer}>
                                         <Add/>
                                             Add Offer
@@ -229,7 +229,7 @@ const TeamDetails = () => {
             <div key={index} className="member-card">
               {/* Edit Button on Top Left */}
               {(currentUser.role === 'SUPER_ADMIN' ||
-                (currentUser.role === 'HEAD_DEPARTEMENT' && currentUser.departement === team.departement)) && (
+                (currentUser.role === 'HEAD_DEPARTEMENT' && currentUser.departement._id === team.departement)) && (
                 <button
                   className="edit-btn"
                   title="Detach from the team"
@@ -241,7 +241,7 @@ const TeamDetails = () => {
               {/* Info Button on Top Right */}
               {member._id !== team.headTeam &&
                 (currentUser.role === 'SUPER_ADMIN' ||
-                  (currentUser.role === 'HEAD_DEPARTEMENT' && currentUser.departement === team.departement)) && (
+                  (currentUser.role === 'HEAD_DEPARTEMENT' && currentUser.departement._id === team.departement)) && (
                   <button
                     className="info-btn"
                     title="Confirm as Head of Team"

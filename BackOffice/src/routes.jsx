@@ -189,7 +189,7 @@ export const routes = [
         path: '/app/dashboard/complaints',
         element: lazy(() => import('./views/complaint')),
         guard: (props) => (
-          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'HEAD_DEPARTEMENT', 'ADMIN_HR', 'HEAD_DEPARTEMENT']}>
+          <AuthGuard allowedRoles={['SUPER_ADMIN', 'EMPLOYEE', 'MEMBRE_HR', 'ADMIN_HR', 'HEAD_DEPARTEMENT']}>
             {props.children}
           </AuthGuard>
         )

@@ -57,7 +57,7 @@ const TeamCard = ({ team ,  showAlertDeleteTeam, setShowAlertDeleteTeam, setTeam
           </button>
 
           {(currentUser.role === "SUPER_ADMIN" ||
-            (currentUser.role === "HEAD_DEPARTEMENT" && currentUser.departement === team.departement)) && (
+            (currentUser.role === "HEAD_DEPARTEMENT" && currentUser.departement._id === team.departement)) && (
             <>
               <button
                 className="update-btn"

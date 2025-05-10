@@ -258,7 +258,7 @@ const handleAddToTeam = (emp)=>{
                                         </div>
                                 </div>
                                 
-                                { (currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement == departement._id)  && <div className="link" onClick={handleAdd}>
+                                { (currentUser.role ==="HEAD_DEPARTEMENT" && currentUser.departement._id == departement._id)  && <div className="link" onClick={handleAdd}>
                                         <Add/>
                                             Add Team
                                 </div> }

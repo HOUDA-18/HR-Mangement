@@ -69,7 +69,7 @@ const Employees = () => {
   }
 
   const confirmAddToDepartement=(emp)=>{
-    axios.put(`http://localhost:8070/api/departements/assignEmployee/${currentUser.departement}/${emp._id}`)
+    axios.put(`http://localhost:8070/api/departements/assignEmployee/${currentUser.departement._id}/${emp._id}`)
     .then((res)=>{
       console.log('team deleted:', res.data);
       // Refresh the list of users after deletion

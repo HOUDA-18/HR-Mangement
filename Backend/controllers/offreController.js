@@ -4,6 +4,7 @@ const {User}= require('../models/user')
 const {Departement}=require('../models/departement')
 const {Team}=require('../models/team')
 const nodemailer = require("nodemailer");
+const { sendNotification } = require('../services/sendNotification');
 
 exports.addOffer = async (req, res) => {
     const { 
@@ -41,7 +42,7 @@ exports.addOffer = async (req, res) => {
 
     try {
         const departement = await Departement.findById(newOffer.departement)
-        if(departement.name==="HR"){
+        if(departement.name===""){
             newOffer.status=offreStatus.ACCEPTED
             await newOffer.save();
             res.status(201).json({
@@ -61,6 +62,12 @@ exports.addOffer = async (req, res) => {
                     .status(400)
                     .send({ message: "User not found please register" });
                 }
+
+                const message = `An offer from department ${departement.name} titled ${newOffer.title} is waiting for your approval.`
+
+                const notif = await sendNotification(checkUser._id, message, newOffer._id, departement.chefDepartement)
+
+                    req.io.emit('receive_notification', notif);
                 const transporter = nodemailer.createTransport({
                 service: "gmail",
                 secure: true,
@@ -253,6 +260,12 @@ exports.updateOfferStatus = async (req, res) => {
         if (!updatedOffer) {
             return res.status(404).json({ message: "Offre non trouvée" });
         }
+        const adminHR= await User.findOne({role: Roles.ADMIN_HR})
+        const message = `An offer from your department (${updatedOffer.departement.name}) was ${updatedOffer.status.toLowerCase()}.`
+
+        const notif = await sendNotification(updatedOffer.departement?.chefDepartement?._id, message, updatedOffer._id, adminHR._id)
+
+            req.io.emit('receive_notification', notif);
 
         // Envoi d'email
         if (updatedOffer.departement?.chefDepartement?.email) {
@@ -339,11 +352,17 @@ exports.closeOffre= async (req, res)=>{
     const {id}= req.params
 
     try {
-        const offer = await Offer.findById(id)
+        const offer = await Offer.findById(id).populate('departement')
         if (!offer){
             res.status(404).json({"message": "offer doesn't exist"})
         }else{
             const newOffer = await Offer.findByIdAndUpdate(id, {status: offreStatus.CLOSED}, {new: true})
+            const adminHR= await User.findOne({role: Roles.ADMIN_HR})
+            const message = `An offer from your department (${offer.departement.name}) was CLOSED.`
+
+            const notif = await sendNotification(offer.departement?.chefDepartement, message, offer._id, adminHR._id)
+
+                req.io.emit('receive_notification', notif);
             res.status(200).json(newOffer)
         }
     } catch (error) {

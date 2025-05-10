@@ -43,6 +43,8 @@ mongoose
     next();
 })
 
+const connectedUsers = new Map();
+
 // Socket.IO
 io.on('connection', (socket) => {
   console.log('User connected:', socket.id);
@@ -51,8 +53,19 @@ io.on('connection', (socket) => {
     socket.join(roomId);
   });
 
+  socket.on('register_user', (userId) => {
+    connectedUsers.set(userId, socket.id);
+    console.log(`${userId} registered with socket ${socket.id}`);
+    console.log("connectedUsers", connectedUsers)
+  });
 
   socket.on('disconnect', () => {
+    for (const [userId, socketId] of connectedUsers.entries()) {
+      if (socketId === socket.id) {
+        connectedUsers.delete(userId);
+        break;
+      }
+    }
     console.log('User disconnected:', socket.id);
   });
 });

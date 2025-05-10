@@ -8,6 +8,7 @@ module.exports= app =>{
     const meetingController = require("../controllers/meetingController")
     const conversationController = require('../controllers/conversationController')
     const attendanceController=require("../controllers/attendanceController")
+    const notificationController=require("../controllers/notificationController")
 
     const { UserSchema, loginSchema} = require("../models/user");
     const {DepartementSchema}=require("../models/departement")
@@ -141,6 +142,8 @@ module.exports= app =>{
     router.get('/conversation/:id', conversationController.getConversationById)
     router.get('/messages/:chatId', conversationController.getMessagesByConversation)
     router.post('/messages/:chatId', conversationController.saveMessage)
+
+    router.get('/notifications/:userId', notificationController.getNotifications)
 
     app.use('/api', router);
   

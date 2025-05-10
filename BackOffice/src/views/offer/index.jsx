@@ -313,7 +313,7 @@ const fetchCandidatures = async (offerId) => {
                       <div className="rejection-actions">
                         <button 
                           onClick={() => updateOfferStatus(offer._id, 'REJECTED', rejectionComment)}
-                          className="action-btn confirm-reject"
+                          className="action-btnn confirm-reject"
                         >
                           <FaBan /> Confirm Rejection
                         </button>
@@ -322,7 +322,7 @@ const fetchCandidatures = async (offerId) => {
                             setRejectingOfferId(null);
                             setRejectionComment('');
                           }}
-                          className="action-btn cancel"
+                          className="action-btnn cancel"
                         >
                           <FaTimes /> Cancel
                         </button>

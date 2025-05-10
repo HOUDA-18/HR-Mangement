@@ -56,7 +56,7 @@ const DashAnalytics = () => {
 
     }
     if(currentUser.departement!==null){
-      navigate(`/app/dashboard/departements/details`,{state:{ values: currentUser.departement}})
+      navigate(`/app/dashboard/departements/details`,{state:{ values: currentUser.departement._id}})
     }
   }
 

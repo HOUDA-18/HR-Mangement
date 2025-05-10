@@ -20,7 +20,7 @@ const Statistics = () => {
 
   const [loading, setLoading] = useState(true);
   const data = [
-    { name: 'In Progress', value: statistics.complaintInProgress },
+    { name: 'In Progress', value: statistics.complaintProgress },
     { name: 'Resolved', value: statistics.complaintResolved },
     { name: 'Pending', value: statistics.complaintPending },
     { name: 'Rejected', value: statistics.complaintRejected }
@@ -48,12 +48,13 @@ const Statistics = () => {
 
   return (
     <React.Fragment>
-      <div className="row" style={{ padding: '10px', gap: '10px' }}>
-        <div
+      <div className="row" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', padding: '10px', gap: '10px' }}>
+       <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', padding: '10px', gap: '10px' }}>
+       <div
           className="card-user "
           style={{
             padding: 20,
-            backgroundColor: 'rgb(14, 13, 13)',
+            backgroundColor: '#ffffff',
             width: 290,
             height: 150,
             borderRadius: 10,
@@ -64,28 +65,28 @@ const Statistics = () => {
             gap: '4px'
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: 'white', fontSize: '14px', fontWeight: 'bold' }}>
-              <FaUser /> Welcome {currentUser.lastname + ' ' + currentUser.firstname}
+          <div style={{display: 'flex', justifyContent: 'space-between', width: '100%', maxWidth: '920px', gap: '20px' }}>
+            <span style={{ color: '#808080', fontSize: '14px', fontWeight: 'bold' }}>
+              <FaUser /> Welcome {currentUser.firstname + ' ' +currentUser.lastname }
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: 'white', fontSize: '14px' }}>
+            <span style={{ color: '#808080', fontSize: '14px' }}>
               <FaEnvelope /> {currentUser.email}
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: 'white', fontSize: '14px' }}>
+            <span style={{ color: '#808080', fontSize: '14px' }}>
               <FaUserTag /> {currentUser.role}
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: 'white', fontSize: '14px' }}>
+            <span style={{ color: '#808080', fontSize: '14px' }}>
               <FaBriefcase /> {currentUser.employmentType}
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: 'white', fontSize: '14px' }}>
+            <span style={{ color: 'green', fontSize: '14px' }}>
               <FaCheckCircle /> {currentUser.status}
             </span>
           </div>
@@ -94,7 +95,7 @@ const Statistics = () => {
           className="card-user"
           style={{
             padding: 20,
-            backgroundColor: 'rgb(14, 13, 13)',
+            backgroundColor: '#ffffff',
             width: 290,
             height: 150,
             borderRadius: 10,
@@ -106,8 +107,8 @@ const Statistics = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <FaBriefcase style={{ color: 'white', fontSize: '24px' }} />
-            <span style={{ color: 'white', fontSize: '18px', fontWeight: 'bold' }}>
+            <FaBriefcase style={{ color: '#808080', fontSize: '24px' }} />
+            <span style={{ color: '#808080', fontSize: '18px', fontWeight: 'bold' }}>
               Total Complaints: {loading ? 'Loading...' : statistics.complaintTotal}
             </span>
           </div>
@@ -116,7 +117,7 @@ const Statistics = () => {
           className="card-user "
           style={{
             padding: 20,
-            backgroundColor: 'rgb(14, 13, 13)',
+            backgroundColor: '#ffffff',
             width: 290,
             height: 150,
             borderRadius: 10,
@@ -128,25 +129,26 @@ const Statistics = () => {
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: 'white', fontSize: '14px', fontWeight: 'bold' }}>
-              <FaClipboardCheck style={{ color: '#17a2b8' }} /> Complaint in progress: {statistics.complaintInProgress}
+            <span style={{ color: '#808080', fontSize: '14px', fontWeight: 'bold' }}>
+              <FaClipboardCheck style={{ color: '#17a2b8' }} /> Complaint in progress: <span style={{ color: '#17a2b8' }}> {statistics.complaintProgress} </span>
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: 'white', fontSize: '14px' }}>
-              <FaCheckCircle style={{ color: '#28a745' }} /> Complaint resolved: {statistics.complaintResolved}
+            <span style={{ color: '#808080', fontSize: '14px' , fontWeight: 'bold'}}>
+              <FaCheckCircle style={{ color: '#28a745' }} /> Complaint resolved: <span style={{ color: '#28a745' }}> {statistics.complaintResolved}</span>
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: 'white', fontSize: '14px' }}>
-              <FaHourglassHalf style={{ color: '#ffc107' }} /> Complaint pending: {statistics.complaintPending}
+            <span style={{ color: '#808080', fontSize: '14px' , fontWeight: 'bold'}}>
+              <FaHourglassHalf style={{ color: '#ffc107' }} /> Complaint pending: <span style={{ color: '#ffc107' }} >{statistics.complaintPending}</span>  
             </span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-            <span style={{ color: 'white', fontSize: '14px' }}>
-              <FaTimesCircle style={{ color: '#dc3545' }} /> Complaint rejected: {statistics.complaintRejected}
+            <span style={{ color: '#808080', fontSize: '14px' , fontWeight: 'bold'}}>
+              <FaTimesCircle style={{ color: '#dc3545' }} /> Complaint rejected: <span style={{ color: '#dc3545' }}>{statistics.complaintRejected}</span> 
             </span>
           </div>
+        </div>
         </div>
         <div className="chart-container">
           <div className="chart-inner">

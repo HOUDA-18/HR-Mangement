@@ -46,7 +46,7 @@ const ApplyFormModal = ({ offre, setShow, setErreur, setShowToast , setType}) =>
         const reader = new FileReader();
         reader.readAsDataURL(file);
         axios
-          .post('http://127.0.0.1:5000/analyze_resume', formData, {
+          .post('http://127.0.0.1:4000/analyze_resume', formData, {
             headers: { 'Content-Type': 'multipart/form-data' },
           })
           .then((res) => {

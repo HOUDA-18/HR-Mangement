@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 // react-bootstrap
@@ -9,22 +9,67 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 
 // project import
 import ChatList from './ChatList';
-
 // assets
 import avatar1 from '../../../../assets/images/user/avatar-1.jpg';
 import avatar2 from '../../../../assets/images/user/avatar-2.jpg';
 import avatar3 from '../../../../assets/images/user/avatar-3.jpg';
 import avatar4 from '../../../../assets/images/user/avatar-4.jpg';
 import { useLogout } from 'hooks/useLogout';
+import axios from 'axios';
+import io from 'socket.io-client';
+import { playSound } from '../../../../playSound';
+import notificationSound from '../../../../Whatsapp Message Ringtone Download.mp3'
+
 
 // ==============================|| NAV RIGHT ||============================== //
 
 const NavRight = () => {
   const [listOpen, setListOpen] = useState(false);
   const [user, setUser]= useState({})
+  const [notifications, setNotifications]=useState([])
+  const socket = io('http://localhost:8070'); // adjust to your backend URL
+  const audioPlayer = useRef(null);
+
+/* 
+  useEffect(() => {
+    // Register user with backend
+
+  }, []); */
+
+
   useEffect(()=>{
+    const currentUser = JSON.parse(localStorage.getItem('user'))
     setUser( JSON.parse(localStorage.getItem('user')))
     console.log(JSON.parse(localStorage.getItem('user')))
+
+    if(['HEAD_DEPARTEMENT', 'ADMIN_HR'].includes(currentUser.role)){
+             // Register user with backend
+      socket.emit('register_user', currentUser._id);
+
+      axios.get(`http://localhost:8070/api/notifications/${currentUser._id}`)
+      .then((res)=>{
+        console.log("res notif:",res.data)
+        setNotifications(res.data.reverse())
+      })
+      .catch((err)=>{
+        console.log("err ", err)
+      })
+
+      // Listen for notifications
+        socket.on('receive_notification', (data) => {
+        console.log('receive_notification: ',data)
+        if(data.recipientId===currentUser._id){
+          setNotifications((prev) => [data, ...prev]);
+          audioPlayer.current.play()
+        }
+      });
+    }
+
+               
+      return () => {
+        socket.disconnect();
+      };
+
 
   },[])
   const nav = useNavigate()
@@ -56,7 +101,22 @@ const NavRight = () => {
       activity: 'yesterday'
     }
   ];
-
+  function timeAgo(dateString) {
+    const now = new Date();
+    const date = new Date(dateString);
+    const diffMs = now - date; // difference in milliseconds
+    const diffSec = Math.floor(diffMs / 1000);
+    const diffMin = Math.floor(diffSec / 60);
+    const diffHour = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHour / 24);
+  
+    if (diffSec < 60) return `${diffSec}s ago`;
+    if (diffMin < 60) return `${diffMin} min ago`;
+    if (diffHour < 24) return `${diffHour} h ago`;
+    if (diffDay < 7) return `${diffDay} day${diffDay > 1 ? 's' : ''} ago`;
+  
+    return date.toLocaleDateString(); // fallback to date format
+  }
   return (
     <React.Fragment>
       <ListGroup as="ul" bsPrefix=" " className="navbar-nav ml-auto">
@@ -85,45 +145,26 @@ const NavRight = () => {
                   <ListGroup.Item as="li" bsPrefix=" " className="n-title">
                     <p className="m-b-0">NEW</p>
                   </ListGroup.Item>
-                  <ListGroup.Item as="li" bsPrefix=" " className="notification">
-                    <Card
-                      className="d-flex align-items-center shadow-none mb-0 p-0"
-                      style={{ flexDirection: 'row', backgroundColor: 'unset' }}
-                    >
-                      <img className="img-radius" src={avatar1} alt="Generic placeholder" />
-                      <Card.Body className="p-0">
-                        <p>
-                          <strong>John Doe</strong>
-                          <span className="n-time text-muted">
-                            <i className="icon feather icon-clock me-2" />
-                            30 min
-                          </span>
-                        </p>
-                        <p>New ticket Added</p>
-                      </Card.Body>
-                    </Card>
-                  </ListGroup.Item>
-                  <ListGroup.Item as="li" bsPrefix=" " className="n-title">
-                    <p className="m-b-0">EARLIER</p>
-                  </ListGroup.Item>
-                  {notiData.map((data, index) => {
+                  {notifications.map((data, index) => {
                     return (
                       <ListGroup.Item key={index} as="li" bsPrefix=" " className="notification">
                         <Card
                           className="d-flex align-items-center shadow-none mb-0 p-0"
                           style={{ flexDirection: 'row', backgroundColor: 'unset' }}
                         >
-                          <img className="img-radius" src={data.image} alt="Generic placeholder" />
+                          <img className="img-radius" src={data.senderId.image} alt="Generic placeholder" />
                           <Card.Body className="p-0">
                             <p>
-                              <strong>{data.name}</strong>
+                              <strong>{data.relatedOfferId.title}</strong>
                               <span className="n-time text-muted">
                                 <i className="icon feather icon-clock me-2" />
-                                {data.activity}
+                                {timeAgo(data.createdAt)}
                               </span>
                             </p>
-                            <p>{data.details}</p>
+                            <p>{data.message}</p>
                           </Card.Body>
+                          <audio ref={audioPlayer} src={notificationSound} />
+
                         </Card>
                       </ListGroup.Item>
                     );
@@ -134,16 +175,6 @@ const NavRight = () => {
                 <Link to="#">show all</Link>
               </div>
             </Dropdown.Menu>
-          </Dropdown>
-        </ListGroup.Item>
-        <ListGroup.Item as="li" bsPrefix=" ">
-          <Dropdown>
-            <Dropdown.Toggle as={Link} variant="link" to="#" className="displayChatbox" onClick={() => setListOpen(true)}>
-              <i className="icon feather icon-mail" />
-              <span className="badge bg-success">
-                <span />
-              </span>
-            </Dropdown.Toggle>
           </Dropdown>
         </ListGroup.Item>
         <ListGroup.Item as="li" bsPrefix=" ">

@@ -230,7 +230,7 @@ const ComplaintsTable = () => {
       if (currentUser.role === 'SUPER_ADMIN') {
         setComplaints(response.data);
       } else if (currentUser.role === 'ADMIN_HR') {
-        setComplaints(response.data.filter((complaint) => complaint.userId.role !== 'ADMIN_HR'));
+        setComplaints(response.data.filter((complaint) => complaint.userId.role === 'MEMBRE_HR'));
       } else if (currentUser.role === 'HEAD_DEPARTEMENT') {
         setComplaints(response.data.filter((complaint) => currentUser.departement.employees.includes(complaint.userId._id)));
         console.log(complaints);
@@ -244,7 +244,7 @@ const ComplaintsTable = () => {
         setComplaints(response.data.filter((complaint) => complaint.userId._id === currentUser._id));
       } else if (currentUser.role === 'HEAD_DEPARTEMENT') {
         setComplaints(response.data.filter((complaint) => complaint.userId._id === currentUser._id));
-      } else if (currentUser.role === 'EMPLOYEE') {
+      } else if (currentUser.role === 'EMPLOYEE' || currentUser.role === 'MEMBRE_HR') {
         setComplaints(response.data.filter((complaint) => complaint.userId._id === currentUser._id));
       }
     }
@@ -366,7 +366,7 @@ const ComplaintsTable = () => {
         >
           List of Complaints
         </h1>
-        {currentUser.role !== 'SUPER_ADMIN' && currentUser.role !== 'EMPLOYEE' && (
+        {currentUser.role !== 'SUPER_ADMIN' && currentUser.role !== 'EMPLOYEE' && currentUser.role !== 'MEMBRE_HR' && (
               <select
                 className="form-select"
                 style={{ marginBottom: '1rem', width: '30%' }}

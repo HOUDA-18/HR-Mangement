@@ -204,7 +204,7 @@ exports.login = async (req, res) => {
 
         // Populate the department before sending the response
         const populatedUser = await User.findById(user._id)
-          .populate("departement", "employees _id chefDepartement")
+          .populate("departement", "name employees _id chefDepartement")
           .select("-password"); // Exclude password from response
         if (ress) {
           if (user.status == Status.Inactive) {

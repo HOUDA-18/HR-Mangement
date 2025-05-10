@@ -7,8 +7,8 @@ const Dashboard = () => {
 
   return (
     <div>
-      {currentUser.role === 'EMPLOYEE' && <LeavesForm />}
-      {currentUser.role === 'HEAD_DEPARTEMENT' && <HRLeaves />}
+      {currentUser.role === 'EMPLOYEE' || currentUser.role === 'MEMBRE_HR' && <LeavesForm />}
+      {currentUser.role === 'HEAD_DEPARTEMENT' || currentUser.role === 'ADMIN_HR' && <HRLeaves />}
     </div>
   );
 };
